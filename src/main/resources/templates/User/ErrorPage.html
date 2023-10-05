@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error Page</title>
+</head>
+<body>
+<h1>Error Page</h1>
+<p>There are some products that do not have sufficient quantity:</p>
+<ul th:each="errorMessage : ${errorMessages}">
+    <li   th:text="${errorMessage}"></li>
+</ul>
+<p>Please remove the products or adjust the quantities in your shopping cart and try again.</p>
+<a href="/user/viewCart">Cart</a>
+</body>
+</html>

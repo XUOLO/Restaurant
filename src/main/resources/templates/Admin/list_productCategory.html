@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{Admin/index}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<main id="main" layout:fragment="main"class="main">
+
+    <!-- View Images -->
+    <!--Main Content-->
+    <div class="mt-5">
+
+        <div class="container">
+            <!--Add User Button-->
+            <div class="my-3">
+                <p>Product category</p>
+                <a href="/admin/new_productCategory"><button type="button" class="btn btn-primary">Add Product Category</button></a>
+            </div>
+            <table class="table border" >
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+
+                    <th scope="col">Description</th>
+                    <th scope="col"> </th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list : ${listProductCategory}">
+                    <td th:text="${list.id}"></td>
+                    <td th:text="${list.name}"></td>
+
+                    <td th:text="${list.description}"></td>
+                    <td >
+
+                        <a  th:href="@{/admin/showFormForUpdateProductCategory/{id}(id=${list.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>
+                        <a th:if="${isAdmin}" th:href="@{/admin/deleteProductCategory/{id}(id=${list.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>
+
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

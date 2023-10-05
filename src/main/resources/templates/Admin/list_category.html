@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+
+<main id="main" layout:fragment="main"class="main">
+
+
+
+  <!-- Top Selling -->
+
+  <div class="card top-selling overflow-auto">
+
+
+
+    <div class="card-body pb-0">
+      <h5 class="card-title">List category <a href="/admin/new_category"><button type="button" class="btn btn-primary">Add Category</button></a>
+      </h5>
+
+      <table class="table table-borderless">
+        <thead>
+        <tr>
+
+          <th scope="col">Name</th>
+
+
+
+          <th scope="col">Description</th>
+
+          <th scope="col">Action</th>
+          <th scope="col"> </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${listCategory}">
+           <td th:text="${list.name}"></td>
+
+
+           <td th:text="${list.description}"></td>
+
+
+          <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE')" >
+
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE')"  th:href="@{/admin/showFormForUpdateCategory/{id}(id=${list.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')"   th:href="@{/admin/deleteCategory/{id}(id=${list.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>
+
+
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+  <!-- End Top Selling -->
+
+
+
+
+  <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+</main>
+</body>
+</html>

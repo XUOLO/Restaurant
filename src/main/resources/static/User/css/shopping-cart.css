@@ -1,0 +1,113 @@
+/* CSS for Shopping Cart */
+.page {
+  padding: 20px;
+}
+
+.shopping-cart {
+  margin-bottom: 50px;
+}
+
+.block-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.block-heading h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.block-heading p {
+  font-size: 16px;
+  color: #888;
+}
+
+.content {
+  background-color: #f9f9f9;
+  padding: 30px;
+  border-radius: 5px;
+  overflow: auto;
+ width: 145%;
+  margin-left: -200px ;
+}
+
+.items {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.items th,
+.items td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.items th {
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+}
+
+.items td {
+  vertical-align: middle;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-image {
+  width: 80px;
+  margin-right: 20px;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-name a {
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.product-category {
+  font-size: 14px;
+  color: #888;
+}
+
+.quantity-input {
+  width: 50px;
+}
+
+.summary h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.summary-item .text {
+  font-weight: bold;
+}
+
+.summary-item .price {
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
