@@ -55,11 +55,11 @@ public class HomeUserController {
             }
         }
 
-//        String username = (String) session.getAttribute("username");
+        String username = (String) session.getAttribute("username");
         String name = (String) session.getAttribute("name");
 //        Long userId = (Long) session.getAttribute("userId");
 //        User user = userService.viewById(userId);
-//        model.addAttribute("username", username);
+        model.addAttribute("username", username);
         model.addAttribute("name", name);
 //        model.addAttribute("userId", userId);
 

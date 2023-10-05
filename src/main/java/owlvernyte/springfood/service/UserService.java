@@ -28,15 +28,15 @@ public class UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
-//    public void saveUser(User user) {
-//
-//
-//        String encodedPassword = passwordEncoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
-//        userRepository.save(user);
-//        this.userRepository.save(user);
-//
-//    }
+    public void saveUser(User user) {
+
+        BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+        this.userRepository.save(user);
+
+    }
 
     public void saveOauthUser(String email, @NotNull String username) {
         if (userRepository.findByUsername(username) != null) return;

@@ -45,10 +45,10 @@
            <td th:text="${list.description}"></td>
 
 
-          <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE')" >
+          <td sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')" >
 
-            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE')"  th:href="@{/admin/showFormForUpdateCategory/{id}(id=${list.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>
-            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')"   th:href="@{/admin/deleteCategory/{id}(id=${list.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>
+            <a sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')"  th:href="@{/admin/showFormForUpdateCategory/{id}(id=${list.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>
+            <a sec:authorize="hasAnyAuthority('ADMIN')"   th:href="@{/admin/deleteCategory/{id}(id=${list.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>
 
 
           </td>

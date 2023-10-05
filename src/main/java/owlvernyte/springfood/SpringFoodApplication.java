@@ -19,9 +19,9 @@ public class SpringFoodApplication {
         return args -> {
             if (roleRepository.findAll().isEmpty()) {
                 Role adminRole = new Role();
-                adminRole.setName("ROLE_ADMIN");
+                adminRole.setName("ADMIN");
                 Role userRole = new Role();
-                userRole.setName("ROLE_USER");
+                userRole.setName("USER");
                 roleRepository.save(adminRole);
                 roleRepository.save(userRole);
             }

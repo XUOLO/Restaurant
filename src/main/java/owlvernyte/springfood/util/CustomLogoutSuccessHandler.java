@@ -24,13 +24,13 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
         if (authentication != null && authentication.getAuthorities() != null) {
             for (GrantedAuthority authority : authentication.getAuthorities()) {
-                if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                if (authority.getAuthority().equals("ADMIN")) {
                     response.sendRedirect("/login?logout");
                     return;
-                } else if (authority.getAuthority().equals("ROLE_EMPLOYEE")) {
+                } else if (authority.getAuthority().equals("EMPLOYEE")) {
                     response.sendRedirect("/login?logout");
                     return;
-                } else if (authority.getAuthority().equals("ROLE_USER")) {
+                } else if (authority.getAuthority().equals("USER")) {
 //                    shoppingCartService.clear();
                     response.sendRedirect("/");
                     return;

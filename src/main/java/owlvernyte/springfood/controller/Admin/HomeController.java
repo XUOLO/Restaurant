@@ -31,9 +31,9 @@ public class HomeController {
     public String index(Authentication authentication, Model model) {
 
         boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
         boolean isEmployee = authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_EMPLOYEE"));
+                .anyMatch(auth -> auth.getAuthority().equals("EMPLOYEE"));
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);

@@ -39,9 +39,9 @@ public class ProductCategoryController {
 
         String username = authentication.getName();
         boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
         boolean isEmployee = authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_EMPLOYEE"));
+                .anyMatch(auth -> auth.getAuthority().equals("EMPLOYEE"));
          User user = userRepository.findByUsername(username);
         model.addAttribute("username", username);
         model.addAttribute("user", user);

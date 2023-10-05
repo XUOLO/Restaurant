@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
   <!-- Basic -->
@@ -72,11 +72,13 @@
                 <a href="" class="user_link">
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </a>
-                <div class="dropdown-content">
-                  <a th:if="${isAuthenticated}" href="/logout">Logout</a>
-                  <a th:unless="${isAuthenticated}"  href="/login">Login</a>
-                 <a  th:if="${isAuthenticated}" href="/user/info">Account</a>
-                </div>
+                 <div class="dropdown-content">
+                <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
+
+               <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
+
+              </div>
               </div>
               <style>
   .dropdown-content {
@@ -164,7 +166,8 @@
                   <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
               </form>
-              <a  th:if="${isAuthenticated}" class="order_online"  th:text=" 'Hi '+ ${name}+'!'">
+              <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
+                <span class="ml-1" sec:authentication="name"></span>
 
               </a>
             </div>

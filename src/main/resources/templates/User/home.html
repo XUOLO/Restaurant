@@ -159,10 +159,8 @@
                 <i class="fa fa-search" aria-hidden="true"></i>
               </button>
             </form>
-            <a  sec:authorize="isAuthenticated()" class="order_online"   >hello
+            <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
               <span class="ml-1" sec:authentication="name"></span>
-
-              <a sec:authorize="hasAnyAuthority('ROLE_USER')">USER</a>
 
             </a>
 

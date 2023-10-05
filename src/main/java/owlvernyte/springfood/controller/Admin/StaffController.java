@@ -81,7 +81,7 @@ public class StaffController {
         }
         user.setCreateTime(LocalDateTime.now());
 
-        userService.save(user);
+        userService.saveUser(user);
         return "redirect:/admin/list_staff";
 
 
@@ -94,9 +94,9 @@ public class StaffController {
             // Lấy thông tin người dùng từ cơ sở dữ liệu (thông qua username)
             User user = userRepository.findByUsername(username);
             boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+                    .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
             boolean isEmployee = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_EMPLOYEE"));
+                    .anyMatch(auth -> auth.getAuthority().equals("EMPLOYEE"));
 
             model.addAttribute("username", username);
             model.addAttribute("isAdmin", isAdmin);
@@ -134,7 +134,7 @@ public class StaffController {
             user.setImage(blob); // Gán giá trị 'blob' cho trường 'image' nếu có tệp tin tải lên
         }
 
-        userService.save(user);
+        userService.saveUser(user);
         return "redirect:/admin/staff_profile";
 
     }
@@ -150,7 +150,7 @@ public class StaffController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
-         userService.save(user);
+         userService.saveUser(user);
         return "redirect:/admin/staff_profile";
 
     }

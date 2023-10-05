@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
 >
 
 <head>
@@ -57,7 +58,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto">
-                        <li class="nav-item" th:classappend="${category.name == 'Menu'} ? 'active' : ''" th:each="category : ${listCategory}">
+                        <li class="nav-item"   th:each="category : ${listCategory}">
                             <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
                         </li>
                     </ul>
@@ -158,9 +159,10 @@
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>
                         </form>
-                        <a  th:if="${isAuthenticated}" class="order_online"  th:text=" 'Hi '+ ${name}+'!'">
+                       <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
+              <span class="ml-1" sec:authentication="name"></span>
 
-                        </a>
+            </a>
                     </div>
                 </div>
             </nav>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
 >
 
 <head>
@@ -158,9 +159,10 @@
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>
                         </form>
-                        <a  th:if="${isAuthenticated}" class="order_online"  th:text=" 'Hi '+ ${name}+'!'">
+                       <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
+              <span class="ml-1" sec:authentication="name"></span>
 
-                        </a>
+            </a>
                     </div>
                 </div>
             </nav>

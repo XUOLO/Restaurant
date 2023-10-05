@@ -85,8 +85,8 @@
           <li class="dropdown-header">
             <h6 th:text="${username}"></h6>
 
-            <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">ADMIN</span>
-            <span sec:authorize="hasAnyAuthority('ROLE_EMPLOYEE')">EMPLOYEE</span>
+            <span sec:authorize="hasAnyAuthority('ADMIN')">ADMIN</span>
+            <span sec:authorize="hasAnyAuthority('EMPLOYEE')">EMPLOYEE</span>
 
           </li>
           <li>

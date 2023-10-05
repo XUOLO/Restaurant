@@ -70,10 +70,10 @@ public class SecurityConfig {
                                 .requestMatchers("/Admin/css/**", "/Admin/js/**", "/Admin/img/**", "/Admin/vendor/**", "/Admin/scss/**").permitAll()
 
                                 .requestMatchers("/User/css/**", "/User/js/**", "/User/images/**", "/User/fonts/**").permitAll()
-                                .requestMatchers("/admin/deleteProduct/*").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/admin/deleteProduct/*").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").permitAll()
 
-                                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ADMIN")
+                                .requestMatchers("/admin/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
 
                                 .requestMatchers("/display").permitAll()
                                 .anyRequest()

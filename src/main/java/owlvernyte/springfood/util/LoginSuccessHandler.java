@@ -29,9 +29,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Tạo đường dẫn chuyển hướng với tên người dùng
         String redirectUrl;
-        if (role.equals("ROLE_ADMIN")) {
+        if (role.equals("ADMIN")) {
             redirectUrl = "/admin";
-        } else if (role.equals("ROLE_EMPLOYEE")) {
+        } else if (role.equals("EMPLOYEE")) {
             redirectUrl = "/admin";
         } else {
             redirectUrl = "/";
