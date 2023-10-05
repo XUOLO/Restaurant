@@ -7,16 +7,16 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.entity.CustomOAuth2User;
-import owlvernyte.springfood.repository.IRoleRepository;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.RoleRepository;
+import owlvernyte.springfood.repository.UserRepository;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private IRoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)

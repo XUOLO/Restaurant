@@ -1,29 +1,22 @@
 package owlvernyte.springfood.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import owlvernyte.springfood.entity.OrderDetail;
-import owlvernyte.springfood.repository.IOrderDetailRepository;
 
-import java.util.ArrayList;
+import org.springframework.stereotype.Service;
+import owlvernyte.springfood.entity.Order;
+import owlvernyte.springfood.entity.OrderDetail;
+import owlvernyte.springfood.repository.OrderDetailRepository;
+
 import java.util.List;
 
 @Service
 public class OrderDetailService {
-    @Autowired
-    private IOrderDetailRepository orderDetailRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public void addOrderDetail(OrderDetail orderDetail){
-        orderDetailRepository.save(orderDetail);
+    public OrderDetailService(OrderDetailRepository orderDetailRepository) {
+        this.orderDetailRepository = orderDetailRepository;
     }
 
-    public void deleteOrderDetail(Long id){
-        orderDetailRepository.deleteById(id);
-    }
-
-    public List<OrderDetail> getOrderDetailByOrderId(Long id){
-        List<OrderDetail> list = orderDetailRepository.findAll();
-        list.removeIf(orderDetail -> !orderDetail.getOrder().getId().equals(id));
-        return list;
+    public List<OrderDetail> getOrderDetailsByOrder(Order order) {
+        return orderDetailRepository.findByOrder(order);
     }
 }

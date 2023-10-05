@@ -3,7 +3,7 @@ package owlvernyte.springfood.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 public class CustomUserDetail implements UserDetails {
     private final User user;
 
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public CustomUserDetail(User user, IUserRepository userRepository) {
+    public CustomUserDetail(User user, UserRepository userRepository) {
         this.user = user;
         this.userRepository = userRepository;
     }

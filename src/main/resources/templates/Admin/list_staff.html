@@ -25,7 +25,9 @@
             <table class="table table-borderless">
                 <thead>
                 <tr>
-                     <th scope="col">Name</th>
+                    <th scope="col">NO.</th>
+
+                    <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Address</th>
@@ -39,8 +41,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${listStaff}">
-                     <td th:text="${user.name}"></td>
+                <tr th:each="user, index : ${listStaff}">
+                    <td th:text="${index.index +1}"></td>
+
+                    <td th:text="${user.name}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.phone}"></td>
                     <td th:text="${user.address}"></td>

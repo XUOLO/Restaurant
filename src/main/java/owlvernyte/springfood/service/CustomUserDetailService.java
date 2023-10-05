@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import owlvernyte.springfood.constants.Role;
 import owlvernyte.springfood.entity.CustomUserDetail;
 import owlvernyte.springfood.entity.User;
-import owlvernyte.springfood.repository.IRoleRepository;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.RoleRepository;
+import owlvernyte.springfood.repository.UserRepository;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

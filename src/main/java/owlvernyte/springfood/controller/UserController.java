@@ -24,10 +24,6 @@ public class UserController {
         return "Admin/login";
     }
 
-    @GetMapping("/")
-    public String showHome() {
-        return "User/home";
-    }
 
 
     @GetMapping("/register")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import owlvernyte.springfood.entity.User;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.UserRepository;
 
 @Controller
 public class HomeController {
@@ -17,7 +17,7 @@ public class HomeController {
 //    @Autowired
 //    private UserService userService;
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 //    @GetMapping("/login")
 //    public String showLogin( Model model ) {
 //

@@ -3,20 +3,24 @@ package owlvernyte.springfood.service;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.constants.Provider;
 import owlvernyte.springfood.constants.Role;
 import owlvernyte.springfood.entity.User;
-import owlvernyte.springfood.repository.IRoleRepository;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.RoleRepository;
+import owlvernyte.springfood.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private IRoleRepository roleRepository;
+    private RoleRepository roleRepository;
+
 
     public void save(User user) {
         user.setProvider(Provider.LOCAL.value);
@@ -24,6 +28,15 @@ public class UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
+//    public void saveUser(User user) {
+//
+//
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//        user.setPassword(encodedPassword);
+//        userRepository.save(user);
+//        this.userRepository.save(user);
+//
+//    }
 
     public void saveOauthUser(String email, @NotNull String username) {
         if (userRepository.findByUsername(username) != null) return;
@@ -35,6 +48,9 @@ public class UserService {
         user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
         userRepository.save(user);
     }
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
 
     public void setDefaultRole(String username){
         userRepository.findByUsername(username).getRoles()
@@ -44,4 +60,9 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public User viewById(long id) {
+        return userRepository.findById(id).get();
+    }
+
 }

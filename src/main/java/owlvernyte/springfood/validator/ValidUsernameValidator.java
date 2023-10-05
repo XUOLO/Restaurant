@@ -4,12 +4,12 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.UserRepository;
 import owlvernyte.springfood.validator.annotation.ValidUsername;
 
 public class ValidUsernameValidator implements ConstraintValidator<ValidUsername, String> {
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {

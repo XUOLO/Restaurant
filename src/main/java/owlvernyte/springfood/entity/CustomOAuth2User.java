@@ -5,8 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import owlvernyte.springfood.constants.Role;
-import owlvernyte.springfood.repository.IRoleRepository;
-import owlvernyte.springfood.repository.IUserRepository;
+import owlvernyte.springfood.repository.RoleRepository;
+import owlvernyte.springfood.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,11 +16,11 @@ import java.util.Map;
 public class CustomOAuth2User implements OAuth2User {
     private final OAuth2User oAuth2User;
 
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private final IRoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    public CustomOAuth2User(OAuth2User oAuth2User,IUserRepository userRepository,IRoleRepository roleRepository) {
+    public CustomOAuth2User(OAuth2User oAuth2User,UserRepository userRepository,RoleRepository roleRepository) {
         this.oAuth2User = oAuth2User;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import owlvernyte.springfood.entity.Role;
-import owlvernyte.springfood.repository.IRoleRepository;
+import owlvernyte.springfood.repository.RoleRepository;
 
 @SpringBootApplication
 public class SpringFoodApplication {
@@ -15,7 +15,7 @@ public class SpringFoodApplication {
     }
 
     @Bean
-    CommandLineRunner initDatabase(IRoleRepository roleRepository) {
+    CommandLineRunner initDatabase(RoleRepository roleRepository) {
         return args -> {
             if (roleRepository.findAll().isEmpty()) {
                 Role adminRole = new Role();

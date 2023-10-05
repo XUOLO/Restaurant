@@ -1,26 +1,67 @@
 package owlvernyte.springfood.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
+import jakarta.persistence.*;
 @Entity
-@Table(name = "order_detail")
+@Table(name = "OrderDetail")
 public class OrderDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "meal")
-    private String Meal;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "quantity")
-    private int quantity;
+    private long quantity;
 
-    @Column(name = "total_price")
-    private double totalPrice;
+    @Column(name = "price")
+    private double price;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
