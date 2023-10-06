@@ -22,6 +22,7 @@ import owlvernyte.springfood.service.OrderService;
 import owlvernyte.springfood.service.RoleService;
 import owlvernyte.springfood.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -85,6 +86,24 @@ public class OrderController {
         return "Admin/order_detail";
     }
 
+    @PostMapping("/admin/order/search")
+    public String searchTicket(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+        String username = authentication.getName();
+        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        List<Order> listOrder = orderService.searchOrderAdmin(keyword);
+        if (listOrder.isEmpty()) {
+            String errorMessage = "No matching order found";
+            model.addAttribute("errorMessage", errorMessage);
+        } else {
+            model.addAttribute("listOrder", listOrder);
+        }
+
+        return "Admin/list_order"  ;
+    }
 
 
 }

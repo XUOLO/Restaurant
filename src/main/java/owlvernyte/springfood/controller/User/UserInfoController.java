@@ -158,4 +158,44 @@ public class UserInfoController {
         return "redirect:" + referer;
     }
 
+
+    @PostMapping("/user/order/search")
+    public String searchOrder(HttpSession session,Principal principal, @RequestParam String keyword, Model model) {
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        User userImage = (User) session.getAttribute("userImage");
+        long userId = ((User) session.getAttribute("user")).getId();
+
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+        List<Order> userOrders = orderService.searchOrders(userId, keyword);
+            if (userOrders.isEmpty()) {
+                String errorMessage = "No matching orders found";
+                model.addAttribute("errorMessage", errorMessage);
+            } else {
+                model.addAttribute("userOrders", userOrders);
+            }
+
+
+        return "/User/userOrderInfo";
+    }
+
+
+
 }

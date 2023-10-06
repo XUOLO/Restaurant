@@ -202,10 +202,54 @@
       <div class="panel">
 
         <div class="panel-body bio-graph-info">
-          <h1>Order list</h1>
+          <div>
+            <h1>Order list</h1>
+
+            <div class="searchOrder" style="margin-left:110px;margin-top:-55px;margin-bottom:25px;">
+              <form class="search-form" method="post" action="/user/order/search">
+                <input class="search-input" type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+                <button class="search-button" type="submit" title="Search">Search</button>
+              </form>
+              <style>
+    .search-form {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 225px;
+    }
+
+    .search-button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        margin-left: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .search-button:hover {
+        background-color: #555;
+    }
+</style>
+            </div>
+
+          </div>
+
+
 
 
           <table style="border-collapse: collapse; width: 100%;">
+            <div th:if="${errorMessage}" class="alert alert-danger">
+              <p th:text="${errorMessage}"></p>
+            </div>
             <thead>
             <tr style="background-color: #f2f2f2;">
               <th style="padding: 8px; border: 1px solid #ddd;">NO.</th>

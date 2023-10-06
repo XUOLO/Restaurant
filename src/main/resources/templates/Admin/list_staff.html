@@ -6,7 +6,12 @@
     <title>Title</title>
 </head>
 <body>
-
+<div  layout:fragment="search-bar" class="search-bar">
+    <form class="search-form d-flex align-items-center" method="post" action="/admin/user/search">
+        <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+    </form>
+</div>
 
 <main id="main" layout:fragment="main"class="main">
 

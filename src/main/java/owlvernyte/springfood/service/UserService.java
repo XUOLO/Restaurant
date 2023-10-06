@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.constants.Provider;
 import owlvernyte.springfood.constants.Role;
+import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.RoleRepository;
 import owlvernyte.springfood.repository.UserRepository;
@@ -64,5 +65,17 @@ public class UserService {
     public User viewById(long id) {
         return userRepository.findById(id).get();
     }
+
+
+
+
+    public List<User> searchUser(String keyword) {
+
+        if(keyword!=null){
+            return userRepository.findAll(keyword);
+        }
+        return userRepository.findAll();
+    }
+
 
 }

@@ -13,12 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.repository.UserRepository;
 import owlvernyte.springfood.service.ProductCategoryService;
 import owlvernyte.springfood.service.ProductService;
+import owlvernyte.springfood.service.RoleService;
 import owlvernyte.springfood.service.UserService;
 
 import javax.sql.rowset.serial.SerialException;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class ProductController {
@@ -39,6 +42,8 @@ public class ProductController {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/display")
     public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws IOException, SQLException
@@ -153,7 +158,24 @@ public class ProductController {
         return "redirect:/admin/list_product";
     }
 
+    @PostMapping("/admin/product/search")
+    public String searchTicket(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+        String username = authentication.getName();
+        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        List<Product> products = productService.searchProductAdmin(keyword);
+        if (products.isEmpty()) {
+            String errorMessage = "No matching products found";
+            model.addAttribute("errorMessage", errorMessage);
+        } else {
+            model.addAttribute("listProduct", products);
+        }
 
+        return "Admin/list_product"  ;
+    }
 
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.Role;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.UserRepository;
@@ -154,5 +155,26 @@ public class StaffController {
         return "redirect:/admin/staff_profile";
 
     }
+
+
+    @PostMapping("/admin/user/search")
+    public String searchTicket(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+        String username = authentication.getName();
+        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        List<User> users = userService.searchUser(keyword);
+        if (users.isEmpty()) {
+            String errorMessage = "No matching products found";
+            model.addAttribute("errorMessage", errorMessage);
+        } else {
+            model.addAttribute("listStaff", users);
+        }
+
+        return "Admin/list_staff"  ;
+    }
+
 
 }

@@ -30,11 +30,12 @@
 
     <!-- Custom styles for this template -->
     <link href="/User/css/style.css" rel="stylesheet" />
-    <link href="/User/css/userInfo.css" rel="stylesheet" />
+    <link href="/User/css/styleRecipe.css" rel="stylesheet" />
 
     <!-- responsive style -->
     <link href="/User/css/responsive.css" rel="stylesheet" />
- </head>
+
+</head>
 
 <body class="sub_page">
 
@@ -58,7 +59,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto">
-                        <li class="nav-item"   th:each="category : ${listCategory}">
+                        <li class="nav-item" th:classappend="${category.name == 'Ingredient'} ? 'active' : ''" th:each="category : ${listCategory}">
                             <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
                         </li>
                     </ul>
@@ -68,9 +69,11 @@
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
                             <div class="dropdown-content">
-                                <a th:if="${isAuthenticated}" href="/logout">Logout</a>
-                                <a th:unless="${isAuthenticated}"  href="/login">Login</a>
-                               <a  th:if="${isAuthenticated}" href="/user/info">Account</a>
+                                <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+                                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
+
+                                <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
+
                             </div>
                         </div>
                         <style>
@@ -159,10 +162,10 @@
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>
                         </form>
-                       <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
-              <span class="ml-1" sec:authentication="name"></span>
+                        <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
+                            <span class="ml-1" sec:authentication="name"></span>
 
-            </a>
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -171,71 +174,74 @@
     <!-- end header section -->
 </div>
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container bootstrap snippets bootdey">
-    <div class="row">
-        <div class="profile-nav col-md-3">
-            <div class="panel">
-                <div class="user-heading round">
-                    <a href="#">
-
-                        <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
-                    </a>
-                    <h1 th:text="${username}"> </h1>
-                 </div>
-
-                <div class="belowPicInfo" style="padding-block: 15px;">
-                    <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
-                    <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
-                    <div class="div-link"><a style="color:#89817e;" href="#"><i class="fa fa-edit"></i> Edit profile</a></div>
+<!-- food section -->
 
 
-                </div>
+<div class = "container">
+    <div class = "meal-wrapper">
+        <div class = "meal-search">
+            <h2 class = "title">Find Meals For Your Ingredients</h2>
+            <blockquote>Real food doesn't have ingredients, real food is ingredients.<br>
+                <cite>- Jamie Oliver</cite>
+            </blockquote>
 
-
+            <div class = "meal-search-box">
+                <input type = "text" class = "search-control" placeholder="Enter an ingredient" id = "search-input">
+                <button type = "submit" class = "search-btn btn" id = "search-btn">
+                    <i class = "fa fa-search"></i>
+                </button>
             </div>
         </div>
-        <div class="profile-info col-md-9">
-            <div class="panel">
 
-
+        <div class = "meal-result">
+            <h2 class = "title">Your Search Results:</h2>
+            <div id= "meal">
+                <!-- meal item -->
+                <!-- <div class = "meal-item">
+                  <div class = "meal-img">
+                    <img src = "food.jpg" alt = "food">
+                  </div>
+                  <div class = "meal-name">
+                    <h3>Potato Chips</h3>
+                    <a href = "#" class = "recipe-btn">Get Recipe</a>
+                  </div>
+                </div> -->
+                <!-- end of meal item -->
             </div>
-            <div class="panel">
+        </div>
 
-                <div class="panel-body bio-graph-info">
-                    <h1>Profile information</h1>
-                    <div class="row">
-                        <div class="bio-row">
-                             <p> Full Name : <span th:text="${name}" ></span></p>
-                        </div>
 
-                        <div class="bio-row">
-                            <p> Address : <span th:text="${address}" ></span></p>
+        <div class = "meal-details">
+            <!-- recipe close btn -->
+            <button type = "button" class = "btn recipe-close-btn" id = "recipe-close-btn">
+                <i class = "fas fa-times"></i>
+            </button>
 
-                        </div>
-
-                        <div class="bio-row">
-                            <p> Email : <span th:text="${email}" ></span></p>
-
-                        </div>
-
-                        <div class="bio-row">
-                            <p> Phone : <span th:text="${phone}" ></span></p>
-
-                        </div>
-
-                    </div>
+            <!-- meal content -->
+            <div class = "meal-details-content">
+                <!-- <h2 class = "recipe-title">Meals Name Here</h2>
+                <p class = "recipe-category">Category Name</p>
+                <div class = "recipe-instruct">
+                  <h3>Instructions:</h3>
+                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo blanditiis quis accusantium natus! Porro, reiciendis maiores molestiae distinctio veniam ratione ex provident ipsa, soluta suscipit quam eos velit autem iste!</p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam voluptatibus ad obcaecati magnam, esse numquam nisi ut adipisci in?</p>
                 </div>
+                <div class = "recipe-meal-img">
+                  <img src = "food.jpg" alt = "">
+                </div>
+                <div class = "recipe-link">
+                  <a href = "#" target = "_blank">Watch Video</a>
+                </div> -->
             </div>
-
         </div>
     </div>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript">
 
-</script>
+
+
+<script src = "/User/js/scriptRecipe.js"></script>
+<!-- end food section -->
+
 <!-- footer section -->
 <footer class="footer_section">
     <div class="container">
@@ -339,7 +345,26 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
+<script>
+$(document).ready(function() {
+    $('.add-to-cart-btn').click(function() {
+        var productId = $(this).data('product-id');
 
+        $.ajax({
+            type: 'GET',
+            url: '/user/shoppingCart/add/' + productId,
+            success: function(response) {
+                // Xử lý kết quả thành công
+                alert('Thêm vào giỏ hàng thành công');
+            },
+            error: function() {
+                // Xử lý lỗi (nếu có)
+                alert('Đã xảy ra lỗi khi thêm vào giỏ hàng');
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>

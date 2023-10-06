@@ -3,6 +3,7 @@ package owlvernyte.springfood.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.repository.ProductRepository;
 
@@ -44,5 +45,11 @@ public class ProductService {
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
     }
+    public List<Product> searchProductAdmin(String keyword) {
 
+        if(keyword!=null){
+            return productRepository.findAll(keyword);
+        }
+        return productRepository.findAll();
+    }
 }
