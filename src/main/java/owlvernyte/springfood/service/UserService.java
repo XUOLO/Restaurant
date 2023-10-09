@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import owlvernyte.springfood.constants.Provider;
 import owlvernyte.springfood.constants.Role;
 import owlvernyte.springfood.entity.Order;
+
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.RoleRepository;
 import owlvernyte.springfood.repository.UserRepository;
@@ -77,5 +78,60 @@ public class UserService {
         return userRepository.findAll();
     }
 
+
+    public int countCustomers() {
+        List<User> users = userRepository.findAll();
+        int count = 0;
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("USER")) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+
+    public int countAdmin() {
+        List<User> users = userRepository.findAll();
+        int count = 0;
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("ADMIN")) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+    public int countEmployee() {
+        List<User> users = userRepository.findAll();
+        int count = 0;
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("EMPLOYEE")) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+    public int countEmployeeAndAdmin() {
+        List<User> users = userRepository.findAll();
+        int count = 0;
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("EMPLOYEE") || role.getName().equals("ADMIN")) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
 
 }

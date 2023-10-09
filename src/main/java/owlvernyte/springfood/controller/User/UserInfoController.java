@@ -191,11 +191,8 @@ public class UserInfoController {
             } else {
                 model.addAttribute("userOrders", userOrders);
             }
-
-
         return "/User/userOrderInfo";
     }
-
 
 
 }

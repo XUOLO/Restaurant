@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,22 +47,7 @@ private OrderDetailRepository orderDetailRepository;
     @Autowired
     private ProductRepository productRepository;
 
-//    @GetMapping("/user/checkOut")
-//    public String showCheckOut(Model model){
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//
-//            return "Admin/login";
-//        }
-//        Collection<CartItem> allCartItems = shoppingCartService.getAllCartItem();
-//
-//        model.addAttribute("AllCartItem", allCartItems);
-//        model.addAttribute("listCategory", categoryService.getAllCategory());
-//        model.addAttribute("totalAmount", shoppingCartService.getAmount());
-//        return "User/checkOut";
-//    }
+
     @PostMapping("/user/checkOut")
     public String showCheckOut(Model model, Authentication authentication,Principal principal,HttpSession session) {
 
@@ -178,10 +164,21 @@ private OrderDetailRepository orderDetailRepository;
 
         shoppingCartService.clear();
 
-        return "User/checkOutSuccess";
+        return "redirect:/user/checkOutSuccess";
     }
 
+    @GetMapping("/user/checkOutSuccess")
+    public String getLastOrder(Model model,HttpSession session,Principal principal) {
+        String name = (String) session.getAttribute("name");
 
+        model.addAttribute("name", name);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+
+
+        return "User/checkOutSuccess";
+    }
 
 
 }

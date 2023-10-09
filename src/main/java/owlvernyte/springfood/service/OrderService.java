@@ -69,4 +69,22 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+
+    public Long CountOrder() {
+        return orderRepository.count();
+    }
+
+    public Long countHandlingOrder() {
+        return orderRepository.countHandlingOrder();
+    }
+
+    public Long countConfirmedOrder() {
+        return orderRepository.countConfirmedOrder();
+    }
+
+    public Long countCancelOrder() {
+        return orderRepository.countCancelOrder();
+    }
+
+
 }

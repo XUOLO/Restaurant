@@ -154,11 +154,7 @@
                   </g>
                 </svg>
             </a>
-            <form class="form-inline">
-              <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </form>
+
             <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
               <span class="ml-1" sec:authentication="name"></span>
 
@@ -268,7 +264,7 @@
               <td style="padding: 8px; border: 1px solid #ddd;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
               <td style="padding: 8px; border: 1px solid #ddd; color: #000; display: flex; align-items: center;">
                 <span th:text="${order.statusString}" th:style="${order.status == '1' ? 'color: green' : (order.status == '2' ? 'color: blue' : (order.status == '3' ? 'color: red' : 'color: black'))}"></span>
-                <form method="POST" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
+                <form method="post" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
                   <div th:if="${order.status != '3'}">
                     <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
                   </div>
@@ -410,7 +406,6 @@
 <!-- custom js -->
 <script src="/User/js/custom.js"></script>
 <!-- Google Map -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
 

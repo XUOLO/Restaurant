@@ -36,7 +36,7 @@
 
 <div class="hero_area">
   <div class="bg-box">
-    <img src="/User/images/resBg.jpg" alt="">
+    <img src="/User/images/hero-bg.jpg" alt="">
   </div>
   <!-- header section strats -->
   <header class="header_section">
@@ -47,8 +47,7 @@
               Xuolo
             </span>
         </a>
-<!--<h1 th:text="#{greeting}"></h1>-->
-<!--        <a href="/user/international?lang=vi">VI</a>        <a href="/user/international?lang=en">en</a>-->
+ 
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class=""> </span>
@@ -154,11 +153,7 @@
                   </g>
                 </svg>
             </a>
-            <form class="form-inline">
-              <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </form>
+
             <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
               <span class="ml-1" sec:authentication="name"></span>
 
@@ -545,66 +540,6 @@
 
 <!-- end about section -->
 
-<!-- book section -->
-<section class="book_section layout_padding">
-  <div class="container">
-    <div class="heading_container">
-      <h2>
-        Book A Table
-      </h2>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form_container">
-          <form action="">
-            <div>
-              <input type="text" class="form-control" placeholder="Your Name" />
-            </div>
-            <div>
-              <input type="text" class="form-control" placeholder="Phone Number" />
-            </div>
-            <div>
-              <input type="email" class="form-control" placeholder="Your Email" />
-            </div>
-            <div>
-              <select class="form-control nice-select wide">
-                <option value="" disabled selected>
-                  How many persons?
-                </option>
-                <option value="">
-                  2
-                </option>
-                <option value="">
-                  3
-                </option>
-                <option value="">
-                  4
-                </option>
-                <option value="">
-                  5
-                </option>
-              </select>
-            </div>
-            <div>
-              <input type="date" class="form-control">
-            </div>
-            <div class="btn_box">
-              <button>
-                Book Now
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="map_container ">
-          <div id="googleMap"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end book section -->
 
 <!-- client section -->
 
@@ -759,7 +694,6 @@
 <!-- custom js -->
 <script src="/User/js/custom.js"></script>
 <!-- Google Map -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 <!-- End Google Map -->
 <script>

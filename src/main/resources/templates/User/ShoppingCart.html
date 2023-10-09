@@ -152,11 +152,7 @@
                   </g>
                 </svg>
             </a>
-            <form class="form-inline">
-              <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </form>
+
             <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
               <span class="ml-1" sec:authentication="name"></span>
 
@@ -182,11 +178,10 @@
       </div>
 
       <div th:if="${not hasItems}">
-        <p>Your cart is empty click <a href="/user/menu">here</a> to add some product.</p>
+        <p>Your cart is empty click <a href="/user/menu">here</a> to add some dishes.</p>
       </div>
       <div th:if="${hasItems}">
-        <!-- Hiển thị các mục trong giỏ hàng -->
-        <div class="content">
+         <div class="content">
         <div class="row">
           <div class="col-md-12 col-lg-8">
             <table class="items">
@@ -367,7 +362,6 @@
 <!-- custom js -->
 <script src="/User/js/custom.js"></script>
 <!-- Google Map -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
 </script>
 
 

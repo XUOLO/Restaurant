@@ -16,4 +16,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAll(String keyword);
     List<Order> findByUserId(long userId);
 
+
+
+    @Query("SELECT COUNT(t) FROM Order t WHERE t.status = '1'")
+    Long countHandlingOrder();
+    @Query("SELECT COUNT(t) FROM Order t WHERE t.status = '2'")
+    Long countConfirmedOrder();
+    @Query("SELECT COUNT(t) FROM Order t WHERE t.status = '3'")
+    Long countCancelOrder();
+
 }
