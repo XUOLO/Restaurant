@@ -47,6 +47,75 @@ public class User {
     @Column(name = "provider", length = 50)
     private String provider;
 
+    @Column(name = "otp", length = 6)
+    private String otp;
+    @Column(name = "is_otp_verified")
+    private Boolean isOtpVerified;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setImage(Blob image) {
+        this.image = image;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Boolean isOtpVerified() {
+        return isOtpVerified;
+    }
+
+    public void setOtpVerified(Boolean otpVerified) {
+        isOtpVerified = otpVerified;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
     public boolean hasRole(String roleName) {
         Iterator<Role> iterator = this.roles.iterator();
         while (iterator.hasNext()) {

@@ -40,6 +40,10 @@ public class UserService {
 
     }
 
+    public User findUserByUsernameOrEmail(String username, String email) {
+        return userRepository.findByUsernameOrEmail(username, email);
+    }
+
     public void saveOauthUser(String email, @NotNull String username) {
         if (userRepository.findByUsername(username) != null) return;
         var user = new User();
@@ -68,8 +72,54 @@ public class UserService {
     }
 
 
+    public void saveRegisterCustomer(User user) {
+        userRepository.save(user);
+        Long userId = userRepository.getUserIdByUsername(user.getUsername());
+        Long roleId = roleRepository.getRoleIdByName("USER");
+        if(roleId != 0 && userId != 0){
+            userRepository.addRoleToUser(userId,roleId);
+        }
+
+    }
+    public void saveOtp(User user) {
+        userRepository.save(user);
 
 
+    }
+
+    public boolean verifyOTP(String username, String otp) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+
+            return false;
+        }
+
+
+        return user.getOtp().equals(otp);
+    }
+    public void setOTPVerified(String username, boolean isVerified) {
+        // Lấy thông tin người dùng từ CSDL dựa trên username
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+
+            return;
+        }
+
+
+        user.setOtpVerified(isVerified);
+        userRepository.save(user);
+    }
+
+    public boolean isUsernameExists(String username) {
+        User existingUser = userRepository.findByUsername(username);
+        return existingUser != null;
+    }
+
+    public boolean isEmailExists(String email) {
+        User existingUser = userRepository.findByEmail(email);
+        return existingUser != null;
+    }
     public List<User> searchUser(String keyword) {
 
         if(keyword!=null){

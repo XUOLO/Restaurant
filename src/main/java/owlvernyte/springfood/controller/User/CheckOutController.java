@@ -1,8 +1,12 @@
 package owlvernyte.springfood.controller.User;
 
 
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +25,9 @@ import owlvernyte.springfood.service.ShoppingCartService;
 import owlvernyte.springfood.service.UserService;
 
 import java.security.Principal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class CheckOutController
@@ -46,6 +48,8 @@ private OrderDetailRepository orderDetailRepository;
     private CategoryService categoryService;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     @PostMapping("/user/checkOut")
@@ -160,8 +164,60 @@ private OrderDetailRepository orderDetailRepository;
             }
         }
 
+        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedPriceTotal = formatterTotal.format(order.getTotal());
+//        String subject = "Thông tin đơn hàng #" + order.getCode();
+         MimeMessage message = mailSender.createMimeMessage();
 
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+            // Đặt các thuộc tính của email
+            helper.setTo(email);
+            helper.setSubject("Order info #" + order.getCode());
+
+            // Đặt nội dung email dưới dạng HTML
+            String tableContent = "<table style=\"border-collapse: collapse;\">";
+            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
+
+            for (CartItem cartItem : cartItems) {
+                if (cartItem.getProductId() != null) {
+                    Product product = productRepository.findById(cartItem.getProductId()).orElse(null);
+                    if (product != null) {
+                        tableContent += "<tr>";
+                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + product.getName() + "</td>";
+                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + cartItem.getQuantity() + "</td>";
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                        String formattedPrice = formatter.format(product.getPrice());
+                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + formattedPrice + "</td>";
+                        tableContent += "</tr>";
+                    }
+                }
+            }
+
+            tableContent += "</table>";
+
+            String htmlContent = "<html><body>";
+            htmlContent += "<h2>Order info #" + order.getCode() + "</h2>";
+            htmlContent += "<p>Hello " + order.getName() + ",</p>";
+            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
+            htmlContent += "<p>Order code " + order.getCode() + "</p>";
+            htmlContent += "<p>Order date: " + order.getOrderDate() + "</p>";
+            htmlContent += "<p>Address: " + order.getAddress() + "</p>";
+            htmlContent += "<p>Total: " + formattedPriceTotal + "</p>";
+            htmlContent += tableContent;
+            htmlContent += "</body></html>";
+
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            model.addAttribute("errorMessage", "email fail.");
+            return "User/ErrorPage";
+        }
         shoppingCartService.clear();
 
         return "redirect:/user/checkOutSuccess";
