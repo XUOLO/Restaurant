@@ -81,7 +81,7 @@ public class StaffController {
             user.setImage(blob); // Gán giá trị 'blob' cho trường 'image' nếu có tệp tin tải lên
         }
         user.setCreateTime(LocalDateTime.now());
-
+        user.setIsOtpVerified(true);
         userService.saveUser(user);
         return "redirect:/admin/list_staff";
 
@@ -134,7 +134,7 @@ public class StaffController {
             Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
             user.setImage(blob); // Gán giá trị 'blob' cho trường 'image' nếu có tệp tin tải lên
         }
-
+        user.setIsOtpVerified(true);
         userService.saveUser(user);
         return "redirect:/admin/staff_profile";
 

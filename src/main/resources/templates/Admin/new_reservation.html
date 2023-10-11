@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorate="~{Admin/index}">
+<head>
+    <meta charset="UTF-8">
+    <title>New Product</title>
+</head>
+<body>
+
+<main id="main" layout:fragment="main"class="main">
+
+
+    <section class="section">
+
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">New product</h5>
+
+                <!-- General Form Elements -->
+                <form th:action="@{/admin/addReservation}" method="post" th:object="${reservation}" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text"  id="name" name="name" required th:field="*{name}" class="form-control">
+                            <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="detail" class="col-sm-2 col-form-label">Detail</label>
+                        <div class="col-sm-10">
+                            <input type="text"  id="detail" name="name" required th:field="*{detail}" class="form-control">
+                            <span class="text-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="description" class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <input type="text"  id="description" required name="description" th:field="*{description}" class="form-control">
+                            <span class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="numberOfPeople" class="col-sm-2 col-form-label">Number Of People: </label>
+                        <div class="col-sm-10">
+                            <input type="number" id="numberOfPeople" name="numberOfPeople" th:field="*{numberOfPeople}"class="form-control" min="1">
+                            <span class="text-danger" th:if="${#fields.hasErrors('numberOfPeople')}" th:errors="*{numberOfPeople}"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="reservationCategory"class="col-sm-2 col-form-label">Select reservation  category</label>
+                        <div class="col-sm-10">
+
+                            <select id="reservationCategory" name="reservationCategory.id"aria-label="Default select example" th:field="*{reservationCategory.id}"  >
+                                <option value="">Select Category</option>
+                                <option th:each="category : ${listReservationCategory}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="image" class="col-sm-2 col-form-label">File Upload</label>
+                        <div class="col-sm-10">
+
+                            <input class="form-control"  type="file"id="image" name="image" accept="image/*"  >
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+
+                        <div class="col-sm-10">
+                            <a class="btn btn-danger" href="/admin/list_reservation">Back</a>
+
+                            <button type="submit" class="btn btn-primary">Submit </button>
+                        </div>
+                    </div>
+
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+</body>
+</html>

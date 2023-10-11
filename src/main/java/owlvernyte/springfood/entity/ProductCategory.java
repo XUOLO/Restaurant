@@ -14,7 +14,7 @@ public class ProductCategory {
 	  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private Long id;
 
-	@NotBlank(message = "Đặc điểm không được để trống")
+	@NotBlank(message = "Description not null")
 	@Column(name = "Description")
 	private String description;
 	  @Column(name = "Name")

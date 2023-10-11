@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div  layout:fragment="search-bar" class="search-bar">
+  <form class="search-form d-flex align-items-center" method="post" action="/admin/product/search">
+    <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+<main id="main" layout:fragment="main"class="main">
+
+
+
+  <!-- Top Selling -->
+
+  <div class="card top-selling overflow-auto">
+
+
+
+    <div class="card-body pb-0">
+      <h5 class="card-title">List product <a href="/admin/new_reservation"><button type="button" class="btn btn-primary">Add reservation </button></a>
+      </h5>
+
+      <table class="table table-borderless">
+        <thead>
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Name</th>
+          <th scope="col">Reservation category</th>
+          <th scope="col">Number of people</th>
+          <th scope="col">Create date</th>
+          <th scope="col">Description</th>
+           <th scope="col">Status</th>
+          <th scope="col">Action</th>
+          <th scope="col"> </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${listReservation}">
+          <td>
+            <img height="100px" th:if="${list.image != null}" th:src="@{'/displayReservation?id=' + ${list.id}}" alt="">
+            <img height="100px" th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+          </td>
+          <td th:text="${list.name}"></td>
+          <td th:text="${list.reservationCategory.name}"></td>
+          <td th:text="${list.numberOfPeople}"></td>
+
+
+
+          <td th:text="${#temporals.format(list.createTime, 'dd/MM/yyyy')}">Create date</td>
+          <td th:text="${list.description}"></td>
+           <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : 'color: red'}">Status</td>
+
+          <td>
+            <form method="POST" th:object="${reservation}" th:action="@{/admin/{id}/updateStatusReservation(id=${list.id})}">
+              <select name="status" onchange="submit()" class="custom-select">
+                <option value="1" th:selected="${list.status == '1'}" >Empty</option>
+                <option value="2" th:selected="${list.status == '2'}">Using</option>
+              </select>
+            </form>
+          </td>
+          <td sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">
+            <a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/admin/deleteReservation/{id}(id=${list.id})}">
+              <i style="color:red;" class="bx bxs-trash"></i>
+            </a>
+            <a sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')" th:href="@{/admin/showFormForUpdateReservation/{id}(id=${list.id})}">
+              <i style="color:blue;" class="bx bxs-pencil"></i>
+            </a>
+          </td>
+
+
+        </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+  <!-- End Top Selling -->
+
+
+
+
+  <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+</main>
+</body>
+</html>

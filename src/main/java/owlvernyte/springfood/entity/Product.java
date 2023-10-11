@@ -81,8 +81,7 @@ public class Product {
 
 	@ManyToMany(mappedBy = "products")
 	private List<Order> orders;
-//	@ManyToMany(mappedBy = "products")
-//	private Set<Reservation> reservations = new HashSet<>();
+
 	public String getStatus() {
 		return status;
 	}
