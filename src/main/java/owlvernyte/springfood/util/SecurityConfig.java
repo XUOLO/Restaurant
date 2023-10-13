@@ -76,6 +76,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
 
                                 .requestMatchers("/display").permitAll()
+                                .requestMatchers("/displayReservation").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 .and()

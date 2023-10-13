@@ -118,7 +118,6 @@ private OrderDetailRepository orderDetailRepository;
                 }
             }
         }
-
         if (!errorMessages.isEmpty()) {
             // Có ít nhất một sản phẩm không đủ số lượng, thực hiện xử lý thông báo lỗi, ví dụ: đẩy danh sách thông báo lỗi vào model và trả về trang lỗi
              model.addAttribute("errorMessages", errorMessages);

@@ -67,6 +67,7 @@
               <div class="dropdown-content">
                 <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
                 <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
+                <a  sec:authorize="!isAuthenticated()"  href="/user/register">register</a>
 
                <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
 
@@ -100,6 +101,7 @@
 
 </style>
             <a class="cart_link" href="/user/viewCart">
+              <span class="cart-item-count"></span>
               <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                   <g>
                     <g>
@@ -153,6 +155,9 @@
                   </g>
                 </svg>
             </a>
+
+
+
 
             <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
               <span class="ml-1" sec:authentication="name"></span>
@@ -696,25 +701,33 @@
 <!-- Google Map -->
 </script>
 <!-- End Google Map -->
-<script>
-$(document).ready(function() {
-    $('.add-to-cart-btn').click(function() {
-        var productId = $(this).data('product-id');
 
-        $.ajax({
-            type: 'GET',
-            url: '/user/shoppingCart/add/' + productId,
-            success: function(response) {
-                // Xử lý kết quả thành công
-                alert('Thêm vào giỏ hàng thành công');
-            },
-            error: function() {
-                // Xử lý lỗi (nếu có)
-                alert('Đã xảy ra lỗi khi thêm vào giỏ hàng');
-            }
+<script>
+    $(document).ready(function() {
+        $('.add-to-cart-btn').click(function() {
+            var productId = $(this).data('product-id');
+
+            $.ajax({
+                type: 'GET',
+                url: '/user/shoppingCart/add/' + productId,
+                success: function(response) {
+                    // Xử lý kết quả thành công
+                    updateCartItemCount();
+                },
+                error: function() {
+                    // Xử lý lỗi (nếu có)
+                    alert('Đã xảy ra lỗi khi thêm vào giỏ hàng');
+                }
+            });
         });
+
+        function updateCartItemCount() {
+            $.get("/user/itemCount", function(data) {
+                // Cập nhật số lượng sản phẩm trên giao diện
+                $(".cart-item-count").text(data);
+            });
+        }
     });
-});
 </script>
 </body>
 

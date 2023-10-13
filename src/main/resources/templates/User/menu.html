@@ -68,7 +68,7 @@
                 </a>
                  <div class="dropdown-content">
                 <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
-                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
+                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a><a  sec:authorize="!isAuthenticated()"  href="/user/register">register</a>
 
                <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
 

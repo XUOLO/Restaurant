@@ -14,10 +14,7 @@ import owlvernyte.springfood.entity.Contact;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
-import owlvernyte.springfood.service.CategoryService;
-import owlvernyte.springfood.service.ProductCategoryService;
-import owlvernyte.springfood.service.ProductService;
-import owlvernyte.springfood.service.UserService;
+import owlvernyte.springfood.service.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -42,7 +39,11 @@ public class HomeUserController {
 
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+    @Autowired
+    private ReservationCategoryService reservationCategoryService;
 
+    @Autowired
+    private ReservationService reservationService;
 
 
     @GetMapping("/")
@@ -81,6 +82,8 @@ public class HomeUserController {
 
         model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
         model.addAttribute("listProduct",productService.getAllProduct());
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
         model.addAttribute("listCategory",categoryService.getAllCategory());
         List<Product> sellingProducts = new ArrayList<>();
 

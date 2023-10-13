@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:object="${reservation}" th:action="@{/user/reservation}" method="post">
+  <label for="date">Date:</label>
+  <input type="date" id="date" th:field="*{dateTime.date}" />
+
+  <label for="time">Time:</label>
+  <input type="time" id="time" th:field="*{dateTime.time}" />
+
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

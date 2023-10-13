@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+>
 
 <head>
   <!-- Basic -->
@@ -14,6 +16,7 @@
   <link rel="shortcut icon" href="/User/images/favicon.png" type="">
 
   <title> Xuolo </title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="/User/css/bootstrap.css" />
@@ -34,44 +37,44 @@
 
 <body class="sub_page">
 
-  <div class="hero_area">
-    <div class="bg-box">
-      <img src="/User/images/hero-bg.jpg" alt="">
-    </div>
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="/">
+<div class="hero_area">
+  <div class="bg-box">
+    <img src="/User/images/hero-bg.jpg" alt="">
+  </div>
+  <!-- header section strats -->
+  <header class="header_section">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="/">
             <span>
               Xuolo
             </span>
-          </a>
+        </a>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
-          </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class=""> </span>
+        </button>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mx-auto">
-              <li class="nav-item" th:classappend="${category.name == 'Reservation'} ? 'active' : ''" th:each="category : ${listCategory}">
-                <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
-              </li>
-            </ul>
-            <div class="user_option">
-              <div class="dropdown">
-                <a href="" class="user_link">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                </a>
-                 <div class="dropdown-content">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item" th:classappend="${category.name == 'Reservation'} ? 'active' : ''" th:each="category : ${listCategory}">
+              <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
+            </li>
+          </ul>
+          <div class="user_option">
+            <div class="dropdown">
+              <a href="" class="user_link">
+                <i class="fa fa-user" aria-hidden="true"></i>
+              </a>
+              <div class="dropdown-content">
                 <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
-                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
+                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a><a  sec:authorize="!isAuthenticated()"  href="/user/register">register</a>
 
-               <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
+                <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
 
               </div>
-              </div>
-              <style>
+            </div>
+            <style>
   .dropdown-content {
   display: none; /* Ban đầu ẩn dropdownlist */
   position: absolute;
@@ -98,15 +101,15 @@
 }
 
 </style>
-              <a class="cart_link" href="/user/viewCart">
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+            <a class="cart_link" href="/user/viewCart">
+              <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                   <g>
                     <g>
                       <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
                    c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
                     </g>
                   </g>
-                  <g>
+                <g>
                     <g>
                       <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
                    C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
@@ -114,212 +117,238 @@
                    C457.728,97.71,450.56,86.958,439.296,84.91z" />
                     </g>
                   </g>
-                  <g>
+                <g>
                     <g>
                       <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
                    c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
                     </g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
-                  <g>
+                <g>
                   </g>
                 </svg>
-              </a>
+            </a>
 
-              <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
-                <span class="ml-1" sec:authentication="name"></span>
+            <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
+              <span class="ml-1" sec:authentication="name"></span>
 
-              </a>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <!-- end header section -->
+</div>
+
+<!-- food section -->
+
+<section class="food_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Our Table
+      </h2>
+    </div>
+
+    <ul class="filters_menu">
+      <li class="active" data-filter="*">All</li>
+
+      <li  th:each="reservationCategory : ${listReservationCategory}" th:text="${reservationCategory.name}" th:attr="data-filter='.' + ${reservationCategory.name}">
+
+      </li>
+    </ul>
+
+    <div class="filters-content">
+      <div class="row grid" >
+        <div th:each="list : ${listReservation}" th:class="'col-sm-6 col-lg-4 all ' + ${list.reservationCategory.name}"  >
+          <div class="box">
+            <div>
+              <div class="img-box">
+                <img height="100px" th:if="${list.image != null}" th:src="@{'/displayReservation?id=' + ${list.id}}" alt="">
+                <img height="100px" th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+              </div>
+              <div class="detail-box">
+
+                <h5 th:text="${list.name}">
+                </h5>
+                <h5 th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : 'color: red'}">Status</h5>
+
+                </h5>
+                <p th:text="${list.description}">
+                </p>
+                <div class="options">
+                 <p>
+                   Number of people :<span th:text="${list.numberOfPeople}" >></span>
+
+                 </p>
+
+                  <a  th:href="@{/user/showReservation/{id}(id=${list.id})}">
+                      Book now
+                   </a>
+                </div>
+              </div>
             </div>
           </div>
-        </nav>
-      </div>
-    </header>
-    <!-- end header section -->
-  </div>
+        </div>
 
-  <!-- book section -->
-  <section class="book_section layout_padding">
-    <div class="container">
-      <div class="heading_container">
-        <h2>
-          Book A Table
-        </h2>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form_container">
-            <form action="">
-              <div>
-                <input type="text" class="form-control" placeholder="Your Name" />
-              </div>
-              <div>
-                <input type="text" class="form-control" placeholder="Phone Number" />
-              </div>
-              <div>
-                <input type="email" class="form-control" placeholder="Your Email" />
-              </div>
-              <div>
-                <select class="form-control nice-select wide">
-                  <option value="" disabled selected>
-                    How many persons?
-                  </option>
-                  <option value="">
-                    2
-                  </option>
-                  <option value="">
-                    3
-                  </option>
-                  <option value="">
-                    4
-                  </option>
-                  <option value="">
-                    5
-                  </option>
-                </select>
-              </div>
-              <div>
-                <input type="date" class="form-control">
-              </div>
-              <div class="btn_box">
-                <button>
-                  Book Now
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="map_container ">
-            <div id="googleMap"></div>
-          </div>
-        </div>
       </div>
     </div>
-  </section>
-  <!-- end book section -->
 
-  <!-- footer section -->
-  <footer class="footer_section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>
-              Contact Us
-            </h4>
-            <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
+  </div>
+</section>
+
+<!-- end food section -->
+
+<!-- footer section -->
+<footer class="footer_section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 footer-col">
+        <div class="footer_contact">
+          <h4>
+            Contact Us
+          </h4>
+          <div class="contact_link_box">
+            <a href="">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              <span>
                   123 HCM city
                 </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
+            </a>
+            <a href="">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <span>
                   Call +84 906303905
                 </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
+            </a>
+            <a href="">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+              <span>
                   xuanloc290901@gmail.com
                 </span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 footer-col">
-          <div class="footer_detail">
-            <a href="" class="footer-logo">
-              Xuolo
             </a>
-            <p>
-Welcome to our restaurant, where you can enjoy the most unique and wonderful culinary experiences.            </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
-            </div>
           </div>
         </div>
-        <div class="col-md-4 footer-col">
-          <h4>
-            Opening Hours
-          </h4>
+      </div>
+      <div class="col-md-4 footer-col">
+        <div class="footer_detail">
+          <a href="" class="footer-logo">
+            Xuolo
+          </a>
           <p>
-            From Mon - Sat
-          </p>
-          <p>
-            8 Am - 10.00 Pm
-          </p>
+            Welcome to our restaurant, where you can enjoy the most unique and wonderful culinary experiences.            </p>
+          <div class="footer_social">
+            <a href="">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-pinterest" aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
+      </div>
+      <div class="col-md-4 footer-col">
+        <h4>
+          Opening Hours
+        </h4>
+        <p>
+          From Mon - Sat
+        </p>
+        <p>
+          8 Am - 10.00 Pm
+        </p>
       </div>
 
     </div>
-  </footer>
-  <!-- footer section -->
+    <div class="footer-info">
+      <p>
+        &copy; <span id="displayYear"></span>
+        <a href="https://html.design/"> </a><br><br>
+        &copy; <span id="displayYear"></span>
+        <a href="https://themewagon.com/" target="_blank"> </a>
+      </p>
+    </div>
 
-  <!-- jQery -->
-  <script src="/User/js/jquery-3.4.1.min.js"></script>
-  <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <!-- bootstrap js -->
-  <script src="/User/js/bootstrap.js"></script>
-  <!-- owl slider -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
-  <!-- isotope js -->
-  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-  <!-- nice select -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0//User/js/jquery.nice-select.min.js"></script>
-  <!-- custom js -->
-  <script src="/User/js/custom.js"></script>
-  <!-- Google Map -->
-    </script>
-  <!-- End Google Map -->
+  </div>
+</footer>
+<!-- footer section -->
 
+<!-- jQery -->
+<script src="/User/js/jquery-3.4.1.min.js"></script>
+<!-- popper js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<!-- bootstrap js -->
+<script src="/User/js/bootstrap.js"></script>
+<!-- owl slider -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+</script>
+<!-- isotope js -->
+<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+<!-- nice select -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0//User/js/jquery.nice-select.min.js"></script>
+<!-- custom js -->
+<script src="/User/js/custom.js"></script>
+<!-- Google Map -->
+</script>
+<!-- End Google Map -->
+<script>
+$(document).ready(function() {
+    $('.add-to-cart-btn').click(function() {
+        var productId = $(this).data('product-id');
+
+        $.ajax({
+            type: 'GET',
+            url: '/user/shoppingCart/add/' + productId,
+            success: function(response) {
+                // Xử lý kết quả thành công
+                alert('Thêm vào giỏ hàng thành công');
+            },
+            error: function() {
+                // Xử lý lỗi (nếu có)
+                alert('Đã xảy ra lỗi khi thêm vào giỏ hàng');
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>

@@ -36,7 +36,8 @@ public class User {
     private LocalDateTime createTime;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
     @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -51,6 +52,18 @@ public class User {
     private String otp;
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public Boolean getOtpVerified() {
+        return isOtpVerified;
+    }
 
     public void setId(Long id) {
         this.id = id;

@@ -58,4 +58,7 @@ public class ShoppingCartService {
         return shoppingCart.values().stream()
                 .mapToDouble(item->item.getQuantity()*item.getPrice()).sum();
     }
+
+
+
 }

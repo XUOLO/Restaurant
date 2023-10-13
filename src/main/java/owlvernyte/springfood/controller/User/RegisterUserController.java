@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import owlvernyte.springfood.constants.Provider;
-import owlvernyte.springfood.entity.CartItem;
-import owlvernyte.springfood.entity.OTPUtils;
-import owlvernyte.springfood.entity.Product;
-import owlvernyte.springfood.entity.User;
+import owlvernyte.springfood.entity.*;
+import owlvernyte.springfood.repository.ReservationRepository;
 import owlvernyte.springfood.service.UserService;
 
 import java.text.NumberFormat;
@@ -128,5 +126,20 @@ public class RegisterUserController {
         redirectAttributes.addFlashAttribute("username", user.getUsername());
         return "redirect:/user/otpVerified";
     }
+    @Autowired
+    private ReservationRepository reservationRepository;
+        @PostMapping("/user/reservation")
+        public String createBooking(@ModelAttribute("reservation") Reservation reservation) {
+            reservationRepository.save(reservation); // Lưu trữ thông tin đặt bàn vào cơ sở dữ liệu
+            return "redirect:/user/datetime"; // Chuyển hướng sau khi đặt bàn thành công
+        }
+
+        @GetMapping("/user/datetime")
+    public String dateee(){
+            return "User/datetime";
+        }
+
+
+
 
 }

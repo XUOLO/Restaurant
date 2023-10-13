@@ -40,4 +40,11 @@ public class cartRestController {
 
         return "error"; // Trả về một phản hồi JSON hoặc thông báo lỗi
     }
+
+
+    @GetMapping("/user/itemCount")
+    public int getCartItemCount() {
+        int itemCount = shoppingCartService.getCount();
+        return itemCount;
+    }
 }
