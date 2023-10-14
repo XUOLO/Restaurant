@@ -71,7 +71,11 @@ public class BookingService {
 @Autowired
 private BookingRepository bookingRepository;
     public void saveBooking(Booking booking) {
+
         this.bookingRepository.save(booking);
 
     }
+
+
+
 }

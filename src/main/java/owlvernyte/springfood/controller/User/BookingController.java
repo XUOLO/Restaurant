@@ -9,7 +9,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import owlvernyte.springfood.entity.*;
 import owlvernyte.springfood.repository.BookingDetailRepository;
 import owlvernyte.springfood.repository.BookingRepository;
@@ -52,6 +55,7 @@ public class BookingController {
     private ReservationRepository reservationRepository;
     @GetMapping("/user/showReservation/{id}")
     public String viewReservation(Model model, Principal principal, HttpSession session,@PathVariable(value = "id") long id) {
+
         Reservation reservation = reservationService.getReservationById(id);
         model.addAttribute("reservation", reservation);
         Collection<ReservationItem> allReservationItems = bookingService.getAllReservationItem();
@@ -112,14 +116,14 @@ public class BookingController {
                               @RequestParam("phone") String phone,
                              @RequestParam("email") String email,
                                Model model,
+                               HttpServletRequest request,
                                @ModelAttribute("booking") @Valid Booking booking,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
                               HttpSession session) {
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
         User user = userService.viewById(userId);
-
- //        reservationRepository.save(reservation);
-//        booking.setReservation(reservation);
         booking.setName(name);
         booking.setPhone(phone);
         booking.setEmail(email);
@@ -148,6 +152,7 @@ public class BookingController {
                 }
             }
         }
+
         if (!errorMessages.isEmpty()) {
             // Có ít nhất một sản phẩm không đủ số lượng, thực hiện xử lý thông báo lỗi, ví dụ: đẩy danh sách thông báo lỗi vào model và trả về trang lỗi
             model.addAttribute("errorMessages", errorMessages);
@@ -155,10 +160,21 @@ public class BookingController {
         }
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;
-        String code = "XL" + String.valueOf(randomNumber);
+        String code = "TB" + String.valueOf(randomNumber);
         booking.setCode(code);
+
+        if (bindingResult.hasErrors()) {
+
+            redirectAttributes.addFlashAttribute("failMessage", "Invalid date");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        if (bookingRepository.existsByDateTime(booking.getDateTime())) {
+            redirectAttributes.addFlashAttribute("DuplicateDate", "DuplicateDate DuplicateDate");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }else
         bookingService.saveBooking(booking);
-        Long bookingId = booking.getId();
 
         // Trừ số lượng sản phẩm trong cơ sở dữ liệu
         for (ReservationItem reservationItem : reservationItems) {

@@ -1,6 +1,7 @@
 package owlvernyte.springfood.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class Booking {
     @Column(name = "booking_date")
     private LocalDate bookingDate;
     @Column(name = "date_time")
+    @FutureOrPresent(message = "The booking date and time cannot be in the past.")
     private LocalDateTime dateTime;
 
     @Column(name = "customer_name")
