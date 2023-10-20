@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import owlvernyte.springfood.constants.Provider;
 import owlvernyte.springfood.entity.*;
 import owlvernyte.springfood.repository.ReservationRepository;
+import owlvernyte.springfood.service.CategoryService;
 import owlvernyte.springfood.service.UserService;
 
 import java.text.NumberFormat;
@@ -31,6 +32,9 @@ public class RegisterUserController {
     private JavaMailSender mailSender;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/user/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
@@ -50,12 +54,25 @@ public class RegisterUserController {
 
         return "User/otpVerified";
     }
+    @PostMapping("/user/verifyOTPAgain")
+    public String verifyOTPAgain(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
+         if (userService.verifyOTP(username, otp)) {
+            userService.setOTPVerified(username, true);
+            model.addAttribute("successMessage", "OTP verification successful.");
+            SecurityContextHolder.clearContext();
+            session.invalidate();
+        } else {
+            model.addAttribute("errorMessage", "Invalid OTP. Please try again.");
+        }
+
+        return "User/otpVerifiedAgain";
+    }
     @GetMapping("/user/otpVerified")
     public String showOtpVerifiedForm(Model model) {
         String username = (String) model.getAttribute("username");
         if (username == null) {
             model.addAttribute("errorMessage", "not found username");
-
+            model.addAttribute("listCategory", categoryService.getAllCategory());
         } else {
             model.addAttribute("username", username);
         }
@@ -66,11 +83,13 @@ public class RegisterUserController {
         String username = (String) session.getAttribute("username");
 
         if (username == null) {
+            model.addAttribute("listCategory", categoryService.getAllCategory());
             model.addAttribute("errorMessage", "not found username");
 
         } else {
             model.addAttribute("username", username);
         }
+
         return "User/otpVerifiedAgain";
     }
     @PostMapping("/user/register")
@@ -90,7 +109,7 @@ public class RegisterUserController {
             result.rejectValue("email", "error.user", "Email already exists.");
             return "User/register";
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Register successful");
+        redirectAttributes.addFlashAttribute("successMessage", "Register successful, please check your mail to get OTP code.");
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setCreateTime(LocalDateTime.now());
         user.setProvider(Provider.LOCAL.value);
@@ -122,7 +141,7 @@ public class RegisterUserController {
         }
 
         userService.saveRegisterCustomer(user);
-
+        model.addAttribute("listCategory", categoryService.getAllCategory());
         redirectAttributes.addFlashAttribute("username", user.getUsername());
         return "redirect:/user/otpVerified";
     }

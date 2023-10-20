@@ -1,212 +1,143 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
->
+<html
+        xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
   <!-- Basic -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <link rel="shortcut icon" href="/User/images/favicon.png" type="">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title> Xuolo </title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>Restaurantly Bootstrap Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="/User/css/bootstrap.css" />
+  <!-- Favicons -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <link href="/User/img/favicon.png" rel="icon">
+  <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <!-- nice select  -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-  <!-- font awesome style -->
-  <link href="/User/css/font-awesome.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Custom styles for this template -->
-  <link href="/User/css/style.css" rel="stylesheet" />
-  <link href="/User/css/userInfo.css" rel="stylesheet" />
+  <!-- Vendor CSS Files -->
+  <link href="/User/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/User/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/User/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/User/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/User/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-  <!-- responsive style -->
-  <link href="/User/css/responsive.css" rel="stylesheet" />
+  <!-- Template Main CSS File -->
+  <link href="/User/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Restaurantly - v3.1.0
+  * Template URL: https://bootstrapmade.com/restaurantly-restaurant-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
 </head>
 
-<body class="sub_page">
+<body  >
 
-<div class="hero_area">
-  <div class="bg-box">
-    <img src="/User/images/hero-bg.jpg" alt="">
-  </div>
-  <!-- header section strats -->
-  <header class="header_section">
-    <div class="container">
-      <nav class="navbar navbar-expand-lg custom_nav-container ">
-        <a class="navbar-brand" href="/">
-            <span>
-              Xuolo
-            </span>
-        </a>
+<!-- ======= Top Bar ======= -->
+<div id="topbar" class="d-flex align-items-center fixed-top">
+  <div class="container d-flex justify-content-center justify-content-md-between">
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class=""> </span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item"   th:each="category : ${listCategory}">
-              <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
-            </li>
-          </ul>
-          <div class="user_option">
-            <div class="dropdown">
-              <a href="" class="user_link">
-                <i class="fa fa-user" aria-hidden="true"></i>
-              </a>
-              <div class="dropdown-content">
-                <a th:if="${isAuthenticated}" href="/logout">Logout</a>
-                <a th:unless="${isAuthenticated}"  href="/login">Login</a>
-                <a  th:if="${isAuthenticated}" href="/user/info">Account</a>
-              </div>
-            </div>
-            <style>
-  .dropdown-content {
-  display: none; /* Ban đầu ẩn dropdownlist */
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
-  z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block; /* Khi di chuột vào icon, hiện dropdownlist */
-}
-
-.dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-  padding: 8px 0;
-}
-
-.dropdown-content a:hover {
-   color: #ffbe33;
-}
-
-</style>
-            <a class="cart_link" href="/user/viewCart">
-              <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  <g>
-                    <g>
-                      <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                    </g>
-                  </g>
-                <g>
-                    <g>
-                      <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                   C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                    </g>
-                  </g>
-                <g>
-                    <g>
-                      <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                    </g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                </svg>
-            </a>
-
-            <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
-              <span class="ml-1" sec:authentication="name"></span>
-
-            </a>
-          </div>
-        </div>
-      </nav>
+    <div class="contact-info d-flex align-items-center">
+      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
     </div>
-  </header>
-  <!-- end header section -->
+
+    <div class="languages d-none d-md-flex align-items-center">
+      <ul>
+        <li>En</li>
+        <li><a href="#">De</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container bootstrap snippets bootdey">
-  <div class="row">
-    <div class="profile-nav col-md-3">
-      <div class="panel">
-        <div class="user-heading round">
-          <a href="#">
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-cente">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
-            <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile">
+    <h1 class="logo me-auto me-lg-0"><a href="index.html">Restaurantly</a></h1>
+    <!-- Uncomment below if you prefer to use an image logo -->
+    <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="/User/img/logo.png" alt="" class="img-fluid"></a>-->
 
-          </a>
-          <h1 th:text="${username}"> </h1>
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <ul>
+        <li th:each="category : ${listCategory}" ><a    th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
+
+        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+          <ul>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+          </ul>
+        </li>
+        <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
+        </a></li>
+        <a class="cart" href="/user/viewCart">
+          <span class="cart-item-count"></span>
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+    <a href="#book-a-table" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</a>
+
+  </div>
+</header><!-- End Header -->
+
+<main id="main">
+
+  <!-- ======= Menu Section ======= -->
+  <section   style="padding-top: 165px;" class="menu section-bg">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <div class="container bootstrap snippets bootdey">
+      <div class="row">
+        <div class="profile-nav col-md-3">
+          <div class="panel">
+            <div class="user-heading round">
+              <a href="#">
+
+                <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
+              </a>
+              <h1 th:text="${username}"> </h1>
+            </div>
+
+            <div class="belowPicInfo" style="padding-block: 15px;">
+              <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
+              <div class="div-link"><a style="color:#89817e;" href="#"><i class="fa fa-edit"></i> Edit profile</a></div>
+
+
+            </div>
+
+
+          </div>
         </div>
-
-        <div class="belowPicInfo" style="padding-block: 15px;">
-          <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
-          <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
-          <div class="div-link"><a style="color:#89817e;" href="#"><i class="fa fa-edit"></i> Edit profile</a></div>
-        </div>
+        <div class="profile-info col-md-9" style="padding-left: 70px;">
+          <div class="panel">
 
 
-      </div>
-    </div>
-    <div class="profile-info col-md-9">
-      <div class="panel">
+          </div>
+          <div class="panel">
+            <div>
+              <h1>Order list</h1>
 
-
-      </div>
-      <div class="panel">
-
-        <div class="panel-body bio-graph-info">
-          <div>
-            <h1>Order list</h1>
-
-            <div class="searchOrder" style="margin-left:110px;margin-top:-55px;margin-bottom:25px;">
-              <form class="search-form" method="post" action="/user/order/search">
-                <input class="search-input" type="text" name="keyword" placeholder="Search" title="Enter search keyword">
-                <button class="search-button" type="submit" title="Search">Search</button>
-              </form>
-              <style>
+              <div class="searchOrder" style="margin-left:200px;margin-top:-55px;margin-bottom:25px;">
+                <form class="search-form" method="post" action="/user/order/search">
+                  <input class="search-input" type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+                  <button class="search-button" type="submit" title="Search">Search</button>
+                </form>
+                <style>
     .search-form {
         display: flex;
         align-items: center;
@@ -235,50 +166,50 @@
         background-color: #555;
     }
 </style>
+              </div>
+
             </div>
 
-          </div>
 
 
 
-
-          <table style="border-collapse: collapse; width: 100%;">
-            <div th:if="${errorMessage}" class="alert alert-danger">
-              <p th:text="${errorMessage}"></p>
-            </div>
-            <thead>
-            <tr style="background-color: #f2f2f2;">
-              <th style="padding: 8px; border: 1px solid #ddd;">NO.</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Order id</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Order Date</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Total Amount</th>
-              <th style="padding: 8px; border: 1px solid #ddd;">Status</th>
-              <th style="padding: 8px; border: 1px solid #ddd;"> </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order, index : ${userOrders}" style="background-color: #fff;">
-              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${index.index + 1}"></td>
-              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${order.code}"></td>
-              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${order.orderDate}"></td>
-              <td style="padding: 8px; border: 1px solid #ddd;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
-              <td style="padding: 8px; border: 1px solid #ddd; color: #000; display: flex; align-items: center;">
-                <span th:text="${order.statusString}" th:style="${order.status == '1' ? 'color: green' : (order.status == '2' ? 'color: blue' : (order.status == '3' ? 'color: red' : 'color: black'))}"></span>
-                <form method="post" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
-                  <div th:if="${order.status != '3'}">
-                    <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
-                  </div>
-                </form>
-              </td>
-              <td style="padding: 8px; border: 1px solid #ddd;">
-                <a th:href="@{/user/orderDetail/{id}(id=${order.id})}">
-                  Detail<i class="bi bi-list"></i>
-                </a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-<style>
+            <table style="border-collapse: collapse; width: 100%; background-color: #0c0b09;">
+              <div th:if="${errorMessage}" class="alert alert-danger">
+                <p th:text="${errorMessage}"></p>
+              </div>
+              <thead style="background-color: #d5a84d">
+              <tr>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Order id</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Order Date</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Total Amount</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Status</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
+              </tr>
+              </thead>
+              <tbody style="background-color: #202020;">
+              <tr th:each="order, index : ${userOrders}">
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${index.index + 1}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.code}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.orderDate}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2; display: flex; align-items: center;">
+                  <span th:text="${order.statusString}" th:style="${order.status == '1' ? 'color: #1cff1c' : (order.status == '2' ? 'color: #01f5ef' : (order.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
+                  <form method="post" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
+                    <div th:if="${order.status != '3'}">
+                      <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
+                    </div>
+                  </form>
+                </td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">
+                  <a th:href="@{/user/orderDetail/{id}(id=${order.id})}">
+                    Detail<i class="bi bi-list"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <style>
   .cancel-button {
     background-color: #ff0000;
     color: #fff;
@@ -292,123 +223,126 @@
 
 
 
-
-
-
-         </div>
+          </div>
       </div>
-
     </div>
-  </div>
-</div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script type="text/javascript">
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
 
-</script>
-<!-- footer section -->
-<footer class="footer_section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 footer-col">
-        <div class="footer_contact">
-          <h4>
-            Contact Us
-          </h4>
-          <div class="contact_link_box">
-            <a href="">
-              <i class="fa fa-map-marker" aria-hidden="true"></i>
-              <span>
-                  123 HCM city
-                </span>
-            </a>
-            <a href="">
-              <i class="fa fa-phone" aria-hidden="true"></i>
-              <span>
-                  Call +84 906303905
-                </span>
-            </a>
-            <a href="">
-              <i class="fa fa-envelope" aria-hidden="true"></i>
-              <span>
-                  xuanloc290901@gmail.com
-                </span>
-            </a>
+    </script>
+    </div>
+  </section><!-- End Menu Section -->
+
+</main>
+
+
+
+
+
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-info">
+            <h3>Xuolo</h3>
+            <p>
+              123 HCM <br>
+              <br><br>
+              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>Email:</strong> xuanloc290901@gmail.com<br>
+            </p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4 footer-col">
-        <div class="footer_detail">
-          <a href="" class="footer-logo">
-            Xuolo
-          </a>
-          <p>
-            Welcome to our restaurant, where you can enjoy the most unique and wonderful culinary experiences.            </p>
-          <div class="footer_social">
-            <a href="">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-linkedin" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-pinterest" aria-hidden="true"></i>
-            </a>
-          </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          </ul>
         </div>
-      </div>
-      <div class="col-md-4 footer-col">
-        <h4>
-          Opening Hours
-        </h4>
-        <p>
-          From Mon - Sat
-        </p>
-        <p>
-          8 Am - 10.00 Pm
-        </p>
-      </div>
 
-    </div>
-    <div class="footer-info">
-      <p>
-        &copy; <span id="displayYear"></span>
-        <a href="https://html.design/"> </a><br><br>
-        &copy; <span id="displayYear"></span>
-        <a href="https://themewagon.com/" target="_blank"> </a>
-      </p>
-    </div>
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
 
+
+
+      </div>
+    </div>
   </div>
-</footer>
-<!-- footer section -->
 
-<!-- jQery -->
-<script src="/User/js/jquery-3.4.1.min.js"></script>
-<!-- popper js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-</script>
-<!-- bootstrap js -->
-<script src="/User/js/bootstrap.js"></script>
-<!-- owl slider -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-</script>
-<!-- isotope js -->
-<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-<!-- nice select -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0//User/js/jquery.nice-select.min.js"></script>
-<!-- custom js -->
-<script src="/User/js/custom.js"></script>
-<!-- Google Map -->
-</script>
+
+</footer><!-- End Footer -->
+
+
+<div id="preloader"></div>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/User/vendor/aos/aos.js"></script>
+<script src="/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/User/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="/User/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="/User/vendor/php-email-form/validate.js"></script>
+<script src="/User/vendor/swiper/swiper-bundle.min.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/User/js/main.js"></script>
+
 <!-- End Google Map -->
+<script>
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Phone numbers must start with 0 and be 10 digits long');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
+</script>
 </body>
 
 </html>

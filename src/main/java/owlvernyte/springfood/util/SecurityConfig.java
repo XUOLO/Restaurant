@@ -69,7 +69,7 @@ public class SecurityConfig {
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/Admin/css/**", "/Admin/js/**", "/Admin/img/**", "/Admin/vendor/**", "/Admin/scss/**").permitAll()
 
-                                .requestMatchers("/User/css/**", "/User/js/**", "/User/images/**", "/User/fonts/**").permitAll()
+                                .requestMatchers("/User/css/**", "/User/js/**","/User/img/**","/User/vendor/**", "/User/images/**", "/User/fonts/**").permitAll()
                                 .requestMatchers("/admin/deleteProduct/*").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").permitAll()
 

@@ -213,7 +213,6 @@ private OrderDetailRepository orderDetailRepository;
 
         } catch (Exception e) {
             e.printStackTrace();
-
             model.addAttribute("errorMessage", "email fail.");
             return "User/ErrorPage";
         }

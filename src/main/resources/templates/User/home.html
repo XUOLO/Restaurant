@@ -2,706 +2,571 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-  <!-- Basic -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <link rel="shortcut icon" href="/User/images/favicon.png" type="">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title> Xuolo </title>
+  <title>Xuolo Bootstrap Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+   <!-- Favicons -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <link href="/User/img/favicon.png" rel="icon">
+  <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="/User/css/bootstrap.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <!-- nice select  -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-  <!-- font awesome style -->
-  <link href="/User/css/font-awesome.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Custom styles for this template -->
-  <link href="/User/css/style.css" rel="stylesheet" />
-  <!-- responsive style -->
-  <link href="/User/css/responsive.css" rel="stylesheet" />
+  <!-- Vendor CSS Files -->
+  <link href="/User/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/User/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/User/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/User/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/User/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+  <!-- Template Main CSS File -->
+  <link href="/User/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Xuolo - v3.1.0
+  * Template URL: https://bootstrapmade.com/Xuolo-restaurant-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
 
 <body>
 
-<div class="hero_area">
-  <div class="bg-box">
-    <img src="/User/images/hero-bg.jpg" alt="">
+<!-- ======= Top Bar ======= -->
+<div id="topbar" class="d-flex align-items-center fixed-top">
+  <div class="container d-flex justify-content-center justify-content-md-between">
+
+    <div class="contact-info d-flex align-items-center">
+      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+    </div>
+
+    <div class="languages d-none d-md-flex align-items-center">
+      <ul>
+        <li>En</li>
+        <li><a href="#">De</a></li>
+      </ul>
+    </div>
   </div>
-  <!-- header section strats -->
-  <header class="header_section">
-    <div class="container">
-      <nav class="navbar navbar-expand-lg custom_nav-container ">
-        <a class="navbar-brand" href="/">
-            <span>
-              Xuolo
-            </span>
-        </a>
- 
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class=""> </span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item" th:classappend="${category.name == 'Home'} ? 'active' : ''" th:each="category : ${listCategory}">
-              <a class="nav-link" th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}"></a>
-            </li>
-          </ul>
-          <div class="user_option">
-            <div class="dropdown">
-              <a href="" class="user_link">
-                <i class="fa fa-user" aria-hidden="true"></i>
-              </a>
-              <div class="dropdown-content">
-                <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a>
-                <a  sec:authorize="!isAuthenticated()"  href="/login">Login</a>
-                <a  sec:authorize="!isAuthenticated()"  href="/user/register">register</a>
-
-               <a   sec:authorize="isAuthenticated()" href="/user/info">Account</a>
-
-              </div>
-            </div>
-<style>
-  .dropdown-content {
-  display: none; /* Ban đầu ẩn dropdownlist */
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
-  z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block; /* Khi di chuột vào icon, hiện dropdownlist */
-}
-
-.dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-  padding: 8px 0;
-}
-
-.dropdown-content a:hover {
-   color: #ffbe33;
-}
-
-</style>
-            <a class="cart_link" href="/user/viewCart">
-              <span class="cart-item-count"></span>
-              <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  <g>
-                    <g>
-                      <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                    </g>
-                  </g>
-                <g>
-                    <g>
-                      <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                   C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                    </g>
-                  </g>
-                <g>
-                    <g>
-                      <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                    </g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                <g>
-                  </g>
-                </svg>
-            </a>
-
-
-
-
-            <a  sec:authorize="isAuthenticated()" class="order_online"   >Hello
-              <span class="ml-1" sec:authentication="name"></span>
-
-            </a>
-
-
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
-  <!-- end header section -->
-  <!-- slider section -->
-  <section class="slider_section ">
-    <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="container ">
-            <div class="row">
-              <div class="col-md-7 col-lg-6 ">
-                <div class="detail-box">
-                  <h1>
-                    BBQ Restaurant
-                  </h1>
-                  <p>
-                  BBQ Restaurant is the ideal destination for food lovers. With a diverse menu of delicious grilled dishes, traditional dishes and rich side dishes, we are committed to bringing you a memorable meal." with unique flavor and excellent quality.
-                  </p>
-                  <div class="btn-box">
-                    <a href="" class="btn1">
-                      Order Now
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item ">
-          <div class="container ">
-            <div class="row">
-              <div class="col-md-7 col-lg-6 ">
-                <div class="detail-box">
-                  <h1>
-                    BBQ Restaurant
-                  </h1>
-                  <p>
-                    Professional service and cozy space at BBQ Restaurant will make you feel like you are enjoying a meal at your beloved home. With our enthusiastic and attentive staff, we will ensure you have a wonderful culinary experience and feel comfortable from the moment you set foot in the restaurant until the moment you leave.                  </p>
-                  <div class="btn-box">
-                    <a href="" class="btn1">
-                      Order Now
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="container ">
-            <div class="row">
-              <div class="col-md-7 col-lg-6 ">
-                <div class="detail-box">
-                  <h1>
-                    BBQ Restaurant
-                  </h1>
-                  <p>
-                    BBQ Restaurant brings an exciting experience with unique flavors. With the perfect combination of delicious food, comfortable space and dedicated service, we are committed to bringing you wonderful culinary experiences. Let's explore the world of BBQ and enjoy excellent dishes at our restaurant.
-                  </p>
-                  <div class="btn-box">
-                    <a href="" class="btn1">
-                      Order Now
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <ol class="carousel-indicators">
-          <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
-          <li data-target="#customCarousel1" data-slide-to="1"></li>
-          <li data-target="#customCarousel1" data-slide-to="2"></li>
-        </ol>
-      </div>
-    </div>
-
-  </section>
-  <!-- end slider section -->
 </div>
 
-<!-- offer section -->
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-cente">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
-<section class="offer_section layout_padding-bottom">
-  <div class="offer_container">
-    <div class="container ">
-      <div class="row">
-        <div class="col-md-6  ">
-          <div class="box ">
-            <div class="img-box">
-              <img src="/User/images/nuong/ca.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Tasty Thursdays
-              </h5>
-              <h6>
-                <span>20%</span> Off
-              </h6>
-              <a href="">
-                Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                    <g>
-                      <g>
-                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                      </g>
-                    </g>
-                <g>
-                      <g>
-                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                      </g>
-                    </g>
-                <g>
-                      <g>
-                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                      </g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                  </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6  ">
-          <div class="box ">
-            <div class="img-box">
-              <img src="/User/images/Hotpot/Tom yum.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Pizza Days
-              </h5>
-              <h6>
-                <span>15%</span> Off
-              </h6>
-              <a href="">
-                Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                    <g>
-                      <g>
-                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                      </g>
-                    </g>
-                <g>
-                      <g>
-                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                      </g>
-                    </g>
-                <g>
-                      <g>
-                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                      </g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                <g>
-                    </g>
-                  </svg>
-              </a>
-            </div>
-          </div>
+    <h1 class="logo me-auto me-lg-0"><a href="/">Xuolo</a></h1>
+    <!-- Uncomment below if you prefer to use an image logo -->
+    <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="/User/img/logo.png" alt="" class="img-fluid"></a>-->
+
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <ul>
+        <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Home'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
+
+        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+          <ul>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+          </ul>
+        </li>
+         <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
+        </a></li>
+        <a class="cart" href="/user/viewCart">
+          <span class="cart-item-count"></span>
+          <i class="fa-solid fa-cart-shopping"></i>
+         </a>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+    <a href="#book-a-table" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</a>
+
+  </div>
+</header><!-- End Header -->
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+  <div class="container position-relative text-center text-lg-start" data-aos="zoom-in" data-aos-delay="100">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1>Welcome to <span>Xuolo</span></h1>
+        <h2>Delivering great food for more than 18 years!</h2>
+
+        <div class="btns">
+          <a href="#menu" class="btn-menu animated fadeInUp scrollto">Our Menu</a>
+          <a href="#book-a-table" class="btn-book animated fadeInUp scrollto">Book a Table</a>
         </div>
       </div>
+      <div class="col-lg-4 d-flex align-items-center justify-content-center position-relative" data-aos="zoom-in" data-aos-delay="200">
+        <a href="https://www.youtube.com/watch?v=GlrxcuEDyF8" class="glightbox play-btn"></a>
+      </div>
+
     </div>
   </div>
-</section>
+</section><!-- End Hero -->
 
-<!-- end offer section -->
+<main id="main">
 
-<!-- food section -->
+  <!-- ======= About Section ======= -->
+  <section id="about" class="about">
+    <div class="container" data-aos="fade-up">
 
-<section class="food_section layout_padding-bottom">
-  <div class="container">
-    <div class="heading_container heading_center">
-      <h2>
-        Our Menu
-      </h2>
+      <div class="row">
+        <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="100">
+          <div class="about-img">
+            <img src="/User/img/about.jpg" alt="">
+          </div>
+        </div>
+        <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
+          <h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
+          <p class="fst-italic">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            magna aliqua.
+          </p>
+          <ul>
+            <li><i class="bi bi-check-circle"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
+            <li><i class="bi bi-check-circle"></i> Duis aute irure dolor in reprehenderit in voluptate velit.</li>
+            <li><i class="bi bi-check-circle"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</li>
+          </ul>
+          <p>
+            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum
+          </p>
+        </div>
+      </div>
+
     </div>
+  </section><!-- End About Section -->
 
-    <ul class="filters_menu">
-      <li class="active" data-filter="*">All</li>
-      <li  th:each="productCategory : ${listProductCategory}" th:text="${productCategory.name}" th:attr="data-filter='.' + ${productCategory.name}">
+  <!-- ======= Why Us Section ======= -->
+  <section id="why-us" class="why-us">
+    <div class="container" data-aos="fade-up">
 
-    </ul>
+      <div class="section-title">
+        <h2>Why Us</h2>
+        <p>Why Choose Our Restaurant</p>
+      </div>
 
-    <div class="filters-content">
-      <div class="row grid">
+      <div class="row">
 
-        <div th:each="list : ${listProduct}" th:class="'col-sm-6 col-lg-4 all ' + ${list.productCategory.name}"  >
-          <div class="box">
-            <div>
-              <div class="img-box">
-                <img height="100px" th:if="${list.image != null}" th:src="@{'/display?id=' + ${list.id}}" alt="">
-                <img height="100px" th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+        <div class="col-lg-4">
+          <div class="box" data-aos="zoom-in" data-aos-delay="100">
+            <span>01</span>
+            <h4>Lorem Ipsum</h4>
+            <p>Ulamco laboris nisi ut aliquip ex ea commodo consequat. Et consectetur ducimus vero placeat</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+          <div class="box" data-aos="zoom-in" data-aos-delay="200">
+            <span>02</span>
+            <h4>Repellat Nihil</h4>
+            <p>Dolorem est fugiat occaecati voluptate velit esse. Dicta veritatis dolor quod et vel dire leno para dest</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+          <div class="box" data-aos="zoom-in" data-aos-delay="300">
+            <span>03</span>
+            <h4> Ad ad velit qui</h4>
+            <p>Molestiae officiis omnis illo asperiores. Aut doloribus vitae sunt debitis quo vel nam quis</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Why Us Section -->
+
+  <!-- ======= Menu Section ======= -->
+  <section id="menu" class="menu section-bg">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>Menu</h2>
+        <p>Check Our Tasty Menu</p>
+      </div>
+
+      <div class="row" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-12 d-flex justify-content-center">
+          <ul id="menu-flters">
+            <li data-filter="*" class="filter-active">All</li>
+            <li th:attr="data-filter='.filter-' + ${productCategory.name}" th:each="productCategory : ${listProductCategory}" th:text="${productCategory.name}">Starters</li>
+
+          </ul>
+        </div>
+      </div>
+
+      <div class="row menu-container" data-aos="fade-up" data-aos-delay="200">
+
+        <div th:class="'col-lg-6 menu-item filter-'+ ${list.productCategory.name}" th:each="list : ${listProduct}">
+
+          <img class="menu-img"  th:if="${list.image != null}" th:src="@{'/display?id=' + ${list.id}}" alt="">
+          <img class="menu-img"   th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+          <div class="menu-content">
+            <a href="#" th:text="${list.name}"> </a><span th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}" > </span>
+          </div>
+          <div class="menu-ingredients"th:text="${list.description}">
+
+          </div>
+            <a href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${list.id}">
+               + Add to cart
+<!--             <i class="fa-solid fa-cart-shopping"></i>-->
+           </a>
+        </div>
+
+
+
+      </div>
+
+    </div>
+  </section><!-- End Menu Section -->
+
+  <!-- ======= Specials Section ======= -->
+  <section id="specials" class="specials">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>Specials</h2>
+        <p>Check Our Specials</p>
+      </div>
+
+      <div class="row" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-3">
+          <ul class="nav nav-tabs flex-column">
+            <li class="nav-item">
+              <a class="nav-link active show" data-bs-toggle="tab" href="#tab-1">Modi sit est</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#tab-2">Unde praesentium sed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#tab-3">Pariatur explicabo vel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#tab-4">Nostrum qui quasi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#tab-5">Iusto ut expedita aut</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-9 mt-4 mt-lg-0">
+          <div class="tab-content">
+            <div class="tab-pane active show" id="tab-1">
+              <div class="row">
+                <div class="col-lg-8 details order-2 order-lg-1">
+                  <h3>Architecto ut aperiam autem id</h3>
+                  <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer a videna mareta paulona marka</p>
+                  <p>Et nobis maiores eius. Voluptatibus ut enim blanditiis atque harum sint. Laborum eos ipsum ipsa odit magni. Incidunt hic ut molestiae aut qui. Est repellat minima eveniet eius et quis magni nihil. Consequatur dolorem quaerat quos qui similique accusamus nostrum rem vero</p>
+                </div>
+                <div class="col-lg-4 text-center order-1 order-lg-2">
+                  <img src="/User/img/specials-1.png" alt="" class="img-fluid">
+                </div>
               </div>
-              <div class="detail-box">
-                <h5 th:text="${list.name}">
-
-                 </h5>
-                <p th:text="${list.description}">
-                 </p>
-                <div class="options">
-                  <h6 th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}" >
-
-                  </h6>
-                  <a href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${list.id}">
-                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                        <g>
-                          <g>
-                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                          </g>
-                        </g>
-                      <g>
-                          <g>
-                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                          </g>
-                        </g>
-                      <g>
-                          <g>
-                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                          </g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      <g>
-                        </g>
-                      </svg>
-                  </a>
+            </div>
+            <div class="tab-pane" id="tab-2">
+              <div class="row">
+                <div class="col-lg-8 details order-2 order-lg-1">
+                  <h3>Et blanditiis nemo veritatis excepturi</h3>
+                  <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer a videna mareta paulona marka</p>
+                  <p>Ea ipsum voluptatem consequatur quis est. Illum error ullam omnis quia et reiciendis sunt sunt est. Non aliquid repellendus itaque accusamus eius et velit ipsa voluptates. Optio nesciunt eaque beatae accusamus lerode pakto madirna desera vafle de nideran pal</p>
+                </div>
+                <div class="col-lg-4 text-center order-1 order-lg-2">
+                  <img src="/User/img/specials-2.png" alt="" class="img-fluid">
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-3">
+              <div class="row">
+                <div class="col-lg-8 details order-2 order-lg-1">
+                  <h3>Impedit facilis occaecati odio neque aperiam sit</h3>
+                  <p class="fst-italic">Eos voluptatibus quo. Odio similique illum id quidem non enim fuga. Qui natus non sunt dicta dolor et. In asperiores velit quaerat perferendis aut</p>
+                  <p>Iure officiis odit rerum. Harum sequi eum illum corrupti culpa veritatis quisquam. Neque necessitatibus illo rerum eum ut. Commodi ipsam minima molestiae sed laboriosam a iste odio. Earum odit nesciunt fugiat sit ullam. Soluta et harum voluptatem optio quae</p>
+                </div>
+                <div class="col-lg-4 text-center order-1 order-lg-2">
+                  <img src="/User/img/specials-3.png" alt="" class="img-fluid">
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-4">
+              <div class="row">
+                <div class="col-lg-8 details order-2 order-lg-1">
+                  <h3>Fuga dolores inventore laboriosam ut est accusamus laboriosam dolore</h3>
+                  <p class="fst-italic">Totam aperiam accusamus. Repellat consequuntur iure voluptas iure porro quis delectus</p>
+                  <p>Eaque consequuntur consequuntur libero expedita in voluptas. Nostrum ipsam necessitatibus aliquam fugiat debitis quis velit. Eum ex maxime error in consequatur corporis atque. Eligendi asperiores sed qui veritatis aperiam quia a laborum inventore</p>
+                </div>
+                <div class="col-lg-4 text-center order-1 order-lg-2">
+                  <img src="/User/img/specials-4.png" alt="" class="img-fluid">
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab-5">
+              <div class="row">
+                <div class="col-lg-8 details order-2 order-lg-1">
+                  <h3>Est eveniet ipsam sindera pad rone matrelat sando reda</h3>
+                  <p class="fst-italic">Omnis blanditiis saepe eos autem qui sunt debitis porro quia.</p>
+                  <p>Exercitationem nostrum omnis. Ut reiciendis repudiandae minus. Omnis recusandae ut non quam ut quod eius qui. Ipsum quia odit vero atque qui quibusdam amet. Occaecati sed est sint aut vitae molestiae voluptate vel</p>
+                </div>
+                <div class="col-lg-4 text-center order-1 order-lg-2">
+                  <img src="/User/img/specials-5.png" alt="" class="img-fluid">
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
+    </div>
+  </section><!-- End Specials Section -->
+
+
+
+  <!-- ======= Gallery Section ======= -->
+  <section id="gallery" class="gallery">
+
+    <div class="container" data-aos="fade-up">
+      <div class="section-title">
+        <h2>Gallery</h2>
+        <p>Some photos from Our Restaurant</p>
       </div>
     </div>
-    <div class="btn-box">
-      <a href="">
-        View More
-      </a>
-    </div>
-  </div>
-</section>
 
-<!-- end food section -->
+    <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
 
-<!-- about section -->
+      <div class="row g-0">
 
-<section class="about_section layout_padding">
-  <div class="container  ">
-
-    <div class="row">
-      <div class="col-md-6 ">
-        <div class="img-box">
-          <img src="/User/images/about-img.png" alt="">
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="detail-box">
-          <div class="heading_container">
-            <h2>
-              We Are Xuolo
-            </h2>
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-1.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-1.jpg" alt="" class="img-fluid">
+            </a>
           </div>
-          <p>
-            There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-            in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-            are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in
-            the middle of text. All
-          </p>
-          <a href="">
-            Read More
-          </a>
         </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-2.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-2.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-3.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-3.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-4.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-4.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-5.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-5.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-6.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-6.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-7.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-7.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <div class="gallery-item">
+            <a href="/User/img/gallery/gallery-8.jpg" class="gallery-lightbox" data-gall="gallery-item">
+              <img src="/User/img/gallery/gallery-8.jpg" alt="" class="img-fluid">
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Gallery Section -->
+
+  <!-- ======= Chefs Section ======= -->
+  <section id="chefs" class="chefs">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>Chefs</h2>
+        <p>Our Proffesional Chefs</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-lg-4 col-md-6">
+          <div class="member" data-aos="zoom-in" data-aos-delay="100">
+            <img src="/User/img/chefs/chefs-1.jpg" class="img-fluid" alt="">
+            <div class="member-info">
+              <div class="member-info-content">
+                <h4>Walter White</h4>
+                <span>Master Chef</span>
+              </div>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="member" data-aos="zoom-in" data-aos-delay="200">
+            <img src="/User/img/chefs/chefs-2.jpg" class="img-fluid" alt="">
+            <div class="member-info">
+              <div class="member-info-content">
+                <h4>Sarah Jhonson</h4>
+                <span>Patissier</span>
+              </div>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="member" data-aos="zoom-in" data-aos-delay="300">
+            <img src="/User/img/chefs/chefs-3.jpg" class="img-fluid" alt="">
+            <div class="member-info">
+              <div class="member-info-content">
+                <h4>William Anderson</h4>
+                <span>Cook</span>
+              </div>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Chefs Section -->
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-info">
+            <h3>Xuolo</h3>
+            <p>
+              123 HCM <br>
+              <br><br>
+              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>Email:</strong> xuanloc290901@gmail.com<br>
+            </p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+
+
       </div>
     </div>
   </div>
-</section>
 
-<!-- end about section -->
-
-
-<!-- client section -->
-
-<section class="client_section layout_padding-bottom">
   <div class="container">
-    <div class="heading_container heading_center psudo_white_primary mb_45">
-      <h2>
-        What Says Our Customers
-      </h2>
+    <div class="copyright">
+      &copy; Copyright <strong><span>Xuolo</span></strong>. All Rights Reserved
     </div>
-    <div class="carousel-wrap row ">
-      <div class="owl-carousel client_owl-carousel">
-        <div class="item">
-          <div class="box">
-            <div class="detail-box">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-              </p>
-              <h6>
-                Moana Michell
-              </h6>
-              <p>
-                magna aliqua
-              </p>
-            </div>
-            <div class="img-box">
-              <img src="/User/images/client1.jpg" alt="" class="box-img">
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="box">
-            <div class="detail-box">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-              </p>
-              <h6>
-                Mike Hamell
-              </h6>
-              <p>
-                magna aliqua
-              </p>
-            </div>
-            <div class="img-box">
-              <img src="/User/images/client2.jpg" alt="" class="box-img">
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/Xuolo-restaurant-template/ -->
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </div>
-</section>
+</footer><!-- End Footer -->
 
-<!-- end client section -->
+<div id="preloader"></div>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-<!-- footer section -->
-<footer class="footer_section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 footer-col">
-        <div class="footer_contact">
-          <h4>
-            Contact Us
-          </h4>
-          <div class="contact_link_box">
-            <a href="">
-              <i class="fa fa-map-marker" aria-hidden="true"></i>
-              <span>
-                  123 HCM city
-                </span>
-            </a>
-            <a href="">
-              <i class="fa fa-phone" aria-hidden="true"></i>
-              <span>
-                  Call +84 906303905
-                </span>
-            </a>
-            <a href="">
-              <i class="fa fa-envelope" aria-hidden="true"></i>
-              <span>
-                  xuanloc290901@gmail.com
-                </span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 footer-col">
-        <div class="footer_detail">
-          <a href="" class="footer-logo">
-            Xuolo
-          </a>
-          <p>
-            Welcome to our restaurant, where you can enjoy the most unique and wonderful culinary experiences.            </p>
-          </p>
-          <div class="footer_social">
-            <a href="">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-linkedin" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-instagram" aria-hidden="true"></i>
-            </a>
-            <a href="">
-              <i class="fa fa-pinterest" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 footer-col">
-        <h4>
-          Opening Hours
-        </h4>
-        <p>
-          From Mon - Sat
-        </p>
-        <p>
-          8 Am - 10.00 Pm
-        </p>
-      </div>
-    </div>
-    <div class="footer-info">
-      <p>
-        &copy; <span id="displayYear"></span>
-        <a href="https://html.design/"> </a><br><br>
-        &copy; <span id="displayYear"></span>
-        <a href="https://themewagon.com/" target="_blank"> </a>
-      </p>
-    </div>
-  </div>
-</footer>
-<!-- footer section -->
-
-<!-- jQery -->
+<!-- Vendor JS Files -->
+<script src="/User/vendor/aos/aos.js"></script>
+<script src="/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/User/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="/User/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="/User/vendor/php-email-form/validate.js"></script>
+<script src="/User/vendor/swiper/swiper-bundle.min.js"></script>
 <script src="/User/js/jquery-3.4.1.min.js"></script>
-<!-- popper js -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-</script>
-<!-- bootstrap js -->
-<script src="/User/js/bootstrap.js"></script>
-<!-- owl slider -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-</script>
-<!-- isotope js -->
-<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-<!-- nice select -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-<!-- custom js -->
-<script src="/User/js/custom.js"></script>
-<!-- Google Map -->
-</script>
-<!-- End Google Map -->
 
+<!-- Template Main JS File -->
+<script src="/User/js/main.js"></script>
 <script>
     $(document).ready(function() {
         $('.add-to-cart-btn').click(function() {
@@ -712,6 +577,7 @@
                 url: '/user/shoppingCart/add/' + productId,
                 success: function(response) {
                     // Xử lý kết quả thành công
+                    alert('Đã   thêm vào giỏ hàng');
                     updateCartItemCount();
                 },
                 error: function() {
