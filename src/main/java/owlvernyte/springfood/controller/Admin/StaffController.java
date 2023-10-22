@@ -102,7 +102,6 @@ public class StaffController {
             model.addAttribute("username", username);
             model.addAttribute("isAdmin", isAdmin);
             model.addAttribute("isEmployee", isEmployee);
-            // Truyền thông tin người dùng vào Model để hiển thị trên giao diện
             model.addAttribute("user", user);
             model.addAttribute("roles", user.getRoles());
             model.addAttribute("listRole", roleService.getAllRole());

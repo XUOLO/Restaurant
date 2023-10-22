@@ -53,6 +53,24 @@ public class BookingController {
     private BookingDetailRepository bookingDetailRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private CategoryService categoryService;
+
+    @GetMapping("/user/BookATable")
+    public String showTable(Model model, HttpSession session){
+
+        String username = (String) session.getAttribute("username");
+        String name = (String) session.getAttribute("name");
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("listCategory",categoryService.getAllCategory());
+        return "User/reservation";
+
+    }
     @GetMapping("/user/showReservation/{id}")
     public String viewReservation(Model model, Principal principal, HttpSession session,@PathVariable(value = "id") long id) {
 
@@ -82,6 +100,7 @@ public class BookingController {
                 ReservationItem reservationItem = new ReservationItem();
                 reservationItem.setProductId(product.getId());
                 reservationItem.setName(product.getName());
+                reservationItem.setImage(product.getImage());
                 reservationItem.setPrice(product.getPrice());
                 reservationItem.setQuantity(product.getQuantity());
                  reservationItem.setProductCategory(product.getProductCategory().getName());
@@ -93,6 +112,13 @@ public class BookingController {
         model.addAttribute("username", username);
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
+
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("listCategory",categoryService.getAllCategory());
 
         return "User/booking";
     }
