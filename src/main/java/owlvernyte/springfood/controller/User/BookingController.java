@@ -182,7 +182,7 @@ public class BookingController {
         if (!errorMessages.isEmpty()) {
             // Có ít nhất một sản phẩm không đủ số lượng, thực hiện xử lý thông báo lỗi, ví dụ: đẩy danh sách thông báo lỗi vào model và trả về trang lỗi
             model.addAttribute("errorMessages", errorMessages);
-            return "User/ErrorPage";
+            return "User/ErrorPageBooking";
         }
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;
@@ -196,7 +196,7 @@ public class BookingController {
             return "redirect:" + referer;
         }
         if (bookingRepository.existsByDateTime(booking.getDateTime())) {
-            redirectAttributes.addFlashAttribute("DuplicateDate", "DuplicateDate DuplicateDate");
+            redirectAttributes.addFlashAttribute("DuplicateDate", "The selected time is already booked. Please choose another time.");
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }else

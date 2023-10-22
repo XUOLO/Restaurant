@@ -70,7 +70,7 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-                <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Menu'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" >Home</a></li>
+                <li th:each="category : ${listCategory}" ><a th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" >Home</a></li>
 
                 <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
@@ -103,10 +103,11 @@
     width: 100%;
     padding: 20px;">
             <h2>Table info</h2>
-            <form th:object="${reservation}" method="POST" action="/user/bookReservation">
+            <form th:object="${reservation}" method="POST" action="/user/bookReservation" >
+
                 <p type="hidden" th:field="*{id}" />
-                <p type="text"  id="name" name="name" th:text="*{name}"  ></p>
-                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="*{numberOfPeople}"  ></p>
+                <p type="text"  id="name" name="name" th:text="'Table: '+ *{name}"  ></p>
+                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="'Number of people: ' + *{numberOfPeople}"  ></p>
 
                 <p type="text"  id="detail" name="detail" th:text="*{detail}" ></p>
                 <p type="text"  id="description" name="description" th:text="*{description}" ></p>
@@ -114,54 +115,218 @@
             </form>
         </div>
 
-        <table class="items">
-            <thead>
-            <tr>
-                <th>Product</th>
-                <th>Product Category</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-                <th> </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${allReservationItem}">
-                <td>
-                    <div class="product-info">
-                        <div class="product-image">
-                            <img class="img-fluid mx-auto d-block"style="width:100px; height:100px;" th:if="${item.image != null}" th:src="@{'/display?id=' + ${item.productId}}" alt="">
-                            <img class="img-fluid mx-auto d-block"style="width:100px; height:100px;" th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
-                        </div>
-                        <div class="product-name">
-                            <a th:text="${item.name}"> </a>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <span class="product-category" th:text="${item.productCategory}">5 inch</span>
-                </td>
-                <td>
-                    <form action="#" th:action="@{/user/booking/updateBooking}" method="POST">
-                        <input type="hidden" th:name="productId" th:value="${item.productId}">
-                        <input type="hidden" th:name="id" th:value="${id}">
-                        <input class="form-control quantity-input" type="number" min="1" th:name="quantity" th:value="${item.quantity}" onblur="this.form.submit()" style="width:85px;">
-                    </form>
-                </td>
-                <td>
-                    <span th:text="${#numbers.formatInteger(item.price,3,'POINT')+' VND'}"></span>
-                </td>
-                <td>
-                    <span th:text="${#numbers.formatInteger(item.price * item.quantity,3,'POINT')+' VND'}"></span>
-                </td>
-                <td>
-                    <a th:href="@{/user/booking/remove/{id}(id=${item.productId})}" class="btn btn-danger">Remove</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <span class="price" th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span>
-        <div class="checkout-container">
+        <h2 class="list-dishes" style="margin-left: 50px;">List dishes <span class="total-price" style="margin-left: 10%;" th:text="'Total: '+${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span></h2>
+
+        <div class="menu-list" style=" background-color: #0c0b09;
+    width: 40%;
+    float: left;
+    overflow-y: scroll;
+    height: 400px;
+    padding: 20px;">
+           <style>
+
+
+ .checkout-container {
+        margin-left: 45%;
+    }
+
+    .address-section {
+            margin-top: -41px;
+    }
+
+    .address-section h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .has-error input[type="datetime-local"] {
+        border-color: red;
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+.table-info {
+    background-color: #1a1814;
+    color:white;
+    text-align:center;
+    width: 100%;
+    padding: 20px;
+}
+
+
+.customer-info {
+    background-color: #ffffff;
+    width: 50%;
+    float: right;
+    padding: 20px;
+}
+
+.menu-items {
+    margin-bottom: 20px;
+}
+
+
+
+.menu-items p {
+    margin-bottom: 5px;
+}
+
+.menu-items input {
+    margin-bottom: 10px;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.menu-image {
+    width: 100px;
+    height: 100px;
+}
+
+
+
+.table-info h2 {
+    margin-bottom: 20px;
+}
+
+.customer-info h2 {
+    margin-bottom: 30px;
+}
+
+.menu-items h3 {
+    color:#fff;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+         margin-right: 100px;
+}
+
+.menu-items p {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.menu-items input {
+    color: black;
+    font-family: Arial, sans-serif;
+    margin-top: 85px;
+    font-size: 16px;
+    margin-left: -5%;
+}
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+input[type="email"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+button[type="submit"] {
+    color: #ffffff;
+}
+
+.menu-image {
+    border-radius: 5px;
+}
+
+.menu-items img {
+    border: 1px solid #ccc;
+}
+.menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border: 1px solid #cda45e;
+    margin-bottom: 50px;
+    height: 130px;
+}
+
+.menu-item {
+    width: 50%;
+    border-radius: 5px;
+}
+.price {
+margin-bottom: -30px;
+color:#cda45e;
+}
+
+    </style>
+
+           <ul th:each="item : ${allReservationItem}">
+               <li class="menu-items">
+                   <div>
+                       <img class="menu-image"style="width:100px; height:100px;" th:if="${item.image != null}" th:src="@{'/display?id=' + ${item.productId}}" alt="">
+                       <img class="menu-image"style="width:100px; height:100px;" th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
+                       <div class="price" th:text="${#numbers.formatInteger(item.price,3,'POINT')+' VND'}">Giá: $10</div>
+                   </div>
+                   <div class="product-info" style="text-align: start;width: 50%;margin-right: 117px;">
+                       <h3 class="name" th:text="'Name: ' + ${item.name}"></h3>
+                       <h3 class="category"th:text="'Category: '+${item.productCategory}"></h3>
+
+                   </div>
+
+
+
+
+                   <form action="#" th:action="@{/user/booking/updateBooking}" method="POST">
+                       <input type="hidden" th:name="productId" th:value="${item.productId}">
+                       <input type="hidden" th:name="id" th:value="${id}">
+                       <input class="form-control quantity-input" type="number" min="1" th:name="quantity" th:value="${item.quantity}" onblur="this.form.submit()" style="width:85px;">
+                   </form>
+               </li>
+
+           </ul>
+
+       </div>
+
+
+
+
+        <div class="checkout-container" style="margin-left: 41%;">
             <div class="address-section">
                 <h2>Address Information</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">
@@ -193,7 +358,7 @@
 
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                    <button type="submit">Place order</button>
+                    <button type="submit" style="background-color:#cda45e;">Place order</button>
                 </form>
             </div>
 
