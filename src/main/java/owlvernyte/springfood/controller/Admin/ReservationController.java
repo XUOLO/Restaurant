@@ -3,6 +3,7 @@ package owlvernyte.springfood.controller.Admin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.apache.regexp.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -129,5 +130,35 @@ public class ReservationController {
         this.reservationService.deleteReservationById(id);
         return "redirect:/admin/list_reservation";
     }
+    @GetMapping("/admin/showFormForUpdateReservation/{id}")
+    public String showFormForUpdateSP(Authentication authentication,@PathVariable(value = "id") long id, Model model) {
+        Reservation reservation = reservationService.getReservationById(id);
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("listReservationCategory", reservationCategoryService.getAllReservationCategory());
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
 
+        return "Admin/update_reservation";
+    }
+
+
+    @PostMapping("/admin/updateReservation")
+    public String updateProduct(@ModelAttribute("reservation") @Valid  Reservation reservation, BindingResult bindingResult,
+                                Model model,
+                                @RequestParam("image") MultipartFile file) throws IOException, SerialException, SQLException {
+
+        if (file.isEmpty()) {
+            reservation.setImage(null);
+        } else {
+            byte[] bytes = file.getBytes();
+            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+            reservation.setImage(blob);
+        }
+
+        reservationService.saveReservation(reservation);
+        return "redirect:/admin/list_reservation";
+
+    }
 }

@@ -234,18 +234,17 @@ public class UserInfoController {
 
         List<Order> userOrders = orderService.searchOrders(userId, keyword);
 
-        // Check if the search results are empty.
+
         if (userOrders.isEmpty()) {
-            // Display an error message to the user.
+
             String errorMessage = "No matching orders found";
             model.addAttribute("errorMessage", errorMessage);
             return findPaginatedUserOrder(1,model,"name","asc",session,principal);
         } else {
-            // Add the search results to the model.
-            model.addAttribute("userOrders", userOrders);
+             model.addAttribute("userOrders", userOrders);
         }
 
-        // Return the search results page.
+
         return "User/userSearchOrder";
     }
 
