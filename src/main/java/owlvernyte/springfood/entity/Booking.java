@@ -29,8 +29,6 @@ public class Booking {
 
     @Column(name = "customer_name")
     private String name;
-
-
     @Column(name = "phone")
     private String phone;
 

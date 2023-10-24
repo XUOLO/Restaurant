@@ -1,17 +1,15 @@
 package owlvernyte.springfood.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import owlvernyte.springfood.entity.Booking;
-import owlvernyte.springfood.entity.CartItem;
-import owlvernyte.springfood.entity.Product;
-import owlvernyte.springfood.entity.ReservationItem;
+import owlvernyte.springfood.entity.*;
 import owlvernyte.springfood.repository.BookingRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BookingService {
@@ -68,14 +66,44 @@ public class BookingService {
                 .mapToDouble(item->item.getQuantity()*item.getPrice()).sum();
     }
 
-@Autowired
-private BookingRepository bookingRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
     public void saveBooking(Booking booking) {
 
         this.bookingRepository.save(booking);
 
     }
 
+    public List<Booking> getAllBooking() {
+        return bookingRepository.findAll();
+    }
+    public Page<Booking> findPaginatedBooking(int pageNo, int pageSize, String sortField, String sortDirection){
+        Sort sort= sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending():
+                Sort.by(sortField).descending();
 
 
+        Pageable pageable= PageRequest.of(pageNo - 1,pageSize,sort);
+        return this.bookingRepository.findAll(pageable);
+    }
+
+
+    public Booking getBookingById(long id) {
+        Optional<Booking> optional = bookingRepository.findById(id);
+        Booking booking = null;
+        if (optional.isPresent()) {
+            booking = optional.get();
+        }
+        else
+        {
+            throw new RuntimeException(" Cant find booking id : " + id);
+        }
+        return booking;
+    }
+    public List<Booking> searchBookingAdmin(String keyword) {
+
+        if(keyword!=null){
+            return bookingRepository.findAll(keyword);
+        }
+        return bookingRepository.findAll();
+    }
 }

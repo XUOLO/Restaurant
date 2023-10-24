@@ -122,7 +122,7 @@ public class OrderController {
     }
 
     @PostMapping("/admin/order/search")
-    public String searchTicket(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+    public String searchOrder(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
         String username = authentication.getName();
         model.addAttribute("listStaff", userService.getAllUser());
         model.addAttribute("listRole", roleService.getAllRole());
