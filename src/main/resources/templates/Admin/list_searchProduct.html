@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div  layout:fragment="search-bar" class="search-bar">
+  <form class="search-form d-flex align-items-center" method="post" action="/admin/product/search">
+    <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+  </form>
+</div>
+<main id="main" layout:fragment="main"class="main">
+
+
+
+  <!-- Top Selling -->
+
+  <div class="card top-selling overflow-auto">
+
+
+
+    <div class="card-body pb-0">
+      <h5 class="card-title">List product <a href="/admin/new_product"><button type="button" class="btn btn-primary">Add Product</button></a><a class="btn btn-primary excel" style="margin-left: 70%;margin-right: 1%;background-color: green;" href="/admin/exportDishes-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportDishes-pdf">Export to pdf</a>
+      </h5>
+
+      <table class="table table-borderless">
+        <thead>
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Name</th>
+          <th scope="col">Product category</th>
+
+          <th scope="col">Quantity</th>
+          <th scope="col">Create date</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+          <th scope="col"> </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${listProduct}">
+          <td>
+            <img height="100px" th:if="${list.image != null}" th:src="@{'/display?id=' + ${list.id}}" alt="">
+            <img height="100px" th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+          </td>
+          <td th:text="${list.name}"></td>
+          <td th:text="${list.productCategory.name}"></td>
+          <td th:text="${list.quantity}"></td>
+
+
+
+          <td th:text="${#temporals.format(list.createTime, 'dd/MM/yyyy')}">Create date</td>
+          <td th:text="${list.description}"></td>
+          <td th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}"></td>
+          <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : 'color: red'}">Status</td>
+
+          <td>
+            <form method="POST" th:object="${product}" th:action="@{/admin/{id}/updateStatus(id=${list.id})}">
+              <select name="status" onchange="submit()" class="custom-select">
+                <option value="1" th:selected="${list.status == '1'}" >Selling</option>
+                <option value="2" th:selected="${list.status == '2'}">Not Selling</option>
+              </select>
+            </form>
+          </td>
+          <td sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">
+            <a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/admin/deleteProduct/{id}(id=${list.id})}">
+              <i style="color:red;" class="bx bxs-trash"></i>
+            </a>
+            <a sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')" th:href="@{/admin/showFormForUpdateProduct/{id}(id=${list.id})}">
+              <i style="color:blue;" class="bx bxs-pencil"></i>
+            </a>
+          </td>
+
+
+        </tr>
+
+        </tbody>
+      </table>
+      <div th:if="${totalPages > 1}">
+        <div class="d-flex justify-content-between col-md-6">
+          <div class="col-md-4 text-center">
+            <span th:if="${currentPage > 1}">
+                <a th:href="@{/admin/pageProduct/} + ${currentPage - 1}">Last</a>
+            </span>
+            <span hidden  th:unless="${currentPage > 1}">Last</span>
+          </div>
+          <div class="col-md-4 text-center">
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}" th:href="@{/admin/pageProduct/} + ${i}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+          </div>
+          <div class="col-md-4 text-center">
+            <span th:if="${currentPage < totalPages}">
+                <a th:href="@{/admin/pageProduct/} + ${currentPage + 1}">Next</a>
+            </span>
+            <span th:unless="${currentPage < totalPages}">Next</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- End Top Selling -->
+
+
+
+
+  <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+</main>
+</body>
+</html>

@@ -4,6 +4,7 @@ package owlvernyte.springfood.controller.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.OrderDetail;
+import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.OrderRepository;
 import owlvernyte.springfood.repository.ProductCategoryRepository;
@@ -105,9 +107,55 @@ public class UserInfoController {
         model.addAttribute("userOrders", userOrders);
 
 
-        return "User/userOrderInfo";
+        return findPaginatedUserOrder(1,model,"name","asc",session,principal);
     }
+    @GetMapping("/user/pageUserOrder/{pageNo}")
+    public String findPaginatedUserOrder(@PathVariable(value = "pageNo")int pageNo,Model model,@RequestParam("sortField") String sortField
+            ,@RequestParam("sortDir") String sortDir,HttpSession session,Principal principal){
+        int pageSize=10;
 
+        long userId = ((User) session.getAttribute("user")).getId();
+        Page<Order> page= orderService.findPaginatedOrder(pageNo,pageSize,sortField,sortDir);
+        List<Order> orderList = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        User userImage = (User) session.getAttribute("userImage");
+
+
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+        List<Order> userOrders = orderRepository.findByUserId(userId);
+        model.addAttribute("userOrders",orderList);
+
+        return "User/userOrderInfo";
+
+    }
 
 
     @GetMapping("/user/orderDetail/{id}")
@@ -185,13 +233,20 @@ public class UserInfoController {
         model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
 
         List<Order> userOrders = orderService.searchOrders(userId, keyword);
-            if (userOrders.isEmpty()) {
-                String errorMessage = "No matching orders found";
-                model.addAttribute("errorMessage", errorMessage);
-            } else {
-                model.addAttribute("userOrders", userOrders);
-            }
-        return "/User/userOrderInfo";
+
+        // Check if the search results are empty.
+        if (userOrders.isEmpty()) {
+            // Display an error message to the user.
+            String errorMessage = "No matching orders found";
+            model.addAttribute("errorMessage", errorMessage);
+            return findPaginatedUserOrder(1,model,"name","asc",session,principal);
+        } else {
+            // Add the search results to the model.
+            model.addAttribute("userOrders", userOrders);
+        }
+
+        // Return the search results page.
+        return "User/userSearchOrder";
     }
 
 

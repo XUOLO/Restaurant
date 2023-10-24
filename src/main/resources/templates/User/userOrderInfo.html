@@ -134,7 +134,7 @@
 
               <div class="searchOrder" style="margin-left:200px;margin-top:-55px;margin-bottom:25px;">
                 <form class="search-form" method="post" action="/user/order/search">
-                  <input class="search-input" type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+                  <input class="search-input" type="text" required name="keyword" placeholder="Search" title="Enter search keyword">
                   <button class="search-button" type="submit" title="Search">Search</button>
                 </form>
                 <style>
@@ -180,16 +180,16 @@
               <thead style="background-color: #d5a84d">
               <tr>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Order id</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Order Date</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Total Amount</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Status</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}">Order id</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}">Order Date</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}">Total Amount</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Status</a> </th>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
               </tr>
               </thead>
               <tbody style="background-color: #202020;">
               <tr th:each="order, index : ${userOrders}">
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${index.index + 1}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"  th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.code}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.orderDate}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
@@ -219,7 +219,35 @@
     cursor: pointer;
 }
 </style>
-
+            <div th:if="${totalPages > 1}">
+              <div class="d-flex justify-content-between col-md-6">
+                <div class="col-md-4 text-center">
+            <span th:if="${currentPage > 1}">
+                <a th:href="@{/user/pageUserOrder/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
+            </span>
+                  <span hidden  th:unless="${currentPage > 1}">Last</span>
+                </div>
+                <div class="col-md-4 text-center">
+            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/user/pageUserOrder/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+                </div>
+                <div class="col-md-4 text-center">
+            <span th:if="${currentPage < totalPages}">
+                <a th:href="@{/user/pageUserOrder/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
+            </span>
+                  <span th:unless="${currentPage < totalPages}">Next</span>
+                </div>
+                <!--                    <div class="col-md-4 text-center">-->
+                <!--            <span th:if="${currentPage < totalPages}">-->
+                <!--                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>-->
+                <!--            </span>-->
+                <!--                        <span th:unless="${currentPage < totalPages}">Next</span>-->
+                <!--                    </div>-->
+              </div>
+            </div>
 
 
 

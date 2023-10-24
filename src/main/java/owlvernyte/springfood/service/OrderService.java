@@ -93,5 +93,14 @@ public class OrderService {
         Pageable pageable= PageRequest.of(pageNo - 1,pageSize);
         return this.orderRepository.findAll(pageable);
     }
+    public Page<Order> findPaginatedOrder(int pageNo, int pageSize,String sortField,String sortDirection){
+        Sort sort= sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending():
+                Sort.by(sortField).descending();
+
+
+        Pageable pageable= PageRequest.of(pageNo - 1,pageSize,sort);
+        return this.orderRepository.findAll(pageable);
+    }
+
 
 }

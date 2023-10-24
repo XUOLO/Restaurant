@@ -70,18 +70,23 @@ public class OrderController {
         model.addAttribute("listOrder", orderService.getAllOrder());
 
 
-        return findPaginatedOrder(1,model);
+        return findPaginatedOrder(1,model,"name","asc");
     }
     @GetMapping("/admin/pageOrder/{pageNo}")
-    public String findPaginatedOrder(@PathVariable(value = "pageNo")int pageNo,Model model){
+    public String findPaginatedOrder(@PathVariable(value = "pageNo")int pageNo,Model model,@RequestParam("sortField") String sortField,@RequestParam("sortDir") String sortDir){
         int pageSize=10;
-        Page<Order> page= orderService.findPaginatedOrder(pageNo,pageSize);
+        Page<Order> page= orderService.findPaginatedOrder(pageNo,pageSize,sortField,sortDir);
         List<Order> orderList = page.getContent();
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("totalItems",page.getTotalElements());
-        model.addAttribute("listOrder",orderList);
+        model.addAttribute("pageSize", pageSize);
 
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+        model.addAttribute("listOrder",orderList);
         return "Admin/list_order";
 
     }
@@ -128,11 +133,12 @@ public class OrderController {
         if (listOrder.isEmpty()) {
             String errorMessage = "No matching order found";
             model.addAttribute("errorMessage", errorMessage);
+            return findPaginatedOrder(1,model,"name","asc");
         } else {
             model.addAttribute("listOrder", listOrder);
         }
 
-        return "Admin/list_order"  ;
+        return "Admin/list_searchOrder"  ;
     }
     @GetMapping("/admin/exportOrder-pdf")
     public void exportPdfOrder(HttpServletResponse response) throws Exception {

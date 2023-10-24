@@ -88,21 +88,25 @@ public class ProductController {
         model.addAttribute("listProduct", productService.getAllProduct());
         model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
 
-        return findPaginatedRequest(1,model);
+        return findPaginatedRequest(1,model,"name","asc");
     }
 
     @GetMapping("/admin/pageProduct/{pageNo}")
-    public String findPaginatedRequest(@PathVariable(value = "pageNo")int pageNo,Model model){
+    public String findPaginatedRequest(@PathVariable(value = "pageNo")int pageNo,Model model,@RequestParam("sortField") String sortField,@RequestParam("sortDir") String sortDir){
         int pageSize=10;
-        Page<Product> page= productService.findPaginatedProduct(pageNo,pageSize);
+        Page<Product> page= productService.findPaginatedProduct(pageNo,pageSize,sortField,sortDir);
         List<Product> productList = page.getContent();
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("totalItems",page.getTotalElements());
+
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
         model.addAttribute("listProduct",productList);
-//        User sessionUser = (User) session.getAttribute("user");
-//
-//        model.addAttribute("user", sessionUser);
+
         return "Admin/list_product";
 
     }
@@ -203,11 +207,12 @@ public class ProductController {
         if (products.isEmpty()) {
             String errorMessage = "No matching products found";
             model.addAttribute("errorMessage", errorMessage);
+            return findPaginatedRequest(1,model,"name","asc");
         } else {
             model.addAttribute("listProduct", products);
         }
 
-        return "Admin/list_product"  ;
+        return "Admin/list_searchProduct"  ;
     }
 
     @GetMapping("/admin/exportDishes-pdf")
