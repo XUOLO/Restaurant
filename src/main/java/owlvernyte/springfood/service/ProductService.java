@@ -2,6 +2,9 @@ package owlvernyte.springfood.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
@@ -51,5 +54,13 @@ public class ProductService {
             return productRepository.findAll(keyword);
         }
         return productRepository.findAll();
+    }
+
+
+
+
+    public Page<Product> findPaginatedProduct(int pageNo, int pageSize){
+        Pageable pageable= PageRequest.of(pageNo - 1,pageSize);
+        return this.productRepository.findAll(pageable);
     }
 }
