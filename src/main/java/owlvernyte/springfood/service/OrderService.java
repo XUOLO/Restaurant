@@ -10,6 +10,7 @@ import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.repository.OrderRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -101,6 +102,17 @@ public class OrderService {
         Pageable pageable= PageRequest.of(pageNo - 1,pageSize,sort);
         return this.orderRepository.findAll(pageable);
     }
+    public List<Order> getOrdersByDate(LocalDate date) {
+        return orderRepository.findByOrderDate(date);
+    }
 
+    public double calculateTotalRevenueByDate(LocalDate date) {
+        List<Order> orders = orderRepository.findByOrderDate(date);
+        double totalRevenue = 0.0;
+        for (Order order : orders) {
+            totalRevenue += order.getTotal();
+        }
+        return totalRevenue;
+    }
 
 }

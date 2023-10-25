@@ -260,18 +260,18 @@
             var productId = $(this).data('product-id');
 
             $.ajax({
-                type: 'GET',
-                url: '/user/shoppingCart/add/' + productId,
-                success: function(response) {
-                    // Xử lý kết quả thành công
-                    alert('Đã  thêm vào giỏ hàng');
-                    updateCartItemCount();
-                },
-                error: function() {
-                    // Xử lý lỗi (nếu có)
-                    alert('Đã xảy ra lỗi khi thêm vào giỏ hàng');
-                }
-            });
+    type: 'GET',
+    url: '/user/shoppingCart/add/' + productId,
+    success: function(response) {
+        // Handling success response
+        alert('Added to cart successfully');
+        updateCartItemCount();
+    },
+    error: function() {
+        // Handling error (if any)
+        alert('An error occurred while adding to cart');
+    }
+});
         });
 
         function updateCartItemCount() {

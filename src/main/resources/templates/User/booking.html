@@ -328,14 +328,16 @@ color:#cda45e;
 
         <div class="checkout-container" style="margin-left: 41%;">
             <div class="address-section">
-                <h2>Address Information</h2>
+                <h2>Customer name information</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">
                     <p style="text-align:center;" th:text="${DuplicateDate}"></p>
                 </div>
                 <div th:if="${failMessage}" class="alert alert-danger">
                     <p style="text-align:center;" th:text="${failMessage}"></p>
                 </div>
-                <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}"     >
+                 <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}"     >
+                    <input type="hidden" th:value="${reservation.id}" name="reservationId">
+
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="namee" name="name" required>

@@ -76,6 +76,9 @@ public class BookingController {
 
         Reservation reservation = reservationService.getReservationById(id);
         model.addAttribute("reservation", reservation);
+        Reservation reservationId =reservationService.viewById(id);
+        model.addAttribute("reservationId",reservationId);
+
         Collection<ReservationItem> allReservationItems = bookingService.getAllReservationItem();
 
         model.addAttribute("allReservationItem", allReservationItems);
@@ -141,12 +144,14 @@ public class BookingController {
     public String placeBooking(@RequestParam("name") String name,
                               @RequestParam("phone") String phone,
                              @RequestParam("email") String email,
+                               @RequestParam("reservationId") long reservationId,
                                Model model,
                                HttpServletRequest request,
                                @ModelAttribute("booking") @Valid Booking booking,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
                               HttpSession session) {
+        Reservation reservation = reservationService.viewById(reservationId);
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
         User user = userService.viewById(userId);
@@ -154,6 +159,7 @@ public class BookingController {
         booking.setPhone(phone);
         booking.setEmail(email);
         booking.setBookingDate(LocalDate.now());
+        booking.setReservation(reservation);
 
         booking.setUser(user);
         booking.setTotal(bookingService.getAmount());

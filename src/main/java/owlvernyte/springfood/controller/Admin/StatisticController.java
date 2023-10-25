@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.UserRepository;
+import owlvernyte.springfood.service.BookingService;
 import owlvernyte.springfood.service.OrderService;
 import owlvernyte.springfood.service.UserService;
 
@@ -15,6 +16,9 @@ public class StatisticController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private BookingService bookingService;
 
     @Autowired
     private UserRepository userRepository;
@@ -34,18 +38,29 @@ public class StatisticController {
         Long countCancelOrder = orderService.countCancelOrder();
         Long countHandlingOrder = orderService.countHandlingOrder();
 
+        Long countBooking = bookingService.CountBooking();
+        Long countConfirmBooking = bookingService.countConfirmedBooking();
+        Long countCancelBooking = bookingService.countCancelBooking();
+        Long countHandlingBooking = bookingService.countHandlingBooking();
+
         model.addAttribute("countCustomer", userService.countCustomers());
         model.addAttribute("countAdmin", userService.countAdmin());
         model.addAttribute("countEmployee", userService.countEmployee());
         model.addAttribute("countEmployeeAndAdmin", userService.countEmployeeAndAdmin());
+
+
         model.addAttribute("countOrder",countOrder);
         model.addAttribute("countConfirmOrder",countConfirmOrder);
         model.addAttribute("countCancelOrder",countCancelOrder);
         model.addAttribute("countHandlingOrder",countHandlingOrder);
 
+        model.addAttribute("countBooking",countBooking);
+        model.addAttribute("countConfirmBooking",countConfirmBooking);
+        model.addAttribute("countCancelBooking",countCancelBooking);
+        model.addAttribute("countHandlingBooking",countHandlingBooking);
+
 
         return "Admin/statistic";
-
 
     }
 }

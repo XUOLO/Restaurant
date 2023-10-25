@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import owlvernyte.springfood.entity.Order;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -24,5 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Long countConfirmedOrder();
     @Query("SELECT COUNT(t) FROM Order t WHERE t.status = '3'")
     Long countCancelOrder();
+
+    List<Order> findByOrderDate(LocalDate orderDate);
 
 }

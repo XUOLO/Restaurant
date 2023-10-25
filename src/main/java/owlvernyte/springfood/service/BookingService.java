@@ -106,4 +106,20 @@ public class BookingService {
         }
         return bookingRepository.findAll();
     }
+
+    public Long CountBooking(){
+        return bookingRepository.count();
+    }
+    public Long countHandlingBooking() {
+        return bookingRepository.countHandlingBooking();
+    }
+
+    public Long countConfirmedBooking() {
+        return bookingRepository.countConfirmedBooking();
+    }
+
+    public Long countCancelBooking() {
+        return bookingRepository.countCancelBooking();
+    }
+
 }

@@ -15,4 +15,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     boolean existsByDateTime(LocalDateTime dateTime);
     @Query("SELECT o FROM Booking o WHERE CONCAT(o.name, o.code, o.phone, o.email) LIKE %?1%")
     List<Booking> findAll(String keyword);
+
+
+
+    @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '1'")
+    Long countHandlingBooking();
+    @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '2'")
+    Long countConfirmedBooking();
+    @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '3'")
+    Long countCancelBooking();
 }
