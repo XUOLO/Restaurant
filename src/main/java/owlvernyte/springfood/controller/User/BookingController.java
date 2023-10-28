@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,9 +57,12 @@ public class BookingController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/user/BookATable")
-    public String showTable(Model model, HttpSession session){
+    @PostMapping("/user/BookATable")
+    public String showTable(Model model, Authentication authentication, HttpSession session){
+        if (authentication == null || !authentication.isAuthenticated()) {
 
+            return "Admin/login";
+        }
         String username = (String) session.getAttribute("username");
         String name = (String) session.getAttribute("name");
         Long userId = (Long) session.getAttribute("userId");

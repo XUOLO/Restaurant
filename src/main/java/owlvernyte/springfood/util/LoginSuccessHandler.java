@@ -46,7 +46,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             request.getSession().setAttribute("username", username);
             request.getSession().setAttribute("user", user );
             request.getSession().setAttribute("name", user.getName());
-            request.getSession().setAttribute("name", user.getName());
+            request.getSession().setAttribute("userImage", user.getImage());
             request.getSession().setAttribute("userId", user.getId());
             request.getSession().setAttribute("email", user.getEmail());
             request.getSession().setAttribute("phone", user.getPhone());

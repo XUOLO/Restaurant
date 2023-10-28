@@ -1,6 +1,8 @@
 package owlvernyte.springfood.repository;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import owlvernyte.springfood.entity.Order;
@@ -17,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAll(String keyword);
     List<Order> findByUserId(long userId);
 
-
+    Page<Order> findOrderByUserId(long userId, Pageable pageable);
 
     @Query("SELECT COUNT(t) FROM Order t WHERE t.status = '1'")
     Long countHandlingOrder();

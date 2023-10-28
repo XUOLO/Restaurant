@@ -34,9 +34,6 @@ public class OrderService {
         return order;
     }
 
-    public List<Order> getOrdersByUserId(long userId) {
-        return orderRepository.findByUserId(userId);
-    }
 
     public List<Order> getAllOrder() {
         return orderRepository.findAll();
@@ -45,9 +42,6 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Long getLastOrderId() {
-        return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id")).get(0).getId();
-    }
 
     public List<Order> searchOrders(Long userId, String keyword) {
         List<Order> orders = orderRepository.findByUserId(userId); // Lấy danh sách tất cả các orders của user
@@ -102,6 +96,20 @@ public class OrderService {
         Pageable pageable= PageRequest.of(pageNo - 1,pageSize,sort);
         return this.orderRepository.findAll(pageable);
     }
+
+    public Page<Order> findPaginatedUserOrder(long userId, int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return this.orderRepository.findOrderByUserId(userId, pageable);
+    }
+
+
+    public List<Order> getOrdersByUserId(long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
     public List<Order> getOrdersByDate(LocalDate date) {
         return orderRepository.findByOrderDate(date);
     }

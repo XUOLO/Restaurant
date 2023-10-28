@@ -87,7 +87,7 @@ public class UserInfoController {
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
         User userImage = (User) session.getAttribute("userImage");
-        long userId = ((User) session.getAttribute("user")).getId();
+        long userId = (long) session.getAttribute("userId");
 
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
@@ -103,7 +103,7 @@ public class UserInfoController {
         model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
 
 
-        List<Order> userOrders = orderRepository.findByUserId(userId);
+        List<Order> userOrders = orderService.getOrdersByUserId(userId);
         model.addAttribute("userOrders", userOrders);
 
 
@@ -114,9 +114,14 @@ public class UserInfoController {
             ,@RequestParam("sortDir") String sortDir,HttpSession session,Principal principal){
         int pageSize=10;
 
-        long userId = ((User) session.getAttribute("user")).getId();
-        Page<Order> page= orderService.findPaginatedOrder(pageNo,pageSize,sortField,sortDir);
-        List<Order> orderList = page.getContent();
+        long userId = (long) session.getAttribute("userId");
+
+        Page<Order> page= orderService.findPaginatedUserOrder(userId,pageNo,pageSize,sortField,sortDir);
+
+        List<Order> userOrders = page.getContent();
+
+        model.addAttribute("userOrders",userOrders);
+
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("totalItems",page.getTotalElements());
@@ -150,8 +155,7 @@ public class UserInfoController {
         model.addAttribute("listCategory", categoryService.getAllCategory());
         model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
 
-        List<Order> userOrders = orderRepository.findByUserId(userId);
-        model.addAttribute("userOrders",orderList);
+
 
         return "User/userOrderInfo";
 

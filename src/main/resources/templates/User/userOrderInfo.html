@@ -90,7 +90,9 @@
       </ul>
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
-    <a href="/user/BookATable" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</a>
+     <form action="/user/BookATable" method="post">
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+    </form>
 
   </div>
 </header><!-- End Header -->
@@ -110,6 +112,8 @@
                 <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
               </a>
               <h1 th:text="${username}"> </h1>
+
+
             </div>
 
             <div class="belowPicInfo" style="padding-block: 15px;">
@@ -180,10 +184,10 @@
               <thead style="background-color: #d5a84d">
               <tr>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}">Order id</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}">Order Date</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}">Total Amount</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Status</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}" style="color: #f2f2f2;">Order id</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Order Date</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Total Amount</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Status</a> </th>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
               </tr>
               </thead>
