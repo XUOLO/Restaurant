@@ -3,15 +3,17 @@ package owlvernyte.springfood.controller.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.OrderDetail;
 import owlvernyte.springfood.entity.Product;
@@ -21,7 +23,11 @@ import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.service.*;
 
+import javax.sql.rowset.serial.SerialException;
+import java.io.IOException;
 import java.security.Principal;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -58,13 +64,19 @@ public class UserInfoController {
         String address = (String) session.getAttribute("address");
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
-        User userImage = (User) session.getAttribute("userImage");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+        long userId = (long) session.getAttribute("userId");
 
-        model.addAttribute("name", name);
-        model.addAttribute("username", username);
-        model.addAttribute("address", address);
-        model.addAttribute("email", email);
-        model.addAttribute("phone", phone);
+
+        model.addAttribute("userId", userId);
+        User existingUser = userService.viewById(user.getId());
+
+
+        model.addAttribute("name", existingUser.getName());
+        model.addAttribute("username", existingUser.getUsername());
+        model.addAttribute("address", existingUser.getAddress());
+        model.addAttribute("email", existingUser.getEmail());
+        model.addAttribute("phone", existingUser.getPhone());
         model.addAttribute("user", user);
         model.addAttribute("userImage", userImage);
         boolean isAuthenticated = principal != null;
@@ -86,9 +98,11 @@ public class UserInfoController {
         String address = (String) session.getAttribute("address");
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
-        User userImage = (User) session.getAttribute("userImage");
+        Blob userImage = (Blob) session.getAttribute("userImage");
         long userId = (long) session.getAttribute("userId");
 
+
+        model.addAttribute("userId", userId);
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
         model.addAttribute("username", username);
@@ -139,7 +153,11 @@ public class UserInfoController {
         String address = (String) session.getAttribute("address");
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
-        User userImage = (User) session.getAttribute("userImage");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+
+
+
+
 
 
         model.addAttribute("name", name);
@@ -171,9 +189,13 @@ public class UserInfoController {
         String address = (String) session.getAttribute("address");
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
-        User userImage = (User) session.getAttribute("userImage");
-        long userId = ((User) session.getAttribute("user")).getId();
 
+        long userId = ((User) session.getAttribute("user")).getId();
+        Blob userImage = (Blob) session.getAttribute("userImage");
+
+
+
+        model.addAttribute("userId", userId);
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
         model.addAttribute("username", username);
@@ -220,8 +242,12 @@ public class UserInfoController {
         String address = (String) session.getAttribute("address");
         String email = (String) session.getAttribute("email");
         String phone = (String) session.getAttribute("phone");
-        User userImage = (User) session.getAttribute("userImage");
-        long userId = ((User) session.getAttribute("user")).getId();
+        Blob userImage = (Blob) session.getAttribute("userImage");
+        long userId = (long) session.getAttribute("userId");
+
+
+
+
 
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
@@ -250,6 +276,110 @@ public class UserInfoController {
 
 
         return "User/userSearchOrder";
+    }
+
+
+    @GetMapping("/user/editProfile")
+    public String showEditInfo(Model model, HttpSession session, Principal principal){
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+        long userId = (long) session.getAttribute("userId");
+
+
+        model.addAttribute("userId", userId);
+        User existingUser = userService.viewById(user.getId());
+
+
+        model.addAttribute("name", existingUser.getName());
+        model.addAttribute("username", existingUser.getUsername());
+        model.addAttribute("address", existingUser.getAddress());
+        model.addAttribute("email", existingUser.getEmail());
+        model.addAttribute("phone", existingUser.getPhone());
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+        return "User/edit_profile";
+    }
+
+    @PostMapping("/user/editProfile")
+    public String editProfile(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpSession session,
+                              Model model,
+                              @RequestParam("image") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) throws IOException, SerialException, SQLException {
+        User existingUser = userService.viewById(user.getId());
+        if (file.isEmpty()) {
+            user.setImage(existingUser.getImage());
+        } else {
+            byte[] bytes = file.getBytes();
+            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+            user.setImage(blob);
+        }
+
+        user.setPassword(existingUser.getPassword());
+        user.setOtp(existingUser.getOtp());
+        user.setIsOtpVerified(existingUser.getIsOtpVerified());
+        user.setProvider(existingUser.getProvider());
+        user.setCreateTime(existingUser.getCreateTime());
+        user.setRoles(existingUser.getRoles());
+        session.setAttribute("user",user);
+
+         userService.editUser(user);
+        redirectAttributes.addFlashAttribute("successMessage", "Change successful");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+
+    }
+
+
+    @PostMapping("/user/changePassword")
+    public String changePassword(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpSession session,
+                              Model model,
+                                RedirectAttributes redirectAttributes, HttpServletRequest request,
+                                 @RequestParam("currentPassword") String currentPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword
+                                 ) throws IOException, SerialException, SQLException {
+        User existingUser = userService.viewById(user.getId());
+        user.setOtp(existingUser.getOtp());
+        user.setEmail(existingUser.getEmail());
+        user.setAddress(existingUser.getAddress());
+        user.setPhone(existingUser.getPhone());
+        user.setName(existingUser.getName());
+        user.setImage(existingUser.getImage());
+        user.setUsername(existingUser.getUsername());
+        user.setIsOtpVerified(existingUser.getIsOtpVerified());
+        user.setProvider(existingUser.getProvider());
+        user.setCreateTime(existingUser.getCreateTime());
+        user.setRoles(existingUser.getRoles());
+        session.setAttribute("user",user);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String savePassword =existingUser.getPassword();
+        if(!passwordEncoder.matches(currentPassword,savePassword)){
+            redirectAttributes.addFlashAttribute("errorPassword", "Current password not match");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("NewAndConfirmError", "New Password and confirm password not match ");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userService.editUser(user);
+        redirectAttributes.addFlashAttribute("changePasswordSuccess", "Password change successful");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+
     }
 
 

@@ -108,8 +108,13 @@
                     <div class="panel">
                         <div class="user-heading round">
                             <a href="#">
-
-                                <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
+                                <style>
+  .profile-image {
+  max-width: 344px;
+  max-height: 344px;
+}
+</style>
+                                <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
                             </a>
                             <h1 th:text="${username}"> </h1>
                         </div>
@@ -117,7 +122,7 @@
                         <div class="belowPicInfo" style="padding-block: 15px;">
                             <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
                             <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
-                            <div class="div-link"><a style="color:#89817e;" href="#"><i class="fa fa-edit"></i> Edit profile</a></div>
+                            <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Edit profile</a></div>
 
 
                         </div>

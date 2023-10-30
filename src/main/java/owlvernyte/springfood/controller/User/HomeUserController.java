@@ -3,12 +3,16 @@ package owlvernyte.springfood.controller.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import owlvernyte.springfood.entity.Category;
 import owlvernyte.springfood.entity.Contact;
 import owlvernyte.springfood.entity.Product;
@@ -16,6 +20,10 @@ import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.service.*;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,12 +124,42 @@ public class HomeUserController {
 //        return "User/login";
 //
 //    }
-    @GetMapping("/user/international")
-    public String international(  HttpServletRequest request   ) {
+//    @GetMapping("/user/international")
+//    public String international(@RequestParam("lang") String lang, HttpServletRequest request   ) {
+//
+//        request.getSession().setAttribute("lang", lang);
+//        String referer = request.getHeader("Referer");
+//        return "redirect:" + referer;
+//
+//    }
+    @GetMapping("/user/foods")
+    public String getFoods(Model model) throws IOException {
+        List<FoodData> foods = new ArrayList<>();
 
-        String referer = request.getHeader("Referer");
-        return "redirect:" + referer;
+        // Đường dẫn tới tệp CSV
+        String csvFilePath = "C:\\Users\\admin\\Desktop\\test.csv";
 
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
+             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
+
+            for (CSVRecord csvRecord : csvParser) {
+                String user = csvRecord.get(0); // Vị trí cột name trong tệp CSV
+                String item = csvRecord.get(1); // Vị trí cột description trong tệp CSV
+                String rating = csvRecord.get(2);
+                // Tạo đối tượng FoodData từ dữ liệu trong tệp CSV
+                FoodData food = new FoodData();
+                food.setUser_id(user);
+                food.setItem_id(item);
+                food.setRating(rating);
+
+                foods.add(food);
+            }
+        }
+
+        model.addAttribute("foods", foods);
+        return "User/foods-view"; // Tên của view để hiển thị dữ liệu
     }
+
+
 
 }

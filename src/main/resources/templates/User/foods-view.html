@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Food List</title>
+</head>
+<body>
+<h1>Food List</h1>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Description</th>
+
+  </tr>
+  <!-- Sử dụng Thymeleaf để hiển thị dữ liệu -->
+  <tr th:each="food : ${foods}">
+    <td th:text="${food.user_id}"></td>
+    <td th:text="${food.item_id}"></td>
+    <td th:text="${food.rating}"></td>
+
+  </tr>
+</table>
+</body>
+</html>

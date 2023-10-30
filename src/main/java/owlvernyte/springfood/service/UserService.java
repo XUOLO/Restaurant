@@ -30,6 +30,10 @@ public class UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
+    public void editUser(User user) {
+
+        userRepository.save(user);
+    }
     public void saveUser(User user) {
 
         BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();

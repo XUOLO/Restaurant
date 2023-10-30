@@ -12,8 +12,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
- <link href="/User/img/favicon.png" rel="icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="/User/img/favicon.png" rel="icon">
   <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -90,7 +90,7 @@
       </ul>
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
-     <form action="/user/BookATable" method="post">
+    <form action="/user/BookATable" method="post">
       <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
     </form>
 
@@ -108,17 +108,15 @@
           <div class="panel">
             <div class="user-heading round">
               <a href="#">
-                  <style>
+<style>
   .profile-image {
   max-width: 344px;
   max-height: 344px;
 }
 </style>
-                  <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
+                <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
               </a>
               <h1 th:text="${username}"> </h1>
-
-
             </div>
 
             <div class="belowPicInfo" style="padding-block: 15px;">
@@ -132,135 +130,94 @@
 
           </div>
         </div>
-        <div class="profile-info col-md-9" style="padding-left: 70px;">
+        <div class="profile-info col-md-9">
           <div class="panel">
 
 
           </div>
           <div class="panel">
-            <div>
-              <h1>Order list</h1>
 
-              <div class="searchOrder" style="margin-left:200px;margin-top:-55px;margin-bottom:25px;">
-                <form class="search-form" method="post" action="/user/order/search">
-                  <input class="search-input" type="text" required name="keyword" placeholder="Search" title="Enter search keyword">
-                  <button class="search-button" type="submit" title="Search">Search</button>
-                </form>
-                <style>
-    .search-form {
-        display: flex;
-        align-items: center;
-    }
-
-    .search-input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        width: 225px;
-    }
-
-    .search-button {
-        background-color: #333;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        margin-left: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .search-button:hover {
-        background-color: #555;
-    }
-</style>
+            <div class="panel-body bio-graph-info" style="padding-left: 70px;">
+              <h1>Edit information</h1>
+              <div th:if="${successMessage}" class="alert alert-success">
+                <p style="text-align:center;" th:text="${successMessage}"></p>
               </div>
+              <form  th:action="@{/user/editProfile}" method="post" th:object="${user}" enctype="multipart/form-data" >
+                <div class="row">
+                  <input type="hidden" th:field="*{id}" />
+                  <input type="hidden" th:field="*{username}" />
+                  <input type="hidden" th:field="*{image}" />
+                  <div class="bio-row">
+                    <label for="name" class="col-sm-2 col-form-label">Full name</label>
+                    <input th:field="*{name}" id="name"  type="text" class="form-control">
+                    <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
-            </div>
+                  </div>
 
+                  <div class="bio-row">
+                    <label for="address" class="col-sm-2 col-form-label">Address</label>
+                   <input th:field="*{address}" id="address" type="text" class="form-control">
+                    <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 
+                  </div>
 
+                  <div class="bio-row">
+                    <label for="email" class="col-sm-2 col-form-label" >Email</label>
+                    <input th:field="*{email}" id="email" type="email" class="form-control">
+                    <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
-            <table style="border-collapse: collapse; width: 100%; background-color: #0c0b09;">
-              <div th:if="${errorMessage}" class="alert alert-danger">
-                <p th:text="${errorMessage}"></p>
-              </div>
-              <thead style="background-color: #d5a84d">
-              <tr>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}" style="color: #f2f2f2;">Order id</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Order Date</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Total Amount</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Status</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
-              </tr>
-              </thead>
-              <tbody style="background-color: #202020;">
-              <tr th:each="order, index : ${userOrders}">
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"  th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.code}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.orderDate}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2; display: flex; align-items: center;">
-                  <span th:text="${order.statusString}" th:style="${order.status == '1' ? 'color: #1cff1c' : (order.status == '2' ? 'color: #01f5ef' : (order.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
-                  <form method="post" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
-                    <div th:if="${order.status != '3'}">
-                      <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
+                  </div>
+
+                  <div class="bio-row">
+                    <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+                    <input th:field="*{phone}"
+                           pattern="(03|05|07|08|09)[0-9]{8}"
+                           oninvalid="this.setCustomValidity('Phone number must start with 03, 05, 07, 08 or 09 and have exactly 10 digits')"
+                           onchange="this.setCustomValidity('')"   onkeypress = "return valideNumber()" id="phone"  type="text" class="form-control">
+                    <span class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+
+                  </div>
+                  <div class="bio-row">
+                    <label for="image" class="col-sm-2 col-form-label">Picture profile</label>
+                    <div class="col-sm-10">
+                       <input class="form-control" type="file"id="image" name="image" accept="image/*"  >
                     </div>
-                  </form>
-                </td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">
-                  <a th:href="@{/user/orderDetail/{id}(id=${order.id})}">
-                    Detail<i class="bi bi-list"></i>
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <style>
-  .cancel-button {
-    background-color: #ff0000;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-</style>
-            <div th:if="${totalPages > 1}">
-              <div class="d-flex justify-content-between col-md-6">
-                <div class="col-md-4 text-center">
-            <span th:if="${currentPage > 1}">
-                <a th:href="@{/user/pageUserOrder/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
-            </span>
-                  <span hidden  th:unless="${currentPage > 1}">Last</span>
+                  </div>
+
+
+
                 </div>
-                <div class="col-md-4 text-center">
-            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}"
-                   th:href="@{/user/pageUserOrder/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
-                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-            </span>
-                </div>
-                <div class="col-md-4 text-center">
-            <span th:if="${currentPage < totalPages}">
-                <a th:href="@{/user/pageUserOrder/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
-            </span>
-                  <span th:unless="${currentPage < totalPages}">Next</span>
-                </div>
-                <!--                    <div class="col-md-4 text-center">-->
-                <!--            <span th:if="${currentPage < totalPages}">-->
-                <!--                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>-->
-                <!--            </span>-->
-                <!--                        <span th:unless="${currentPage < totalPages}">Next</span>-->
-                <!--                    </div>-->
-              </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Save change</button>
+              </form>
+
             </div>
-
-
-
           </div>
+
+        </div>
+        <div class="profile-changePassword col-md-7" style="margin-left: 30%;margin-top: 20px;">
+         <h1>Change password</h1>
+          <div th:if="${errorPassword}" class="alert alert-danger">
+            <p style="text-align:center;" th:text="${errorPassword}"></p>
+          </div>
+          <div th:if="${NewAndConfirmError}" class="alert alert-danger">
+            <p style="text-align:center;" th:text="${NewAndConfirmError}"></p>
+          </div>
+          <div th:if="${changePasswordSuccess}" class="alert alert-success">
+            <p style="text-align:center;" th:text="${changePasswordSuccess}"></p>
+          </div>
+          <form  th:action="@{/user/changePassword}" method="post" th:object="${user}"   >
+            <input type="hidden" th:field="*{id}" />
+          <label>Current password</label>
+          <input type="password" name="currentPassword" class="form-control">
+          <label>New password</label>
+          <input type="password" name="newPassword" class="form-control">
+          <label>Confirm password</label>
+          <input type="password" name="confirmPassword" class="form-control">
+          <br>
+          <button type="submit" class="btn btn-primary">Save change</button>
+          </form>
+        </div>
       </div>
     </div>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -268,7 +225,6 @@
     <script type="text/javascript">
 
     </script>
-    </div>
   </section><!-- End Menu Section -->
 
 </main>
