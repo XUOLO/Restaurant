@@ -12,8 +12,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
- <link href="/User/img/favicon.png" rel="icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="/User/img/favicon.png" rel="icon">
   <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -90,7 +90,7 @@
       </ul>
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
-     <form action="/user/BookATable" method="post">
+    <form action="/user/BookATable" method="post">
       <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
     </form>
 
@@ -108,25 +108,18 @@
           <div class="panel">
             <div class="user-heading round">
               <a href="#">
-                  <style>
-  .profile-image {
-  max-width: 344px;
-  max-height: 344px;
-}
-</style>
-                  <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
+
+                <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
               </a>
               <h1 th:text="${username}"> </h1>
-
-
             </div>
 
             <div class="belowPicInfo" style="padding-block: 15px;">
               <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
               <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
-                <div class="div-link"><a style="color:#89817e;" href="/user/userBookingInfo"><i class="fa fa-calendar"></i> My reservation  </a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/userBookingInfo"><i class="fa fa-calendar"></i> My reservation  </a></div>
 
-                <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Edit profile</a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Edit profile</a></div>
 
 
             </div>
@@ -145,7 +138,7 @@
 
               <div class="searchOrder" style="margin-left:200px;margin-top:-55px;margin-bottom:25px;">
                 <form class="search-form" method="post" action="/user/order/search">
-                  <input class="search-input" type="text" required name="keyword" placeholder="Search" title="Enter search keyword">
+                  <input class="search-input" type="text" name="keyword" placeholder="Search" title="Enter search keyword">
                   <button class="search-button" type="submit" title="Search">Search</button>
                 </form>
                 <style>
@@ -191,29 +184,29 @@
               <thead style="background-color: #d5a84d">
               <tr>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}" style="color: #f2f2f2;">Order id</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Order Date</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Total Amount</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Status</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Booking id</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Booking Date</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Date arrive</th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Status</th>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
               </tr>
               </thead>
               <tbody style="background-color: #202020;">
-              <tr th:each="order, index : ${userOrders}">
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"  th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.code}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${order.orderDate}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#numbers.formatInteger(order.total,3,'POINT')+' VND'}"></td>
+              <tr th:each="booking, index : ${userBooking}">
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${index.index + 1}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${booking.code}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${booking.bookingDate}"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${booking.dateTime}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2; display: flex; align-items: center;">
-                  <span th:text="${order.statusString}" th:style="${order.status == '1' ? 'color: #1cff1c' : (order.status == '2' ? 'color: #01f5ef' : (order.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
-                  <form method="post" th:object="${order}" th:action="@{/user/{id}/updateOrderStatus(id=${order.id})}" style="margin-left: 10px;">
-                    <div th:if="${order.status != '3'}">
+                  <span th:text="${booking.statusString}" th:style="${booking.status == '1' ? 'color: #1cff1c' : (booking.status == '2' ? 'color: #01f5ef' : (booking.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
+                  <form method="post" th:object="${booking}" th:action="@{/user/{id}/updateOrderStatus(id=${booking.id})}" style="margin-left: 10px;">
+                    <div th:if="${booking.status != '3'}">
                       <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
                     </div>
                   </form>
                 </td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">
-                  <a th:href="@{/user/orderDetail/{id}(id=${order.id})}">
+                  <a th:href="@{/user/bookingDetail/{id}(id=${booking.id})}">
                     Detail<i class="bi bi-list"></i>
                   </a>
                 </td>
@@ -230,46 +223,18 @@
     cursor: pointer;
 }
 </style>
-            <div th:if="${totalPages > 1}">
-              <div class="d-flex justify-content-between col-md-6">
-                <div class="col-md-4 text-center">
-            <span th:if="${currentPage > 1}">
-                <a th:href="@{/user/pageUserOrder/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
-            </span>
-                  <span hidden  th:unless="${currentPage > 1}">Last</span>
-                </div>
-                <div class="col-md-4 text-center">
-            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}"
-                   th:href="@{/user/pageUserOrder/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
-                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-            </span>
-                </div>
-                <div class="col-md-4 text-center">
-            <span th:if="${currentPage < totalPages}">
-                <a th:href="@{/user/pageUserOrder/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
-            </span>
-                  <span th:unless="${currentPage < totalPages}">Next</span>
-                </div>
-                <!--                    <div class="col-md-4 text-center">-->
-                <!--            <span th:if="${currentPage < totalPages}">-->
-                <!--                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>-->
-                <!--            </span>-->
-                <!--                        <span th:unless="${currentPage < totalPages}">Next</span>-->
-                <!--                    </div>-->
-              </div>
-            </div>
+
 
 
 
           </div>
+        </div>
       </div>
-    </div>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
+      <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+      <script type="text/javascript">
 
-    </script>
+      </script>
     </div>
   </section><!-- End Menu Section -->
 

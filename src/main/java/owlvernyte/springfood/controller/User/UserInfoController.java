@@ -14,10 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import owlvernyte.springfood.entity.Order;
-import owlvernyte.springfood.entity.OrderDetail;
-import owlvernyte.springfood.entity.Product;
-import owlvernyte.springfood.entity.User;
+import owlvernyte.springfood.entity.*;
+import owlvernyte.springfood.repository.BookingRepository;
 import owlvernyte.springfood.repository.OrderRepository;
 import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
@@ -28,6 +26,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -52,7 +51,12 @@ public class UserInfoController {
 
     @Autowired
     private ProductRepository productRepository;
-
+    @Autowired
+    private  BookingService bookingService;
+    @Autowired
+    private BookingDetailService bookingDetailService;
+    @Autowired
+    private BookingRepository bookingRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
     @GetMapping("/user/info")
@@ -223,6 +227,7 @@ public class UserInfoController {
 
         return "User/orderDetailUser";
     }
+
     @PostMapping("/user/{id}/updateOrderStatus")
     public String updateOrderStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid order id: " + id));
@@ -381,6 +386,192 @@ public class UserInfoController {
         return "redirect:" + referer;
 
     }
+    @GetMapping("/user/userBookingInfo")
+    public String userBookingInfo(Model model, HttpSession session, Principal principal){
 
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+        long userId = (long) session.getAttribute("userId");
+
+
+        model.addAttribute("userId", userId);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+
+        List<Booking> userBooking = bookingService.getBookingByUserId(userId);
+        model.addAttribute("userBooking", userBooking);
+
+
+        return findPaginatedUserBooking(1,model,"name","asc",session,principal);
+    }
+    @GetMapping("/user/pageUserBooking/{pageNo}")
+    public String findPaginatedUserBooking(@PathVariable(value = "pageNo")int pageNo,Model model,@RequestParam("sortField") String sortField
+            ,@RequestParam("sortDir") String sortDir,HttpSession session,Principal principal){
+        int pageSize=10;
+
+        long userId = (long) session.getAttribute("userId");
+
+        Page<Booking> page= bookingService.findPaginatedUserBooing(userId,pageNo,pageSize,sortField,sortDir);
+
+        List<Booking> userBooking = page.getContent();
+
+        model.addAttribute("userBooking",userBooking);
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+
+
+
+
+
+
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+
+
+        return "User/userBookingInfo";
+
+    }
+    @PostMapping("/user/booking/search")
+    public String searchBooking(HttpSession session,Principal principal, @RequestParam String keyword, Model model) {
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+        Blob userImage = (Blob) session.getAttribute("userImage");
+        long userId = (long) session.getAttribute("userId");
+
+
+
+
+
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+        List<Booking> userBooking = bookingService.searchBooking(userId, keyword);
+
+
+        if (userBooking.isEmpty()) {
+
+            String errorMessage = "No matching reservation found";
+            model.addAttribute("errorMessage", errorMessage);
+            return findPaginatedUserOrder(1,model,"name","asc",session,principal);
+        } else {
+            model.addAttribute("userBooking", userBooking);
+        }
+
+
+        return "User/userSearchBooking";
+    }
+    @GetMapping("/user/bookingDetail/{id}")
+    public String showUserBookingDetail( HttpSession session, Principal principal,Authentication authentication, @PathVariable(value = "id") long id, Model model) {
+
+        String name = (String) session.getAttribute("name");
+        User user = (User) session.getAttribute("user");
+        String username = (String) session.getAttribute("username");
+        String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
+
+        long userId = ((User) session.getAttribute("user")).getId();
+        Blob userImage = (Blob) session.getAttribute("userImage");
+
+
+
+        model.addAttribute("userId", userId);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("username", username);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
+        model.addAttribute("user", user);
+        model.addAttribute("userImage", userImage);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
+
+
+
+        Booking booking = bookingService.getBookingById(id);
+        model.addAttribute("booking", booking);
+
+        // Lấy danh sách OrderDetail theo Order
+        List<BookingDetail> bookingDetails = bookingDetailService.getBookingDetailsByBooking(booking);
+        model.addAttribute("bookingDetails", bookingDetails);
+        model.addAttribute("totalAmount",booking.getTotal());
+
+
+
+        return "User/bookingDetailUser";
+    }
+    @PostMapping("/user/{id}/updateBookingStatus")
+    public String userUpdateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
+        LocalDateTime currentDateTime = booking.getDateTime();
+        booking.setStatus(status);
+        booking.setDateTime(currentDateTime);
+        bookingRepository.save(booking);
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
 
 }

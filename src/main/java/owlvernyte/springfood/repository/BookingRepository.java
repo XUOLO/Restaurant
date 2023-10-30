@@ -1,5 +1,7 @@
 package owlvernyte.springfood.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,8 +18,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT o FROM Booking o WHERE CONCAT(o.name, o.code, o.phone, o.email) LIKE %?1%")
     List<Booking> findAll(String keyword);
 
-
-
+    Page<Booking> findBookingByUserId(long userId, Pageable pageable);
+    List<Booking> findByUserId(long userId);
     @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '1'")
     Long countHandlingBooking();
     @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '2'")

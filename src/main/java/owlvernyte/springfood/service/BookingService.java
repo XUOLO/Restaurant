@@ -121,5 +121,32 @@ public class BookingService {
     public Long countCancelBooking() {
         return bookingRepository.countCancelBooking();
     }
+    public List<Booking> getBookingByUserId(long userId) {
+        return bookingRepository.findByUserId(userId);
+    }
+    public Page<Booking> findPaginatedUserBooing(long userId, int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
 
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return this.bookingRepository.findBookingByUserId(userId, pageable);
+    }
+
+
+    public List<Booking> searchBooking(Long userId, String keyword) {
+        List<Booking> bookings = bookingRepository.findByUserId(userId); // Lấy danh sách tất cả các orders của user
+        List<Booking> matchedBooking = new ArrayList<>(); // Tạo danh sách rỗng để lưu các orders khớp với từ khóa tìm kiếm
+
+        for (Booking booking : bookings) {
+            String keywordLowerCase = keyword.toLowerCase();
+            String subjectLowerCase = booking.getCode().toLowerCase();
+            String phoneLowerCase = booking.getPhone().toLowerCase();
+            String emailLowerCase = booking.getEmail().toLowerCase();
+            if (subjectLowerCase.contains(keywordLowerCase) || phoneLowerCase.contains(keywordLowerCase)|| emailLowerCase.contains(keywordLowerCase)) {
+                matchedBooking.add(booking);
+            }
+        }
+
+        return matchedBooking;
+    }
 }
