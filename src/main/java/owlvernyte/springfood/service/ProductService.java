@@ -9,7 +9,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
+import owlvernyte.springfood.entity.Rating;
 import owlvernyte.springfood.repository.ProductRepository;
+import owlvernyte.springfood.repository.RatingRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,8 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-
+    @Autowired
+    private RatingRepository ratingRepository;
     @Autowired
     private ProductRepository productRepository;
 
@@ -45,7 +48,23 @@ public class ProductService {
         }
         return product;
     }
+    public void addRating(Long productId, double ratingValue) {
+        // Tạo một đối tượng Rating mới
+        Rating rating = new Rating();
 
+        // Lấy thông tin sản phẩm từ cơ sở dữ liệu (nếu cần thiết)
+        Product product = getProductById(productId);
+
+        // Gán giá trị đánh giá và sản phẩm vào đối tượng Rating
+        rating.setRatingValue(ratingValue);
+        rating.setProduct(product);
+
+        // Lưu đối tượng Rating vào cơ sở dữ liệu
+        ratingRepository.save(rating);
+    }
+    public List<Rating> getProductRatings(Long productId) {
+        return ratingRepository.findByProductId(productId);
+    }
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
     }

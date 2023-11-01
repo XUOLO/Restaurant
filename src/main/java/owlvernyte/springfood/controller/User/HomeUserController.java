@@ -12,12 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import owlvernyte.springfood.entity.Category;
-import owlvernyte.springfood.entity.Contact;
-import owlvernyte.springfood.entity.Product;
+import owlvernyte.springfood.entity.*;
 import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
+import owlvernyte.springfood.repository.RatingRepository;
 import owlvernyte.springfood.service.*;
 
 import java.io.IOException;
@@ -52,7 +52,8 @@ public class HomeUserController {
 
     @Autowired
     private ReservationService reservationService;
-
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @GetMapping("/")
     public String showIndexUser(Model model, Principal principal, HttpSession session, Authentication authentication) {
@@ -132,34 +133,44 @@ public class HomeUserController {
 //        return "redirect:" + referer;
 //
 //    }
-    @GetMapping("/user/foods")
-    public String getFoods(Model model) throws IOException {
-        List<FoodData> foods = new ArrayList<>();
 
-        // Đường dẫn tới tệp CSV
-        String csvFilePath = "C:\\Users\\admin\\Desktop\\test.csv";
 
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT)) {
 
-            for (CSVRecord csvRecord : csvParser) {
-                String user = csvRecord.get(0); // Vị trí cột name trong tệp CSV
-                String item = csvRecord.get(1); // Vị trí cột description trong tệp CSV
-                String rating = csvRecord.get(2);
-                // Tạo đối tượng FoodData từ dữ liệu trong tệp CSV
-                FoodData food = new FoodData();
-                food.setUser_id(user);
-                food.setItem_id(item);
-                food.setRating(rating);
+    @GetMapping("/user/productDetail/{id}")
+    public String getProductDetail(@PathVariable Long id, Model model,HttpSession session,Principal principal) {
+        Product product = productService.getProductById(id);
 
-                foods.add(food);
-            }
+        if (product == null) {
+            // Xử lý trường hợp sản phẩm không tồn tại
+            return "error";
+        }
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("userId",userId);
+        List<Rating> ratings = ratingRepository.findByProduct(product);
+        double averageRating = calculateAverageRating(ratings);
+        model.addAttribute("product", product);
+        model.addAttribute("averageRating", averageRating);
+        String username = (String) session.getAttribute("username");
+        String name = (String) session.getAttribute("name");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+
+
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        return "User/detailproduct";
+    }
+    private double calculateAverageRating(List<Rating> ratings) {
+        if (ratings.isEmpty()) {
+            return 0.0;
         }
 
-        model.addAttribute("foods", foods);
-        return "User/foods-view"; // Tên của view để hiển thị dữ liệu
+        double sum = 0.0;
+        for (Rating rating : ratings) {
+            sum += rating.getRatingValue();
+        }
+
+        return sum / ratings.size();
     }
-
-
-
 }

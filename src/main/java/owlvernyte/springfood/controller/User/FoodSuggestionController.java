@@ -20,11 +20,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 @Controller
 public class FoodSuggestionController {
-    private final FoodSuggestion foodSuggestion;
-@Autowired
-    public FoodSuggestionController(FoodSuggestion foodSuggestion) {
-        this.foodSuggestion = foodSuggestion;
-    }
+
+
 
     @Autowired
     UserRepository userRepository;
@@ -79,6 +76,7 @@ public class FoodSuggestionController {
                     }
                 }
             }
+
 
 
             // Gửi danh sách sản phẩm được gợi ý đến view

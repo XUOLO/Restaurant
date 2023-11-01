@@ -52,6 +52,8 @@ public class User {
     private String otp;
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
+    @OneToMany(mappedBy = "user")
+    private List<Rating> ratings;
 
     public List<Booking> getBookings() {
         return bookings;

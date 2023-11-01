@@ -78,7 +78,8 @@ public class Product {
 				return "Unknown";
 		}
 	}
-
+	@OneToMany(mappedBy = "product")
+	private List<Rating> ratings;
 	@ManyToMany(mappedBy = "products")
 	private List<Order> orders;
 

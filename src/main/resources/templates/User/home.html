@@ -214,7 +214,7 @@
           <img class="menu-img"  th:if="${list.image != null}" th:src="@{'/display?id=' + ${list.id}}" alt="">
           <img class="menu-img"   th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
           <div class="menu-content">
-            <a href="#" th:text="${list.name}"> </a><span th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}" > </span>
+            <a th:href="@{'/user/productDetail/' + ${list.id}}"   th:text="${list.name}"> </a><span th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}" > </span>
           </div>
           <div class="menu-ingredients"th:text="${list.description}">
 
