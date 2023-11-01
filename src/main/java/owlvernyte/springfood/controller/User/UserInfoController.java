@@ -512,7 +512,7 @@ public class UserInfoController {
 
             String errorMessage = "No matching reservation found";
             model.addAttribute("errorMessage", errorMessage);
-            return findPaginatedUserOrder(1,model,"name","asc",session,principal);
+            return findPaginatedUserBooking(1,model,"name","asc",session,principal);
         } else {
             model.addAttribute("userBooking", userBooking);
         }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommended Products</title>
+</head>
+<body>
+<h1>Recommended Products</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Lặp qua danh sách các sản phẩm được gợi ý -->
+    <tr th:each="product : ${recommendedProducts}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.price}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
