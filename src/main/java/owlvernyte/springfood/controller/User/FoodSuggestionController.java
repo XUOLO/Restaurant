@@ -1,12 +1,19 @@
 package owlvernyte.springfood.controller.User;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import owlvernyte.springfood.entity.Product;
+import owlvernyte.springfood.entity.Rating;
 import owlvernyte.springfood.entity.User;
+import owlvernyte.springfood.repository.ProductRepository;
+import owlvernyte.springfood.repository.RatingRepository;
 import owlvernyte.springfood.repository.UserRepository;
 import owlvernyte.springfood.service.ProductService;
 import owlvernyte.springfood.service.UserService;
@@ -87,4 +94,61 @@ public class FoodSuggestionController {
 
         return "User/recommendations";
     }
+    @Autowired
+    private RatingRepository ratingRepository;
+    @GetMapping("/user/ratings/csv")
+    public ResponseEntity<byte[]> exportRatingsToCSV(HttpServletResponse response) throws IOException {
+        List<Rating> ratings = ratingRepository.findAll();
+
+        StringBuilder csvContent = new StringBuilder();
+        csvContent.append("userId,productId,rating\n");
+
+        for (Rating rating : ratings) {
+            csvContent.append(rating.getUser().getId())
+                    .append(",")
+                    .append(rating.getProduct().getId())
+                    .append(",")
+                    .append(rating.getRatingValue())
+                    .append("\n");
+        }
+
+        byte[] csvBytes = csvContent.toString().getBytes();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "ratings.csv");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csvBytes);
+    }
+    @Autowired
+    private ProductRepository productRepository;
+    @GetMapping("/user/products/csv")
+    public ResponseEntity<byte[]> exportProductsToCSV(HttpServletResponse response) throws IOException {
+        List<Product> products = productRepository.findAll();
+
+        StringBuilder csvContent = new StringBuilder();
+        csvContent.append("productId,title,genres\n");
+
+        for (Product product : products) {
+            csvContent.append(product.getId())
+                    .append(",")
+                    .append(product.getName())
+                    .append(",")
+                    .append(product.getProductCategory().getName())
+                    .append("\n");
+        }
+
+        byte[] csvBytes = csvContent.toString().getBytes();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "products.csv");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csvBytes);
+    }
+
 }

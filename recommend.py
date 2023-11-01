@@ -14,7 +14,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 # Đọc dữ liệu từ file CSV
-df = pd.read_csv('C:/Users/admin/Desktop/ml-latest-small/productRatings.csv')
+df = pd.read_csv('C:/Users/admin/Downloads/ratings.csv')
 # print(df)
  
 
@@ -22,17 +22,17 @@ df = pd.read_csv('C:/Users/admin/Desktop/ml-latest-small/productRatings.csv')
 # In[ ]:
 
 
-movie_names=pd.read_csv('C:/Users/admin/Desktop/ml-latest-small/products.csv')
-movie_data = pd.merge(df,movie_names,on='movieId')
-movie_data=movie_data.drop(['genres','timestamp'],axis=1)
-# print(movie_data)
+product_names=pd.read_csv('C:/Users/admin/Downloads/products.csv')
+product_data = pd.merge(df,product_names,on='productId')
+product_data=product_data.drop(['genres'],axis=1)
+# print(product_data)
 
 
 # In[ ]:
 
 
-trend =pd.DataFrame(movie_data.groupby('title')['rating'].mean())
-trend['total number of ratings']=pd.DataFrame(movie_data.groupby('title')['rating'].count())
+trend =pd.DataFrame(product_data.groupby('title')['rating'].mean())
+trend['total number of ratings']=pd.DataFrame(product_data.groupby('title')['rating'].count())
 # print(trend)
 
 
@@ -61,13 +61,13 @@ ax.set_title("Toltal number")
 user_ids= df["userId"].unique().tolist()
 user2user_encode = {x: i for i,x in enumerate(user_ids)}
 userencode2user = {i: x for i, x in enumerate(user_ids)}
-movie_ids= df["movieId"].unique().tolist()
-movie2movie_encode = {x: i for i,x in enumerate(movie_ids)}
-movie_encode2movie = {i: x for i, x in enumerate(movie_ids)}
+product_ids= df["productId"].unique().tolist()
+product2product_encode = {x: i for i,x in enumerate(product_ids)}
+product_encode2product = {i: x for i, x in enumerate(product_ids)}
 df["user"] = df["userId"].map(user2user_encode)
-df["movie"] = df["movieId"].map(movie2movie_encode)
+df["product"] = df["productId"].map(product2product_encode)
 num_users=len(user2user_encode)
-num_movies = len(movie_encode2movie)
+num_products = len(product_encode2product)
 
 df["rating"] = df["rating"].values.astype(np.float32)
 
@@ -75,7 +75,7 @@ min_rating = min(df["rating"])
 max_rating= max(df["rating"])
 
 # print(
-#     "Number of users:{}, Number movies: {}, min rate:{}, max rate: {}".format(num_users, num_movies, min_rating,max_rating)
+#     "Number of users:{}, Number products: {}, min rate:{}, max rate: {}".format(num_users, num_products, min_rating,max_rating)
     
 # )
 
@@ -84,7 +84,7 @@ max_rating= max(df["rating"])
 
 
 df =df.sample(frac=1, random_state=42)
-x= df[["user","movie"]].values
+x= df[["user","product"]].values
 
 y= df["rating"].apply(lambda x:(x - min_rating)/(max_rating- min_rating)).values
 
@@ -103,10 +103,10 @@ x_train,x_val,y_train,y_val=(
 EMBEDDING_SIZE = 50
 
 class RecommenderNet(keras.Model):
-    def __init__(self, num_users, num_movies, embedding_size, **kwargs):
+    def __init__(self, num_users, num_products, embedding_size, **kwargs):
         super(RecommenderNet, self).__init__(**kwargs)
         self.num_users = num_users
-        self.num_movies = num_movies
+        self.num_products = num_products
         self.embedding_size = embedding_size
         self.user_embedding = layers.Embedding(
             num_users,
@@ -115,21 +115,21 @@ class RecommenderNet(keras.Model):
             embeddings_regularizer=keras.regularizers.l2(1e-6),
         )
         self.user_bias = layers.Embedding(num_users, 1)
-        self.movie_embedding = layers.Embedding(
-            num_movies,
+        self.product_embedding = layers.Embedding(
+            num_products,
             embedding_size,
             embeddings_initializer="he_normal",
             embeddings_regularizer=keras.regularizers.l2(1e-6),
         )
-        self.movie_bias = layers.Embedding(num_movies, 1)
+        self.product_bias = layers.Embedding(num_products, 1)
 
     def call(self, inputs):
         user_vector = self.user_embedding(inputs[:, 0])
         user_bias = self.user_bias(inputs[:, 0])
-        movie_vector = self.movie_embedding(inputs[:, 1])
-        movie_bias = self.movie_bias(inputs[:, 1])
-        dot_user_movie = tf.tensordot(user_vector, movie_vector, 2)
-        x = dot_user_movie + user_bias + movie_bias
+        product_vector = self.product_embedding(inputs[:, 1])
+        product_bias = self.product_bias(inputs[:, 1])
+        dot_user_product = tf.tensordot(user_vector, product_vector, 2)
+        x = dot_user_product + user_bias + product_bias
         return tf.nn.sigmoid(x)
 
  
@@ -138,7 +138,7 @@ class RecommenderNet(keras.Model):
 # In[7]:
 
 
-model = RecommenderNet(num_users, num_movies, EMBEDDING_SIZE)
+model = RecommenderNet(num_users, num_products, EMBEDDING_SIZE)
 model.compile(
     keras.optimizers.Adam(learning_rate=0.001),
     loss="mean_squared_error",
@@ -163,37 +163,37 @@ import sys
 parameter = int(sys.argv[1])
 
 user_id = parameter
-movies_watched_by_user = df[df.userId==user_id]
-# print(movies_watched_by_user)
+products_watched_by_user = df[df.userId==user_id]
+# print(products_watched_by_user)
 
 # In[10]:
 
 
-movie_df =pd.read_csv('C:/Users/admin/Desktop/ml-latest-small/products.csv')
+product_df =pd.read_csv('C:/Users/admin/Downloads/products.csv')
 
-movies_not_watched = movie_df[
-    ~movie_df["movieId"].isin(movies_watched_by_user.movieId.values)
-]["movieId"]
-movies_not_watched = list(
-    set(movies_not_watched).intersection(set(movie2movie_encode.keys()))
+products_not_watched = product_df[
+    ~product_df["productId"].isin(products_watched_by_user.productId.values)
+]["productId"]
+products_not_watched = list(
+    set(products_not_watched).intersection(set(product2product_encode.keys()))
 )
-movies_not_watched =[[movie2movie_encode.get(x)] for x in movies_not_watched]
+products_not_watched =[[product2product_encode.get(x)] for x in products_not_watched]
 user_encoder= user2user_encode.get(user_id)
-user_movie_array = np.hstack(
-    ([[user_encoder]]* len(movies_not_watched),movies_not_watched)
+user_product_array = np.hstack(
+    ([[user_encoder]]* len(products_not_watched),products_not_watched)
 ) 
-ratings = model.predict(user_movie_array).flatten()
+ratings = model.predict(user_product_array).flatten()
 top_ratings_indices = ratings.argsort()[-5:][:: -1]
-recommend_movie_ids=[
-    movie_encode2movie.get(movies_not_watched[x][0]) for x in top_ratings_indices
+recommend_product_ids=[
+    product_encode2product.get(products_not_watched[x][0]) for x in top_ratings_indices
 ]
 print("show for user:{}".format(user_id) )
 
 print("top 5")
-recommended_movies = movie_df[movie_df["movieId"].isin(recommend_movie_ids)]
+recommended_products = product_df[product_df["productId"].isin(recommend_product_ids)]
 result = ""
-for row in recommended_movies.itertuples():
-    result += f"{row.movieId}\n"
+for row in recommended_products.itertuples():
+    result += f"{row.productId}\n"
 
 print(result)
 
