@@ -20,7 +20,7 @@
     <tr th:each="product : ${recommendedProducts}">
         <td th:text="${product.id}"></td>
         <td th:text="${product.name}"></td>
-        <td th:text="${product.description}"></td>
+        <td th:text="${product.productCategory.name}"></td>
         <td th:text="${product.price}"></td>
     </tr>
     </tbody>

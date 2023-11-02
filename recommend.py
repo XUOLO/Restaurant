@@ -140,19 +140,49 @@ class RecommenderNet(keras.Model):
 
 model = RecommenderNet(num_users, num_products, EMBEDDING_SIZE)
 model.compile(
-    keras.optimizers.Adam(learning_rate=0.001),
+    keras.optimizers.Adam(learning_rate=0.0001),
     loss="mean_squared_error",
     metrics=["mean_absolute_error", "mean_squared_error"]
 )
 
-history = model.fit(
-    x=x_train,
-    y=y_train,
-    batch_size=64,
-    epochs=5,
-    verbose=1,
-    validation_data=(x_val, y_val)
-)
+# history = model.fit(
+#     x=x_train,
+#     y=y_train,
+#     batch_size=32,
+#     epochs=3,
+#     verbose=1,
+#     validation_data=(x_val, y_val)
+# )
+
+
+
+
+
+
+history = model.fit(x_train, y_train, batch_size=64, epochs=5, verbose=1, validation_data=(x_val, y_val))
+
+# Lấy giá trị độ lỗi từ lịch sử huấn luyện
+train_loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+# Lấy giá trị độ chính xác từ lịch sử huấn luyện
+train_acc = history.history['mean_absolute_error']
+val_acc = history.history['val_mean_absolute_error']
+ 
+
+# In độ lỗi và độ chính xác cuối cùng trên tập huấn luyện và tập kiểm tra
+final_train_loss = train_loss[-1]
+final_val_loss = val_loss[-1]
+final_train_acc = train_acc[-1]
+final_val_acc = val_acc[-1]
+# print(f'Final Training Loss: {final_train_loss}')
+# print(f'Final Validation Loss: {final_val_loss}')
+# print(f'Final Training MAE: {final_train_acc}')
+# print(f'Final Validation MAE: {final_val_acc}')
+
+
+
+
 
 
 # In[8]:

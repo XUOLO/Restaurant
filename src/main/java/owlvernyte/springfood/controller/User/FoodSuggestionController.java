@@ -42,7 +42,7 @@ public class FoodSuggestionController {
     public String getRecommendedProducts(Model model,HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
 
-        String notebookScript = "C:\\Users\\admin\\Desktop\\dacn\\recommend.py";
+        String notebookScript = "C:\\Users\\admin\\Desktop\\dacn\\Restaurant\\recommend.py";
         Long parameter = userId;
 
 
