@@ -245,11 +245,73 @@
               </div>
             </div>
           </div>
+
+
+
+          <!-- ======= Specials Section ======= -->
+          <section id="specials" class="specials"  >
+            <div class="container" data-aos="fade-up">
+
+              <div class="section-title">
+                <h2>Specials</h2>
+                <p>Recommend for you</p>
+                <p th:if="${message}"> <p th:text="${message}"></p> </p>
+              </div>
+
+              <div class="row" data-aos="fade-up" data-aos-delay="100"  >
+                <div class="col-lg-3">
+                  <ul class="nav nav-tabs flex-column">
+                    <li class="nav-item" th:each="product, iterStat : ${matchingProducts}">
+                      <a class="nav-link" data-bs-toggle="tab" th:classappend="${iterStat.index == 0} ? 'active' : ''"
+                         th:text="${product.productCategory.name}" th:href="'#tab-' + ${iterStat.index + 1}">
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+
+                <div class="col-lg-9 mt-4 mt-lg-0">
+                  <div class="tab-content">
+                    <div class="tab-pane" th:each="product, iterStat : ${matchingProducts}"
+                         th:classappend="${iterStat.index == 0} ? 'active show' : ''" th:id="'tab-' + ${iterStat.index + 1}">
+                      <div class="row"  >
+                        <div class="col-lg-8 details order-2 order-lg-1">
+                          <h3 th:href="@{'/user/productDetail/' + ${product.id}}" th:text="${product.name}"> </h3>
+                          <a href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
+                            + Add to cart
+
+                          </a>
+                          <p class="fst-italic" th:text="${product.description}">   </p>
+                          <p th:text="${product.detail}" >     </p>
+                        </div>
+                        <div class="col-lg-4 text-center order-1 order-lg-2">
+                          <img th:src="@{'/display?id=' + ${product.id}}" alt="" class="img-fluid">
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>            </div>
+          </section>
+
+
+          <!-- End Specials Section -->
+
+
+
         </div>
       </div>
+
+
+
     </div>
 
   </section>
+
+
+
+
+
 
 </main>
 
@@ -317,7 +379,36 @@
 
 <div id="preloader"></div>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script src="/User/js/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.add-to-cart-btn').click(function() {
+            var productId = $(this).data('product-id');
 
+           $.ajax({
+    type: 'GET',
+    url: '/user/shoppingCart/add/' + productId,
+    success: function(response) {
+        // Handling success response
+        alert('Added to cart successfully');
+        location.reload();
+        updateCartItemCount();
+    },
+    error: function() {
+        // Handling error (if any)
+        alert('An error occurred while adding to cart');
+    }
+});
+        });
+
+        function updateCartItemCount() {
+            $.get("/user/itemCount", function(data) {
+                // Cập nhật số lượng sản phẩm trên giao diện
+                $(".cart-item-count").text(data);
+            });
+        }
+    });
+</script>
 <!-- Vendor JS Files -->
 <script src="/User/vendor/aos/aos.js"></script>
 <script src="/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

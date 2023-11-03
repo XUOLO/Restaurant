@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import owlvernyte.springfood.entity.CsvReader;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.Rating;
 import owlvernyte.springfood.entity.User;
@@ -18,16 +19,14 @@ import owlvernyte.springfood.repository.UserRepository;
 import owlvernyte.springfood.service.ProductService;
 import owlvernyte.springfood.service.UserService;
 
+import java.io.*;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+
 @Controller
 public class FoodSuggestionController {
-
 
 
     @Autowired
@@ -39,7 +38,7 @@ public class FoodSuggestionController {
     UserService userService;
 
     @GetMapping("/user/recommendation")
-    public String getRecommendedProducts(Model model,HttpSession session) {
+    public String getRecommendedProducts(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
 
         String notebookScript = "C:\\Users\\admin\\Desktop\\dacn\\Restaurant\\recommend.py";
@@ -85,7 +84,6 @@ public class FoodSuggestionController {
             }
 
 
-
             // Gửi danh sách sản phẩm được gợi ý đến view
             model.addAttribute("recommendedProducts", recommendedProducts);
         } catch (IOException e) {
@@ -94,8 +92,10 @@ public class FoodSuggestionController {
 
         return "User/recommendations";
     }
+
     @Autowired
     private RatingRepository ratingRepository;
+
     @GetMapping("/user/ratings/csv")
     public ResponseEntity<byte[]> exportRatingsToCSV(HttpServletResponse response) throws IOException {
         List<Rating> ratings = ratingRepository.findAll();
@@ -122,8 +122,10 @@ public class FoodSuggestionController {
                 .headers(headers)
                 .body(csvBytes);
     }
+
     @Autowired
     private ProductRepository productRepository;
+
     @GetMapping("/user/products/csv")
     public ResponseEntity<byte[]> exportProductsToCSV(HttpServletResponse response) throws IOException {
         List<Product> products = productRepository.findAll();
@@ -150,5 +152,29 @@ public class FoodSuggestionController {
                 .headers(headers)
                 .body(csvBytes);
     }
-
+//    @Autowired
+//    private CsvReader csvReader;
+//    @GetMapping("/user/matching-products")
+//    public String getMatchingProducts(Model model,HttpSession session) {
+//        // Đường dẫn đến tệp CSV chứa dữ liệu
+//        String csvFilePath = "C:\\Users\\admin\\Downloads\\recommendation.csv";
+//        Long userId = (Long) session.getAttribute("userId");
+//        // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
+//        List<Integer> matchingProductIds = csvReader.getMatchingProductsFromCsv(csvFilePath,userId);
+//
+//        List<Product> matchingProducts = new ArrayList<>();
+//
+//        for (Integer productId : matchingProductIds) {
+//            Product product = productService.getProductById(productId);
+//            if (product != null) {
+//                matchingProducts.add(product);
+//            }
+//        }
+//
+//        model.addAttribute("matchingProducts", matchingProducts);
+//
+//        return "User/user-products-view";
+//    }
 }
+
+

@@ -36,7 +36,8 @@ public class HomeUserController {
 
     @Autowired
     private CategoryService categoryService;
-
+    @Autowired
+    private CsvReader csvReader;
     @Autowired
     private UserService userService;
     @Autowired
@@ -72,7 +73,21 @@ public class HomeUserController {
         model.addAttribute("username", username);
         model.addAttribute("name", name);
 //        model.addAttribute("userId", userId);
-
+//        String csvFilePath = "C:\\Users\\admin\\Downloads\\recommendation.csv";
+//
+//        // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
+//        List<Integer> matchingProductIds = csvReader.getMatchingProductsFromCsv(csvFilePath,userId);
+//
+//        List<Product> matchingProducts = new ArrayList<>();
+//
+//        for (Integer productId : matchingProductIds) {
+//            Product product = productService.getProductById(productId);
+//            if (product != null) {
+//                matchingProducts.add(product);
+//            }
+//        }
+//
+//        model.addAttribute("matchingProducts", matchingProducts);
         model.addAttribute("listCategory", categoryService.getAllCategory());
         model.addAttribute("listProductCategory", productCategoryService.getAllProductCategory());
         model.addAttribute("listProduct", sellingProducts);
@@ -116,6 +131,11 @@ public class HomeUserController {
         model.addAttribute("contact", contact);
 
         model.addAttribute("category", category);
+
+
+
+
+
         return templateName;
     }
 
