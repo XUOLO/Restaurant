@@ -53,10 +53,9 @@ public class ShoppingCartService {
         return shoppingCart.values().size();
     }
 
-    public  double getAmount(){
-
+    public  long getAmount(){
         return shoppingCart.values().stream()
-                .mapToDouble(item->item.getQuantity()*item.getPrice()).sum();
+                .mapToLong(item->item.getQuantity()*item.getPrice()).sum();
     }
 
 

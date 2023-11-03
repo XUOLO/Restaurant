@@ -71,8 +71,16 @@ private OrderDetailRepository orderDetailRepository;
         String username = (String) session.getAttribute("username");
         String name = (String) session.getAttribute("name");
         Long userId = (Long) session.getAttribute("userId");
+
+
+          String address = (String) session.getAttribute("address");
+        String email = (String) session.getAttribute("email");
+        String phone = (String) session.getAttribute("phone");
         model.addAttribute("username", username);
         model.addAttribute("name", name);
+        model.addAttribute("address", address);
+        model.addAttribute("email", email);
+        model.addAttribute("phone", phone);
         model.addAttribute("userId", userId);
 
         return "User/checkOut";
@@ -233,6 +241,9 @@ private OrderDetailRepository orderDetailRepository;
 
         return "User/checkOutSuccess";
     }
-
+    @GetMapping("user/vnpay_return")
+    public String returnPay(){
+        return "User/vnpay_return";
+    }
 
 }
