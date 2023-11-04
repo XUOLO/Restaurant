@@ -187,5 +187,14 @@ public class UserService {
         }
         return count;
     }
+    public boolean checkEmailExists(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+    }
 
+    public void updatePasswordByEmail(String email, String newPassword) {
+        User user = userRepository.findByEmail(email);
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
 }

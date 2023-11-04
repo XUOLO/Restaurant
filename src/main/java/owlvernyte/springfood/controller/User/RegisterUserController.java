@@ -1,5 +1,6 @@
 package owlvernyte.springfood.controller.User;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -24,7 +25,9 @@ import owlvernyte.springfood.service.UserService;
 
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 @Controller
 public class RegisterUserController {
@@ -44,7 +47,7 @@ public class RegisterUserController {
     public String verifyOTP(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
         // Kiểm tra xác minh OTP cho username tại đây
         if (userService.verifyOTP(username, otp)) {
-             userService.setOTPVerified(username, true);
+            userService.setOTPVerified(username, true);
             model.addAttribute("successMessage", "OTP verification successful.");
             SecurityContextHolder.clearContext();
             session.invalidate();
@@ -56,7 +59,7 @@ public class RegisterUserController {
     }
     @PostMapping("/user/verifyOTPAgain")
     public String verifyOTPAgain(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
-         if (userService.verifyOTP(username, otp)) {
+        if (userService.verifyOTP(username, otp)) {
             userService.setOTPVerified(username, true);
             model.addAttribute("successMessage", "OTP verification successful.");
             SecurityContextHolder.clearContext();
@@ -147,18 +150,86 @@ public class RegisterUserController {
     }
     @Autowired
     private ReservationRepository reservationRepository;
-        @PostMapping("/user/reservation")
-        public String createBooking(@ModelAttribute("reservation") Reservation reservation) {
-            reservationRepository.save(reservation); // Lưu trữ thông tin đặt bàn vào cơ sở dữ liệu
-            return "redirect:/user/datetime"; // Chuyển hướng sau khi đặt bàn thành công
-        }
+    @PostMapping("/user/reservation")
+    public String createBooking(@ModelAttribute("reservation") Reservation reservation) {
+        reservationRepository.save(reservation); // Lưu trữ thông tin đặt bàn vào cơ sở dữ liệu
+        return "redirect:/user/datetime"; // Chuyển hướng sau khi đặt bàn thành công
+    }
 
-        @GetMapping("/user/datetime")
+    @GetMapping("/user/datetime")
     public String dateee(){
-            return "User/datetime";
+        return "User/datetime";
+    }
+
+
+
+    @GetMapping("/user/forgotPassword")
+    public String forgotPassword( Model model, HttpSession session) {
+
+        String username = (String) session.getAttribute("username");
+
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+        model.addAttribute("username", username);
+
+
+
+
+        return "User/forgotPassword";
+    }
+
+
+    @PostMapping("/user/forgotPassword")
+    public String submitForgotPassword(Model model, HttpSession session, @RequestParam("email") String email) {
+        // Kiểm tra xem email có trong CSDL không (đây giả sử bạn sử dụng một service để kiểm tra)
+        boolean emailExists = userService.checkEmailExists(email);
+
+        if (emailExists) {
+            String newPassword = generateRandomPassword();
+
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+            String encryptedPassword = bCryptPasswordEncoder.encode(newPassword);
+
+            userService.updatePasswordByEmail(email, encryptedPassword);
+
+            sendPasswordResetEmail(email, newPassword);
+
+            model.addAttribute("message", "Your password has reset. Please check your mail");
+        } else {
+            model.addAttribute("errorMessage", "Email not exist!!!");
         }
 
 
+        return "User/forgotPassword";
+    }
 
+    private String generateRandomPassword() {
 
+        String characters = "0123456789";
+        StringBuilder newPassword = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 12; i++) {
+            int index = random.nextInt(characters.length());
+            newPassword.append(characters.charAt(index));
+        }
+
+        return newPassword.toString();
+    }
+
+    private void sendPasswordResetEmail(String email, String newPassword) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+
+        try {
+            helper.setTo(email);
+            helper.setSubject("Reset password");
+            helper.setText("Your new password is : " + newPassword);
+
+            // Gửi email
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 }

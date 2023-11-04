@@ -12,8 +12,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
- <link href="/User/img/favicon.png" rel="icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="/User/img/favicon.png" rel="icon">
     <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -70,24 +70,11 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-                <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Menu'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" >Home</a></li>
+                <li th:each="category : ${listCategory}" ><a   th:href="@{/user/category/{id}(id=${category.id})}" >Home</a></li>
 
                 <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
-                    <ul>
-                        <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Home'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
 
-                        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
-                            <ul>
-                                <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
 
-                                <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
-                                <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
-                                <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
-                            </ul>
-                        </li>
-                        <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
-                        </a></li>
-                    </ul>
                 </li>
                 <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
                 </a></li>
@@ -98,9 +85,9 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
-         <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
-    </form>
+        <form action="/user/BookATable" method="post">
+            <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+        </form>
 
     </div>
 </header><!-- End Header -->

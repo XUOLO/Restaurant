@@ -25,6 +25,7 @@ import owlvernyte.springfood.service.ShoppingCartService;
 import owlvernyte.springfood.service.UserService;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
@@ -125,6 +126,7 @@ public class PayController {
     }
     @GetMapping("/user/payment-infor")
     public ModelAndView transaction(@RequestParam(value = "vnp_Amount") String amount,
+                                    @RequestParam(value = "vnp_TxnRef") String vnp_TxnRef,
                                     @RequestParam(value = "vnp_BankCode") String bankCode,
                                     @RequestParam(value = "vnp_ResponseCode") String responseCode,
                                     HttpSession session,
@@ -136,7 +138,7 @@ public class PayController {
             Long userId = (Long) session.getAttribute("userId");
             User user = userService.viewById(userId);
             String name = (String) session.getAttribute("name");
-             String address = (String) session.getAttribute("address");
+            String address = (String) session.getAttribute("address");
             String email = (String) session.getAttribute("email");
             String phone = (String) session.getAttribute("phone");
             Blob userImage = (Blob) session.getAttribute("userImage");
@@ -178,7 +180,7 @@ public class PayController {
             Random random = new Random();
             int randomNumber = random.nextInt(900000) + 100000;
             String code = "XL" + String.valueOf(randomNumber);
-            order.setCode(code);
+            order.setCode("XL"+vnp_TxnRef);
             orderRepository.save(order);
             Long orderId = order.getId();
 
@@ -274,12 +276,25 @@ public class PayController {
             modelAndView.setViewName("User/checkOutSuccess");
         } else {
             modelAndView.addObject("listCategory", categoryService.getAllCategory());
-             modelAndView.setViewName("User/checkOutFail");
+            modelAndView.setViewName("User/checkOutFail");
         }
 
         return modelAndView;
     }
+    @GetMapping("/user/save-meal")
+    public String saveMeal(@RequestParam("id") String mealId,
+                           @RequestParam("name") String mealName,
+                           @RequestParam("image") String mealImage) throws UnsupportedEncodingException {
 
+        String decodedName = URLDecoder.decode(mealName, "UTF-8");
+        String decodedImage = URLDecoder.decode(mealImage, "UTF-8");
+
+        // Sử dụng các giá trị đã giải mã
+        System.out.println(decodedName);
+        System.out.println(decodedImage);
+
+        return "Meal saved successfully!";
+    }
 
 
 }
