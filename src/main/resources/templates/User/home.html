@@ -201,8 +201,29 @@
         <div class="col-lg-12 d-flex justify-content-center">
           <ul id="menu-flters">
             <li data-filter="*" class="filter-active">All</li>
-            <li th:attr="data-filter='.filter-' + ${productCategory.name}" th:each="productCategory : ${listProductCategory}" th:text="${productCategory.name}">Starters</li>
+            <li class="product-category" data-filter="" th:each="productCategory : ${listProductCategory}" th:text="${productCategory.name}">Thịt nướng</li>
+            <script>
+document.addEventListener("DOMContentLoaded", function() {
+    var productCategoryElements = document.querySelectorAll(".product-category");
 
+    productCategoryElements.forEach(function(element) {
+        var categoryName = element.textContent.trim();
+        var filterValue = "";
+
+        if (categoryName === "Đồ nướng") {
+            filterValue = ".filter-Đồ";
+        } else if (categoryName === "Thức uống") {
+            filterValue = ".filter-Thức";
+        } else if (categoryName === "Tráng miệng") {
+            filterValue = ".filter-Tráng ";
+        } else {
+            filterValue = ".filter-" + categoryName;
+        }
+
+        element.setAttribute("data-filter", filterValue);
+    });
+});
+</script>
           </ul>
         </div>
       </div>

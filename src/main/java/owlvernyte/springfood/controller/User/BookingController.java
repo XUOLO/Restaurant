@@ -159,6 +159,8 @@ public class BookingController {
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
         User user = userService.viewById(userId);
+//        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(bookingId));
+//        booking.setId(reservationId);
         booking.setName(name);
         booking.setPhone(phone);
         booking.setEmail(email);

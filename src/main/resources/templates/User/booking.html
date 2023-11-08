@@ -304,7 +304,7 @@ color:#cda45e;
                        <img class="menu-image"style="width:100px; height:100px;" th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
                        <div class="price" th:text="${#numbers.formatInteger(item.price,3,'POINT')+' VND'}">Giá: $10</div>
                    </div>
-                   <div class="product-info" style="text-align: start;width: 50%;margin-right: 117px;">
+                   <div class="product-info" style="text-align: start;width: 63%;margin-right: -10px;">
                        <h3 class="name" th:text="'Name: ' + ${item.name}"></h3>
                        <h3 class="category"th:text="'Category: '+${item.productCategory}"></h3>
 

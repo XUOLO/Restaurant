@@ -112,7 +112,7 @@
         padding: 20px;
     }
 
-    .address-section,   {
+    .address-section   {
         flex-basis: 60%;
     }
 
@@ -186,7 +186,7 @@
 
       </div>
       <div class="product-section">
-        <h2>List product</h2>
+        <h2>List dishes</h2>
         <div th:each="item : ${AllCartItem}">
           <div class="product-item">
             <p class="product-name" th:text="${item.name}"> </p>
