@@ -227,7 +227,7 @@ public class PayController {
 
                 // Đặt các thuộc tính của email
                 helper.setTo(email);
-                helper.setSubject("Order info #" + order.getCode());
+                helper.setSubject("Thông tin đơn #" + order.getCode());
 
                 // Đặt nội dung email dưới dạng HTML
                 String tableContent = "<table style=\"border-collapse: collapse;\">";
@@ -251,13 +251,13 @@ public class PayController {
                 tableContent += "</table>";
 
                 String htmlContent = "<html><body>";
-                htmlContent += "<h2>Order info #" + order.getCode() + "</h2>";
-                htmlContent += "<p>Hello " + order.getName() + ",</p>";
-                htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
-                htmlContent += "<p>Order code " + order.getCode() + "</p>";
-                htmlContent += "<p>Order date: " + order.getOrderDate() + "</p>";
-                htmlContent += "<p>Address: " + order.getAddress() + "</p>";
-                htmlContent += "<p>Total: " + formattedPriceTotal + "</p>";
+                htmlContent += "<h2>Thông tin  đơn hàng #" + order.getCode() + "</h2>";
+                htmlContent += "<p>Xin chào " + order.getName() + ",</p>";
+                htmlContent += "<p>Cảm ơn bạn đã đặt hàng. Dưới đây là chi tiết về đơn đặt hàng của bạn:</p>";
+                htmlContent += "<p>Mã đơn hàng " + order.getCode() + "</p>";
+                htmlContent += "<p>Ngày đặt hàng: " + order.getOrderDate() + "</p>";
+                htmlContent += "<p>Địa chỉ: " + order.getAddress() + "</p>";
+                htmlContent += "<p>Tổng cộng: " + formattedPriceTotal + "</p>";
                 htmlContent += tableContent;
                 htmlContent += "</body></html>";
 

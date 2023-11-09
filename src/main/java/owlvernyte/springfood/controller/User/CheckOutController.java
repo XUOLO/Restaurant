@@ -82,7 +82,30 @@ private OrderDetailRepository orderDetailRepository;
         model.addAttribute("email", email);
         model.addAttribute("phone", phone);
         model.addAttribute("userId", userId);
+        Collection<CartItem> cartItems = shoppingCartService.getAllCartItem();
+        List<String> errorMessages = new ArrayList<>();
 
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getProductId() != null) {
+                Long productId = cartItem.getProductId();
+                int quantityToOrder = cartItem.getQuantity();
+
+                Product product = productRepository.findById(productId).orElse(null);
+                if (product != null) {
+                    int availableQuantity = product.getQuantity();
+                    if (quantityToOrder > availableQuantity) {
+                        String errorMessage = "Sản phẩm '" + product.getName() + "' không đủ số lượng.";
+                        errorMessages.add(errorMessage);
+
+                    }
+                }
+            }
+        }
+        if (!errorMessages.isEmpty()) {
+            // Có ít nhất một sản phẩm không đủ số lượng, thực hiện xử lý thông báo lỗi, ví dụ: đẩy danh sách thông báo lỗi vào model và trả về trang lỗi
+            model.addAttribute("errorMessages", errorMessages);
+            return  "User/ErrorPage" ;
+        }
         return "User/checkOut";
     }
 

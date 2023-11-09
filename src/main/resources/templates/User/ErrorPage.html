@@ -100,14 +100,18 @@
 </header><!-- End Header -->
 
 <main id="main">
-    <h1>Trang lỗi</h1> <p>Có một số sản phẩm không đủ số lượng:</p>
-    <ul th:each="errorMessage : ${errorMessages}">
-        <li th:text="${errorMessage}">
 
-    </li>
-    </ul>
-    <p>Vui lòng xóa các sản phẩm hoặc điều chỉnh số lượng trong giỏ hàng của bạn và thử lại.</p>
-    <a href="/user/viewCart">Giỏ hàng</a>
+    <div class="errorPage" style="padding-top: 165px;padding-left: 130px;">
+        <h1>Lỗi</h1> <p>Có một số sản phẩm không đủ số lượng:</p>
+        <ul th:each="errorMessage : ${errorMessages}">
+            <li th:text="${errorMessage}">
+
+            </li>
+        </ul>
+        <p>Vui lòng xóa các sản phẩm hoặc điều chỉnh số lượng trong giỏ hàng của bạn và thử lại.</p>
+        <a href="/user/viewCart">Giỏ hàng</a>
+    </div>
+
 </main>
 
 

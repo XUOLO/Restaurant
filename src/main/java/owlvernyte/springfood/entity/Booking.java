@@ -45,11 +45,11 @@ public class Booking {
     public String getStatusString() {
         switch (status) {
             case "1":
-                return "Handling";
+                return "Đang xử lý";
             case "2":
-                return "Confirmed";
+                return "Đã xác nhận";
             case "3":
-                return "Cancel";
+                return "Đã hủy";
 
             default:
                 return "Unknown";
