@@ -57,12 +57,9 @@ public class BookingController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/user/BookATable")
-    public String showTable(Model model, Authentication authentication, HttpSession session){
-        if (authentication == null || !authentication.isAuthenticated()) {
+    @GetMapping("/user/BookATable")
+    public String showTable(Model model, HttpSession session){
 
-            return "Admin/login";
-        }
         String username = (String) session.getAttribute("username");
         String name = (String) session.getAttribute("name");
         Long userId = (Long) session.getAttribute("userId");

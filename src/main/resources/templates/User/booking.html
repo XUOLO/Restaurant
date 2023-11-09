@@ -92,9 +92,9 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
-         <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
-    </form>
+        <a href="/user/BookATable" >
+            <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
+        </a>
 
     </div>
 </header><!-- End Header -->
@@ -118,7 +118,7 @@
             </form>
         </div>
 
-        <h2 class="list-dishes" style="margin-left: 50px;">Danh sách món <span class="total-price" style="margin-left: 10%;" th:text="'Total: '+${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span></h2>
+        <h2 class="list-dishes" style="margin-left: 50px;">Danh sách món <span class="total-price" style="margin-left: 10%;" th:text="'Tổng: '+${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span></h2>
 
         <div class="menu-list" style=" background-color: #0c0b09;
     width: 40%;
@@ -169,15 +169,15 @@
         border-color: red;
     }
 
-    button[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 5px;
-    }
+<!--    button[type="submit"] {-->
+<!--        background-color: #4CAF50;-->
+<!--        color: white;-->
+<!--        padding: 10px 20px;-->
+<!--        border: none;-->
+<!--        cursor: pointer;-->
+<!--        font-size: 16px;-->
+<!--        border-radius: 5px;-->
+<!--    }-->
 .table-info {
     background-color: #1a1814;
     color:white;
@@ -208,15 +208,15 @@
     margin-bottom: 10px;
 }
 
-button[type="submit"] {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
+<!--button[type="submit"] {-->
+<!--    padding: 10px 20px;-->
+<!--    background-color: #4CAF50;-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    cursor: pointer;-->
+<!--    font-size: 16px;-->
+<!--    border-radius: 5px;-->
+<!--}-->
 
 button[type="submit"]:hover {
     background-color: #45a049;
@@ -268,9 +268,9 @@ input[type="email"] {
     padding: 5px;
 }
 
-button[type="submit"] {
-    color: #ffffff;
-}
+<!--button[type="submit"] {-->
+<!--    color: #ffffff;-->
+<!--}-->
 
 .menu-image {
     border-radius: 5px;
@@ -356,14 +356,20 @@ color:#cda45e;
                     </div>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
                     <div class="form-group" th:classappend="${#fields.hasErrors('dateTime')} ? 'has-error'">
-                        <label for="dateTime">Datetime:</label>
+                        <label for="dateTime">Ngày đến:</label>
                         <input type="datetime-local" id="dateTime" name="dateTime" th:field="*{dateTime}" />
 
 
 
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                    <button type="submit" style="background-color:#cda45e;">Place order</button>
+                    <button type="submit" style="background-color:#cda45e;padding: 10px 20px;
+
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;">Tạo đơn</button>
                 </form>
             </div>
 
