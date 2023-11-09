@@ -74,7 +74,7 @@ public class ShoppingCartController {
             model.addAttribute("matchingProducts", matchingProducts);
         } else {
             // Hiển thị thông báo cho người dùng
-            String message = "There are no recommended products for you at the moment.";
+            String message = "Hiện tại không có sản phẩm gợi ý cho bạn!.";
             model.addAttribute("message", message);
         }
 

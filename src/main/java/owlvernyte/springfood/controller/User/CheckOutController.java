@@ -119,7 +119,7 @@ private OrderDetailRepository orderDetailRepository;
                 if (product != null) {
                     int availableQuantity = product.getQuantity();
                     if (quantityToOrder > availableQuantity) {
-                         String errorMessage = "Product '" + product.getName() + "' not enough quantity.";
+                         String errorMessage = "Sản phầm '" + product.getName() + "' không đủ số lượng.";
                         errorMessages.add(errorMessage);
 
                     }

@@ -43,8 +43,8 @@
   <div class="container d-flex justify-content-center justify-content-md-between">
 
     <div class="contact-info d-flex align-items-center">
-      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
-      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
@@ -66,19 +66,24 @@
 
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
-        <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Home'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
+<!--        <li th:each="category : ${listCategory}" ><a class="nav-link scrollto" th:classappend="${category.name == 'Home'} ? 'active' : ''"  th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>-->
+        <li   ><a class="nav-link scrollto active"      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
 
-        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
-            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
 
-            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
-            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
-            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Đăng nhập </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Đăng kí</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-         <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
-        </a></li>
+        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" sec:authentication="name"></span> </a> </li>
+
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
           <i class="fa-solid fa-cart-shopping"></i>
@@ -87,7 +92,7 @@
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
     <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </form>
 
 
@@ -99,12 +104,12 @@
   <div class="container position-relative text-center text-lg-start" data-aos="zoom-in" data-aos-delay="100">
     <div class="row">
       <div class="col-lg-8">
-        <h1>Welcome to <span>Lign</span></h1>
-        <h2>Delivering great food for more than 18 years!</h2>
+        <h1>Chào mừng bạn đến với <span>Lign</span></h1>
+        <h2>Hơn 18 năm phục vụ ẩm thực tuyệt vời!</h2>
 
         <div class="btns">
-          <a href="/user/menu" class="btn-menu animated fadeInUp scrollto">Our Menu</a>
-          <a href="/user/BookATable" class="btn-book animated fadeInUp scrollto">Book a Table</a>
+          <a href="/user/menu" class="btn-menu animated fadeInUp scrollto">Thực đơn</a>
+          <a href="/user/BookATable" class="btn-book animated fadeInUp scrollto">Đặt bàn</a>
         </div>
       </div>
       <div class="col-lg-4 d-flex align-items-center justify-content-center position-relative" data-aos="zoom-in" data-aos-delay="200">
@@ -128,18 +133,15 @@
           </div>
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
-          <h3>Welcome to our restaurant, where you can enjoy memorable moments in a polite and cozy space. </h3>
-          <p class="fst-italic">
-            We understand that eating is not only about meeting physiological needs, but also a delicate experience, a way to enjoy flavors and explore culinary culture. With enjoyment and passion, we create unique and interesting dishes, from traditional to creative and innovative.
-          </p>
+          <h3>Chào mừng bạn đến với nhà hàng của chúng tôi, nơi bạn có thể tận hưởng những khoảnh khắc đáng nhớ trong không gian lịch sự và ấm cúng. </h3>          <p class="fst-italic">
+          Chúng tôi hiểu rằng ăn uống không chỉ là đáp ứng nhu cầu sinh lý mà còn là sự trải nghiệm tinh tế, là cách thưởng thức hương vị và khám phá văn hóa ẩm thực. Bằng sự thích thú và đam mê, chúng tôi tạo ra những món ăn độc đáo, thú vị, từ truyền thống đến sáng tạo và đổi mới.          </p>
           <ul>
-            <li><i class="bi bi-check-circle"></i> Our restaurant is committed to ensuring the quality of each dish, from the careful selection of fresh and quality ingredients, to the cooking process performed by our team of talented and experienced chefs. </li>
-            <li><i class="bi bi-check-circle"></i> With luxurious space and meticulous care to every detail, we hope to bring you a feeling of comfort and relaxation when enjoying your meals here.</li>
-            <li><i class="bi bi-check-circle"></i> We are committed to creating memorable culinary experiences where you can enjoy satisfaction and satisfaction in every aspect.</li>
+            <li><i class="bi bi-check-circle"></i> Nhà hàng chúng tôi cam kết đảm bảo chất lượng của từng món ăn, từ việc lựa chọn kỹ càng nguyên liệu tươi ngon chất lượng cho đến quy trình chế biến do đội ngũ chúng tôi thực hiện của những đầu bếp tài năng và giàu kinh nghiệm. </li>
+            <li><i class="bi bi-check-circle"></i> Với không gian sang trọng và sự chăm chút tỉ mỉ đến từng chi tiết, chúng tôi hy vọng sẽ mang lại cho bạn cảm giác thoải mái, thư giãn khi thưởng thức bữa ăn tại đây.</li >
+            <li><i class="bi bi-check-circle"></i> Chúng tôi cam kết tạo ra những trải nghiệm ẩm thực đáng nhớ để bạn có thể tận hưởng sự hài lòng và hài lòng về mọi mặt.</li>
           </ul>
           <p>
-            Come and explore our restaurant, where we are confident that you will find joy and satisfaction in every bite of food, every view and every moment here.
-          </p>
+            Hãy đến và khám phá nhà hàng của chúng tôi, nơi chúng tôi tin chắc rằng bạn sẽ tìm thấy niềm vui và sự hài lòng trong từng miếng ăn, từng góc nhìn và từng khoảnh khắc tại đây.          </p>
         </div>
       </div>
 
@@ -151,8 +153,8 @@
     <div class="container" data-aos="fade-up">
 
       <div class="section-title">
-        <h2>Why Us</h2>
-        <p>Why Choose Our Restaurant</p>
+        <h2>Ưu điểm của chúng tôi</h2>
+        <p>Tại sao chọn chúng tôi</p>
       </div>
 
       <div class="row">
@@ -160,9 +162,7 @@
         <div class="col-lg-4">
           <div class="box" data-aos="zoom-in" data-aos-delay="100">
             <span>01</span>
-            <h4>Quality and Taste</h4>
-            <p>  We pride ourselves on providing a great culinary experience, with a variety of delicious dishes prepared by our talented chefs using the finest ingredients.</p>
-
+            </h4> <p>Chúng tôi tự hào mang đến trải nghiệm ẩm thực tuyệt vời, với đa dạng các món ngon được chuẩn bị bởi đầu bếp tài năng của chúng tôi sử dụng những nguyên liệu tốt nhất.</p>
 
           </div>
         </div>
@@ -170,16 +170,16 @@
         <div class="col-lg-4 mt-4 mt-lg-0">
           <div class="box" data-aos="zoom-in" data-aos-delay="200">
             <span>02</span>
-            <h4>Ambiance and Atmosphere</h4>
-            <p>  Our restaurant offers a warm and inviting space, perfect for gathering with family and friends to enjoy a delicious and memorable meal together. With its cozy atmosphere and welcoming.</p>
+            <h4>Không gian và Bầu không khí</h4>
+            <p>Nhà hàng của chúng tôi mang đến không gian ấm cúng và hấp dẫn, hoàn hảo để tụ tập cùng gia đình và bạn bè để thưởng thức một bữa ăn ngon và đáng nhớ. Với không gian ấm áp và sự chào đón.</p>
           </div>
         </div>
 
         <div class="col-lg-4 mt-4 mt-lg-0">
           <div class="box" data-aos="zoom-in" data-aos-delay="300">
             <span>03</span>
-            <h4>Exceptional Servic</h4>
-            <p> With a trusted commitment to service excellence, we strive to ensure each customer leaves with satisfaction, creating memorable memories to cherish.</p>
+            <h4>Dịch vụ Xuất sắc</h4>
+            <p>Với cam kết uy tín về dịch vụ xuất sắc, chúng tôi luôn cố gắng đảm bảo mỗi khách hàng ra đi với sự hài lòng, tạo ra những kỷ niệm đáng nhớ để ghi nhớ.</p>
           </div>
         </div>
 
@@ -193,14 +193,14 @@
     <div class="container" data-aos="fade-up">
 
       <div class="section-title">
-        <h2>Menu</h2>
-        <p>Check Our Tasty Menu</p>
+        <h2>Thực đơn</h2>
+        <p>Khám phá Thực đơn hấp dẫn của chúng tôi</p>
       </div>
 
       <div class="row" data-aos="fade-up" data-aos-delay="100">
         <div class="col-lg-12 d-flex justify-content-center">
           <ul id="menu-flters">
-            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter="*" class="filter-active">Tất cả</li>
             <li class="product-category" data-filter="" th:each="productCategory : ${listProductCategory}" th:text="${productCategory.name}">Thịt nướng</li>
             <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
           </div>
             <a href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${list.id}">
-               + Add to cart
+               + Thêm vào giỏ hàng
 <!--             <i class="fa-solid fa-cart-shopping"></i>-->
            </a>
         </div>
@@ -358,8 +358,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     <div class="container" data-aos="fade-up">
       <div class="section-title">
-        <h2>Gallery</h2>
-        <p>Some photos from Our Restaurant</p>
+        <h2>Thư viện hình ảnh</h2>
+        <p>Một số hình ảnh đáng chú ý từ Nhà hàng của chúng tôi</p>
       </div>
     </div>
 
@@ -441,8 +441,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <div class="container" data-aos="fade-up">
 
       <div class="section-title">
-        <h2>Chefs</h2>
-        <p>Our Proffesional Chefs</p>
+        <h2>Đầu bếp</h2>
+        <p>Đội ngũ Đầu bếp chuyên nghiệp của chúng tôi</p>
       </div>
 
       <div class="row">
@@ -521,7 +521,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <p>
               123 HCM <br>
               <br><br>
-              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>Sđt:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">
@@ -588,12 +588,12 @@ document.addEventListener("DOMContentLoaded", function() {
     url: '/user/shoppingCart/add/' + productId,
     success: function(response) {
         // Handling success response
-        alert('Added to cart successfully');
+        alert('Thêm vào giỏ hàng thành công');
         updateCartItemCount();
     },
     error: function() {
         // Handling error (if any)
-        alert('An error occurred while adding to cart');
+        alert('Có lỗi khi thêm vào giỏ hàng');
     }
 });
         });

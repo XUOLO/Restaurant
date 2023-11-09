@@ -48,11 +48,11 @@ public class RegisterUserController {
         // Kiểm tra xác minh OTP cho username tại đây
         if (userService.verifyOTP(username, otp)) {
             userService.setOTPVerified(username, true);
-            model.addAttribute("successMessage", "OTP verification successful.");
+            model.addAttribute("successMessage", "Xác thực OTP thành công.");
             SecurityContextHolder.clearContext();
             session.invalidate();
         } else {
-            model.addAttribute("errorMessage", "Invalid OTP. Please try again.");
+            model.addAttribute("errorMessage", "OTP không hợp lệ. Thử lại!.");
         }
 
         return "User/otpVerified";
@@ -61,11 +61,11 @@ public class RegisterUserController {
     public String verifyOTPAgain(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
         if (userService.verifyOTP(username, otp)) {
             userService.setOTPVerified(username, true);
-            model.addAttribute("successMessage", "OTP verification successful.");
+            model.addAttribute("successMessage", "Xác thực OTP thành công.");
             SecurityContextHolder.clearContext();
             session.invalidate();
         } else {
-            model.addAttribute("errorMessage", "Invalid OTP. Please try again.");
+            model.addAttribute("errorMessage", "OTP không hợp lệ. Thử lại!");
         }
 
         return "User/otpVerifiedAgain";
@@ -74,7 +74,7 @@ public class RegisterUserController {
     public String showOtpVerifiedForm(Model model) {
         String username = (String) model.getAttribute("username");
         if (username == null) {
-            model.addAttribute("errorMessage", "not found username");
+            model.addAttribute("errorMessage", "Tài khoản không đúng");
             model.addAttribute("listCategory", categoryService.getAllCategory());
         } else {
             model.addAttribute("username", username);
@@ -87,7 +87,7 @@ public class RegisterUserController {
 
         if (username == null) {
             model.addAttribute("listCategory", categoryService.getAllCategory());
-            model.addAttribute("errorMessage", "not found username");
+            model.addAttribute("errorMessage", "Tài khoản không đúng");
 
         } else {
             model.addAttribute("username", username);
@@ -103,16 +103,16 @@ public class RegisterUserController {
 
         // Kiểm tra xem username đã tồn tại trong CSDL hay chưa
         if (userService.isUsernameExists(user.getUsername())) {
-            result.rejectValue("username", "error.user", "Username already exists.");
+            result.rejectValue("username", "error.user", "Tài khoản đã tồn tại.");
             return "User/register";
         }
 
         // Kiểm tra xem email đã tồn tại trong CSDL hay chưa
         if (userService.isEmailExists(user.getEmail())) {
-            result.rejectValue("email", "error.user", "Email already exists.");
+            result.rejectValue("email", "error.user", "Email đã tồn tại.");
             return "User/register";
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Register successful, please check your mail to get OTP code.");
+        redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công. Hãy kiểm tra mail của bạn để lấy mã OTP");
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setCreateTime(LocalDateTime.now());
         user.setProvider(Provider.LOCAL.value);
@@ -127,9 +127,9 @@ public class RegisterUserController {
 
             // Đặt các thuộc tính của email
             helper.setTo(user.getEmail());
-            helper.setSubject("OTP Verification");
+            helper.setSubject("Mã xác OTP");
             String htmlContent = "<html><body>";
-            htmlContent += "<h2>Your Otp is: " + otp + "</h2>";
+            htmlContent += "<h2>OTP của bạn là: " + otp + "</h2>";
             htmlContent += "</body></html>";
 
             helper.setText(htmlContent, true);
@@ -194,7 +194,7 @@ public class RegisterUserController {
 
             sendPasswordResetEmail(email, newPassword);
 
-            model.addAttribute("message", "Your password has reset. Please check your mail");
+            model.addAttribute("message", "Mật khẩu của bạn đã được reset, hãy kiểm tra mail của bạn để lấy mật khẩu mới!");
         } else {
             model.addAttribute("errorMessage", "Email not exist!!!");
         }
@@ -223,8 +223,8 @@ public class RegisterUserController {
 
         try {
             helper.setTo(email);
-            helper.setSubject("Reset password");
-            helper.setText("Your new password is : " + newPassword);
+            helper.setSubject("Reset mật khẩu");
+            helper.setText("Mật khẩu mới của bạn là : " + newPassword);
 
             // Gửi email
             mailSender.send(mimeMessage);

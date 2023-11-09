@@ -47,8 +47,8 @@
   <div class="container d-flex justify-content-center justify-content-md-between">
 
     <div class="contact-info d-flex align-items-center">
-      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
-      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
@@ -70,18 +70,20 @@
 
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
-        <li th:each="category : ${listCategory}" ><a    th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
-
-        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+        <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
-            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
 
-            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
-            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
-            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Đăng nhập </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Đăng kí</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-        <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
+        <li>    <a  sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" sec:authentication="name"></span>
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -91,7 +93,7 @@
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
      <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </form>
 
   </div>
@@ -102,12 +104,12 @@
   <section class="shopping-cart dark" style="padding-top: 165px;">
     <div class="container">
       <div class="block-heading">
-        <h2>Shopping Cart</h2>
-        <p>Put your favorite dishes in the cart and prepare to enjoy great food at our restaurant.</p>
+        <h2>Giỏ hàng</h2>
+        <p>Bỏ những món ăn yêu thích của bạn vào giỏ hàng và chuẩn bị thưởng thức những món ăn tuyệt vời tại nhà hàng của chúng tôi.</p>
       </div>
 
       <div th:if="${not hasItems}">
-        <p>Your cart is empty click <a href="/user/menu">here</a> to add some dishes.</p>
+        <p>Giỏ hàng của bạn trống, hãy nhấp vào <a href="/user/menu">đây</a> để thêm một số món ăn.</p>
       </div>
       <div th:if="${hasItems}">
         <div class="content">
@@ -177,11 +179,11 @@
               <table class="items">
                 <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Total</th>
+                  <th>Sản phẩm</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Số lượng</th>
+                  <th>Giá</th>
+                  <th>Tổng cộng</th>
                   <th> </th>
                 </tr>
                 </thead>
@@ -212,18 +214,18 @@
                     <span th:text="${#numbers.formatInteger(item.price * item.quantity,3,'POINT')+' VND'}"></span>
                   </td>
                   <td>
-                    <a th:href="@{/user/shoppingCart/remove/{id}(id=${item.productId})}" class="btn btn-danger">Remove</a>
+                    <a th:href="@{/user/shoppingCart/remove/{id}(id=${item.productId})}" class="btn btn-danger">Xóa</a>
                   </td>
                 </tr>
                 </tbody>
               </table>
-              <a href="/user/menu" class="btn btn-secondary">Add more</a>
+              <a href="/user/menu" class="btn btn-secondary">Thêm món</a>
             </div>
             <div class="col-md-12 col-lg-2">
               <div class="summary">
-                <h3>Summary</h3>
+                <h3>Hóa đơn</h3>
                 <div class="summary-item">
-                  <span class="text">Subtotal</span>
+                  <span class="text">Phụ thu</span>
                   <span class="price" th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span>
                 </div>
                 <!-- <div class="summary-item">
@@ -235,12 +237,12 @@
                   <span class="price">$0</span>
                 </div> -->
                 <div class="summary-item">
-                  <span class="text">Total</span>
+                  <span class="text">Tổng cộng</span>
                   <span class="price" th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span>
                 </div>
 
                 <form action="/user/checkOut" method="post">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block">Checkout</button>
+                  <button type="submit" class="btn btn-primary btn-lg btn-block">Thanh toán</button>
                 </form>
 
               </div>
@@ -254,8 +256,8 @@
             <div class="container" data-aos="fade-up">
 
               <div class="section-title">
-                <h2>Specials</h2>
-                <p>Recommend for you</p>
+                <h2>Đặc biệt</h2>
+                <p>Gợi ý cho bạn</p>
                 <p th:if="${message}"> <p th:text="${message}"></p> </p>
               </div>
 
@@ -279,7 +281,7 @@
                         <div class="col-lg-8 details order-2 order-lg-1">
                           <h3 th:href="@{'/user/productDetail/' + ${product.id}}" th:text="${product.name}"> </h3>
                           <a href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
-                            + Add to cart
+                            + Thêm vào giỏ hàng
 
                           </a>
                           <p class="fst-italic" th:text="${product.description}">   </p>
@@ -333,7 +335,7 @@
             <p>
               123 HCM <br>
               <br><br>
-              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>SDT:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">
@@ -391,13 +393,13 @@
     url: '/user/shoppingCart/add/' + productId,
     success: function(response) {
         // Handling success response
-        alert('Added to cart successfully');
+        alert('Thêm vào giỏ hàng thành công');
         location.reload();
         updateCartItemCount();
     },
     error: function() {
         // Handling error (if any)
-        alert('An error occurred while adding to cart');
+        alert('Có lỗi khi thêm vào giỏ hàng');
     }
 });
         });

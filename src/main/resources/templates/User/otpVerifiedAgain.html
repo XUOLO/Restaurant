@@ -47,8 +47,8 @@
   <div class="container d-flex justify-content-center justify-content-md-between">
 
     <div class="contact-info d-flex align-items-center">
-      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
-      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
@@ -70,9 +70,11 @@
 
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
-        <li th:each="category : ${listCategory}" ><a    th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
-
-        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+        <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
 
         </li>
         <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
@@ -85,7 +87,7 @@
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
     <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </form>
 
   </div>
@@ -103,9 +105,9 @@
     </div>
     <form action="/user/verifyOTPAgain" method="post">
       <input type="hidden" name="username" th:value="${username}">
-      <label for="otp">Enter OTP:</label>
+      <label for="otp">Nhập OTP:</label>
       <input type="text" id="otp" name="otp">
-      <button type="submit">Verify OTP</button>
+      <button type="submit">Xác thực OTP</button>
     </form>
   </section><!-- End Menu Section -->
 
@@ -128,7 +130,7 @@
             <p>
               123 HCM <br>
               <br><br>
-              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>SDT:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">

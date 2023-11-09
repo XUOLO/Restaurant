@@ -47,8 +47,8 @@
   <div class="container d-flex justify-content-center justify-content-md-between">
 
     <div class="contact-info d-flex align-items-center">
-      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
-      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
@@ -70,15 +70,17 @@
 
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
-        <li th:each="category : ${listCategory}" ><a    th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
-
-        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+        <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
-            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
 
-            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
-            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
-            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Đăng nhập </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Đăng kí</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
         <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
@@ -91,7 +93,7 @@
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
     <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </form>
 
   </div>
@@ -120,11 +122,11 @@
             </div>
 
             <div class="belowPicInfo" style="padding-block: 15px;">
-              <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Profile</a></div>
-              <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> My order  </a></div>
-              <div class="div-link"><a style="color:#89817e;" href="/user/userBookingInfo"><i class="fa fa-calendar"></i> My reservation  </a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Thông tin cá nhân</a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> Đơn đặt món  </a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/userBookingInfo"><i class="fa fa-calendar"></i> Đơn đặt bàn  </a></div>
 
-              <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Edit profile</a></div>
+              <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Chỉnh sửa thông tin cá nhân</a></div>
 
 
             </div>
@@ -140,7 +142,7 @@
           <div class="panel">
 
             <div class="panel-body bio-graph-info" style="padding-left: 70px;">
-              <h1>Edit information</h1>
+              <h1>Chỉnh sửa thông tin</h1>
               <div th:if="${successMessage}" class="alert alert-success">
                 <p style="text-align:center;" th:text="${successMessage}"></p>
               </div>
@@ -150,14 +152,14 @@
                   <input type="hidden" th:field="*{username}" />
                   <input type="hidden" th:field="*{image}" />
                   <div class="bio-row">
-                    <label for="name" class="col-sm-2 col-form-label">Full name</label>
+                    <label for="name" class="col-sm-2 col-form-label">Họ tên</label>
                     <input th:field="*{name}" id="name"  type="text" class="form-control">
                     <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
                   </div>
 
                   <div class="bio-row">
-                    <label for="address" class="col-sm-2 col-form-label">Address</label>
+                    <label for="address" class="col-sm-2 col-form-label">Địa chỉ</label>
                    <input th:field="*{address}" id="address" type="text" class="form-control">
                     <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 
@@ -171,16 +173,16 @@
                   </div>
 
                   <div class="bio-row">
-                    <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+                    <label for="phone" class="col-sm-2 col-form-label">SDT</label>
                     <input th:field="*{phone}"
                            pattern="(03|05|07|08|09)[0-9]{8}"
-                           oninvalid="this.setCustomValidity('Phone number must start with 03, 05, 07, 08 or 09 and have exactly 10 digits')"
+                           oninvalid="this.setCustomValidity('Số điện thoại phải bắt đầu bằng 03, 05, 07, 08 hoặc 09 và có đúng 10 chữ số')"
                            onchange="this.setCustomValidity('')"   onkeypress = "return valideNumber()" id="phone"  type="text" class="form-control">
                     <span class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
 
                   </div>
                   <div class="bio-row">
-                    <label for="image" class="col-sm-2 col-form-label">Picture profile</label>
+                    <label for="image" class="col-sm-2 col-form-label">Ảnh đại diện</label>
                     <div class="col-sm-10">
                        <input class="form-control" type="file"id="image" name="image" accept="image/*"  >
                     </div>
@@ -190,7 +192,7 @@
 
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary">Save change</button>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
               </form>
 
             </div>
@@ -198,7 +200,7 @@
 
         </div>
         <div class="profile-changePassword col-md-7" style="margin-left: 30%;margin-top: 20px;">
-         <h1>Change password</h1>
+         <h1>Đổi mật khẩu</h1>
           <div th:if="${errorPassword}" class="alert alert-danger">
             <p style="text-align:center;" th:text="${errorPassword}"></p>
           </div>
@@ -210,14 +212,14 @@
           </div>
           <form  th:action="@{/user/changePassword}" method="post" th:object="${user}"   >
             <input type="hidden" th:field="*{id}" />
-          <label>Current password</label>
+          <label>Mật khẩu hiện tại</label>
           <input type="password" name="currentPassword" class="form-control">
-          <label>New password</label>
+          <label>Mật khẩu mới</label>
           <input type="password" name="newPassword" class="form-control">
-          <label>Confirm password</label>
+          <label>Xác nhận mật khẩu mới</label>
           <input type="password" name="confirmPassword" class="form-control">
           <br>
-          <button type="submit" class="btn btn-primary">Save change</button>
+          <button type="submit" class="btn btn-primary">lưu thay đổi</button>
           </form>
         </div>
       </div>
@@ -248,7 +250,7 @@
             <p>
               123 HCM <br>
               <br><br>
-              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>SDT:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">

@@ -165,7 +165,7 @@ public class PayController {
                     if (product != null) {
                         int availableQuantity = product.getQuantity();
                         if (quantityToOrder > availableQuantity) {
-                            String errorMessage = "Product '" + product.getName() + "' not enough quantity.";
+                            String errorMessage = "Sản phẩm '" + product.getName() + "' không đủ số lượng.";
                             errorMessages.add(errorMessage);
 
                         }

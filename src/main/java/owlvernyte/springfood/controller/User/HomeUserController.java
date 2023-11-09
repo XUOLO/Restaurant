@@ -139,6 +139,44 @@ public class HomeUserController {
         return templateName;
     }
 
+
+    @GetMapping("/user/home")
+    public String viewHomepage(  Model model,Principal principal,HttpSession session) {
+
+
+        List<Product> productList = productService.getAllProduct();
+
+
+        model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
+        model.addAttribute("listProduct",productService.getAllProduct());
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("listCategory",categoryService.getAllCategory());
+        List<Product> sellingProducts = new ArrayList<>();
+
+        for (Product product : productList) {
+            if ("1".equals(product.getStatus())) {
+                sellingProducts.add(product);
+            }
+        }
+
+        String username = (String) session.getAttribute("username");
+        String name = (String) session.getAttribute("name");
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listProduct", sellingProducts);
+
+
+
+        return "User/home";
+    }
+
+
 //    @GetMapping("/user/login")
 //    public String userLogin(Principal principal, Model model) {
 //

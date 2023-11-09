@@ -66,8 +66,8 @@
                             <div class="card-body">
 
                                 <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">Register </h5>
-                                    <p class="text-center small">Enter your information to register</p>
+                                    <h5 class="card-title text-center pb-0 fs-4">Đăng kí </h5>
+                                    <p class="text-center small">Điền thông tin của bạn để đăng kí</p>
                                 </div>
                                 <div th:if="${successMessage}" class="alert alert-success">
                                     <p style="text-align:center;" th:text="${successMessage}"></p>
@@ -75,22 +75,22 @@
                                 <form class="row g-3" method="post" role="form" th:action="@{/user/register}" th:object="${user}" novalidate>
 
                                     <div class="col-12">
-                                        <label for="name" class="form-label">Full Name</label>
-                                        <input th:type="text" th:field="*{name}" id="name" class="form-control" placeholder="Enter your full name" required>
+                                        <label for="name" class="form-label">Họ tên</label>
+                                        <input th:type="text" th:field="*{name}" id="name" class="form-control" placeholder="Nhập họ tên" required>
                                         <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="address" class="form-label">Address</label>
-                                        <input th:type="text" th:field="*{address}" id="address" name="address" class="form-control" placeholder="Enter your address" required>
+                                        <label for="address" class="form-label">Địa chỉ</label>
+                                        <input th:type="text" th:field="*{address}" id="address" name="address" class="form-control" placeholder="Nhập địa chỉ" required>
                                         <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="phone" class="form-label">Phone</label>
-                                        <input th:type="text" id="phone" th:field="*{phone}" name="phone" class="form-control" placeholder="Enter your phone number" required
+                                        <label for="phone" class="form-label">SDT</label>
+                                        <input th:type="text" id="phone" th:field="*{phone}" name="phone" class="form-control" placeholder="Nhập số điện thoại" required
                                                pattern="(03|05|07|08|09)[0-9]{8}"
-                                               oninvalid="this.setCustomValidity('Phone numbers must start with  03, 05, 07, 08 or 09 and have exactly 10 digits')"
+                                               oninvalid="this.setCustomValidity('Số điện thoại phải bắt đầu với  03, 05, 07, 08 or 09 và có 10 số')"
                                                onchange="this.setCustomValidity('')" onkeypress="return valideNumber()">
                                         <span class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
                                     </div>
@@ -98,19 +98,19 @@
                                     <div class="col-12">
                                         <label for="email" class="form-label">Email</label>
                                         <div class="input-group has-validation">
-                                            <input th:type="email" id="email" th:field="*{email}" name="email" class="form-control" placeholder="Enter your email address" required>
+                                            <input th:type="email" id="email" th:field="*{email}" name="email" class="form-control" placeholder="Nhập địa chỉ email" required>
                                             <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input th:type="text" th:field="*{username}" id="username" name="address" class="form-control" placeholder="Enter your username" required>
+                                        <label for="username" class="form-label">Tài khoản</label>
+                                        <input th:type="text" th:field="*{username}" id="username" name="address" class="form-control" placeholder="Nhập tài khoản " required>
                                         <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
                                     </div>
                                     <div class="col-12">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input th:type="password" id="password"th:field="*{password}" name="password" class="form-control" placeholder="Enter password" required>
-                                        <div class="invalid-feedback">Please enter your password!</div>
+                                        <label for="password" class="form-label">Mật khẩu</label>
+                                        <input th:type="password" id="password"th:field="*{password}" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                                        <div class="invalid-feedback">Vui lòng nhập mật khẩu!</div>
                                         <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                                     </div>
 
@@ -124,18 +124,18 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                                        <button class="btn btn-primary w-100" type="submit">Đăng kí</button>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-6">
                                                 <a href="/oauth2/authorization/google" class="btn btn-outline-danger btn-floating m-1" role="button">
-                                                    Login with Google
+                                                    Đăng nhập bằng Google
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <p class="small mb-0" style="padding-top:10px;">   <a href="/login" style="font-size:16px; ">Already have account ?</a></p>
+                                                <p class="small mb-0" style="padding-top:10px;">   <a href="/login" style="font-size:16px; ">Đã có tài khoản ?</a></p>
 
                                             </div>
                                         </div>

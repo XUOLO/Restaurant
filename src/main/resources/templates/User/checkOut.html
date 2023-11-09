@@ -47,8 +47,8 @@
   <div class="container d-flex justify-content-center justify-content-md-between">
 
     <div class="contact-info d-flex align-items-center">
-      <i class="bi bi-phone d-flex align-items-center"><span>+1 5589 55488 55</span></i>
-      <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
@@ -70,15 +70,17 @@
 
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
-        <li th:each="category : ${listCategory}" ><a    th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
-
-        <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down"></i></a>
+        <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
-            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
 
-            <li><a sec:authorize="!isAuthenticated()"  href="/login">Login </a></li>
-            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Register</a></li>
-            <li><a sec:authorize="isAuthenticated()" href="/user/info">User info</a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Đăng nhập </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Đăng kí</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
         <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
@@ -91,7 +93,7 @@
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
     <form action="/user/BookATable" method="post">
-      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</button>
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </form>
 
   </div>
@@ -161,32 +163,32 @@
 </style>
     <div class="checkout-container">
       <div class="address-section">
-        <h2>Check your information</h2>
+        <h2>Kiểm tra thông tin</h2>
         <form  th:action="@{/user/placeOrder}" method="post" th:object="${order}"  >
 
           <div class="form-group">
-            <label for="name">Full Name</label>
+            <label for="name">Họ tên</label>
             <input type="text" id="name" th:value="${name}" name="name" required>
           </div>
           <div class="form-group">
-            <label for="address">Address:</label>
+            <label for="address">Địa chỉ:</label>
             <input type="text" id="address"th:value="${address}" name="address" required>
           </div>
           <div class="form-group">
-            <label for="phone">Phone:</label>
+            <label for="phone">SDT:</label>
             <input type="text" id="phone"th:value="${phone}" name="phone" required>
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email"th:value="${email}" name="email" required>
           </div>
-          <button type="submit" class="btn btn-primary" name="paymentMethod" value="cash">Cash</button>
+          <button type="submit" class="btn btn-primary" name="paymentMethod" value="cash">Tiền mặt</button>
           <a href="/user/pay" class="btn btn-success"   >VNPay</a>
         </form>
 
       </div>
       <div class="product-section">
-        <h2>List dishes</h2>
+        <h2>Danh sách món ăn</h2>
         <div th:each="item : ${AllCartItem}">
           <div class="product-item">
             <p class="product-name" th:text="${item.name}"> </p>
@@ -196,7 +198,7 @@
 
 
         <div class="total-price">
-          <p>Total: <p th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></p></p>
+          <p>Tổng cộng: <p th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></p></p>
         </div>
 
       </div>
@@ -223,7 +225,7 @@
             <p>
               123 HCM <br>
               <br><br>
-              <strong>Phone:</strong> +84 06303905 <br>
+              <strong>SDT:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">

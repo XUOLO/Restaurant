@@ -272,7 +272,7 @@ public class UserInfoController {
 
         if (userOrders.isEmpty()) {
 
-            String errorMessage = "No matching orders found";
+            String errorMessage = "Không tìm thấy thông tin đơn hàng";
             model.addAttribute("errorMessage", errorMessage);
             return findPaginatedUserOrder(1,model,"name","asc",session,principal);
         } else {
@@ -339,7 +339,7 @@ public class UserInfoController {
 
 
         userService.editUser(user);
-        redirectAttributes.addFlashAttribute("successMessage", "Change successful");
+        redirectAttributes.addFlashAttribute("successMessage", "Thay đổi thành công");
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
 
@@ -371,19 +371,19 @@ public class UserInfoController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String savePassword =existingUser.getPassword();
         if(!passwordEncoder.matches(currentPassword,savePassword)){
-            redirectAttributes.addFlashAttribute("errorPassword", "Current password not match");
+            redirectAttributes.addFlashAttribute("errorPassword", "Mật khẩu hiện tại không khớp");
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
         if (!newPassword.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("NewAndConfirmError", "New Password and confirm password not match ");
+            redirectAttributes.addFlashAttribute("NewAndConfirmError", "Mật khẩu mới và xác nhận mật khẩu mới không khớp");
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
         userService.editUser(user);
-        redirectAttributes.addFlashAttribute("changePasswordSuccess", "Password change successful");
+        redirectAttributes.addFlashAttribute("changePasswordSuccess", "Thay đổi mật khẩu thành công");
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
 
@@ -512,7 +512,7 @@ public class UserInfoController {
 
         if (userBooking.isEmpty()) {
 
-            String errorMessage = "No matching reservation found";
+            String errorMessage = "Không tìm thấy đơn đặt bàn!";
             model.addAttribute("errorMessage", errorMessage);
             return findPaginatedUserBooking(1,model,"name","asc",session,principal);
         } else {
