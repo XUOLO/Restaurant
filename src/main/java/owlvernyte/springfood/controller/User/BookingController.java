@@ -15,10 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import owlvernyte.springfood.entity.*;
-import owlvernyte.springfood.repository.BookingDetailRepository;
-import owlvernyte.springfood.repository.BookingRepository;
-import owlvernyte.springfood.repository.ProductRepository;
-import owlvernyte.springfood.repository.ReservationRepository;
+import owlvernyte.springfood.repository.*;
 import owlvernyte.springfood.service.*;
 
 import java.security.Principal;
@@ -56,6 +53,8 @@ public class BookingController {
     private ReservationRepository reservationRepository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private DeskRepository deskRepository;
 
     @GetMapping("/user/BookATable")
     public String showTable(Model model, HttpSession session){
@@ -72,8 +71,35 @@ public class BookingController {
         return "User/reservation";
 
     }
+//    @GetMapping("/user/showReservation/{id}")
+//    public String viewTable(Model model, Principal principal, HttpSession session,@PathVariable(value = "id") long id) {
+//
+//        Reservation reservation = reservationService.getReservationById(id);
+//        model.addAttribute("reservation", reservation);
+//        Reservation reservationId =reservationService.viewById(id);
+//        model.addAttribute("reservationId",reservationId);
+//        String name = (String) session.getAttribute("name");
+//        model.addAttribute("name", name);
+//        model.addAttribute("listCategory",categoryService.getAllCategory());
+//
+//
+//
+//
+//
+//        List<Desk> desks = deskRepository.findByReservationId(id);
+//        model.addAttribute("desks", desks);
+//
+//        return "User/booking";
+//    }
+
     @GetMapping("/user/showReservation/{id}")
     public String viewReservation(Model model, Principal principal, HttpSession session,@PathVariable(value = "id") long id) {
+
+
+
+        List<Desk> desks = deskRepository.findByReservationId(id);
+        model.addAttribute("desks", desks);
+
 
         Reservation reservation = reservationService.getReservationById(id);
         model.addAttribute("reservation", reservation);
@@ -139,7 +165,24 @@ public class BookingController {
 
         return "redirect:/user/showReservation/{id}";
     }
+    @PostMapping("/submitForm")
+    public String submitForm(@RequestParam("selectedDeskId") Long selectedDeskId, Model model) {
+        // Lấy bàn được chọn từ cơ sở dữ liệu
+        Desk selectedDesk = deskRepository.findById(selectedDeskId).orElse(null);
 
+        // Kiểm tra xem bàn có tồn tại hay không
+        if (selectedDesk != null) {
+            // Cập nhật trạng thái của bàn thành "2" (Đang dùng)
+            selectedDesk.setStatus("2");
+
+            // Lưu trạng thái bàn vào cơ sở dữ liệu
+            deskRepository.save(selectedDesk);
+        }
+
+        // Tiếp tục xử lý các công việc khác sau khi submit form
+
+        return "redirect:/successPage";
+    }
 
     @PostMapping("/user/placeBooking")
     public String placeBooking(@RequestParam("name") String name,

@@ -28,9 +28,7 @@ function getMealList(){
                         <div class = "meal-name">
                             <h3>${meal.strMeal}</h3>
                             <a href = "#" class = "recipe-btn">Get Recipe</a>
-                             <form action="/user/meals" method="post">
-     <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">getmeals</button>
-                              </form>
+
 
                         </div>
                     </div>

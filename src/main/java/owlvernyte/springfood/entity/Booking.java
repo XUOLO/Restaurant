@@ -20,6 +20,17 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
+    @ManyToOne
+    @JoinColumn(name = "desk_id")
+    private Desk desk;
+
+    public Desk getDesk() {
+        return desk;
+    }
+
+    public void setDesk(Desk desk) {
+        this.desk = desk;
+    }
 
     @Column(name = "booking_date")
     private LocalDate bookingDate;
