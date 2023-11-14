@@ -43,6 +43,7 @@ public class BookingService {
     public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentDate, long reservationId) {
         return bookingRepository.findByBookingDateAndReservationId(currentDate, reservationId);
     }
+
     public ReservationItem update(long productId, int quantity){
         ReservationItem reservationItem = reservationCart.get(productId);
         if (reservationItem != null) {
@@ -137,6 +138,13 @@ public class BookingService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         return this.bookingRepository.findBookingByUserId(userId, pageable);
     }
+    public Page<Booking> findPaginatedIdReservation(long reservationId, int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return this.bookingRepository.findByReservationId(reservationId, pageable);
+    }
 
 
     public List<Booking> searchBooking(Long userId, String keyword) {
@@ -154,5 +162,11 @@ public class BookingService {
         }
 
         return matchedBooking;
+    }
+
+
+
+    public List<Booking> getBookingsByReservationId(long reservationId) {
+        return bookingRepository.findByReservationId(reservationId);
     }
 }

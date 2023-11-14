@@ -17,11 +17,13 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    boolean existsByDateArriveAndDesk(LocalDate dateArrive, String desk);
+    boolean existsByDateArriveAndDesk(LocalDate dateArrive, String desk );
+
     @Query("SELECT o FROM Booking o WHERE CONCAT(o.name, o.code, o.phone, o.email) LIKE %?1%")
     List<Booking> findAll(String keyword);
 
     Page<Booking> findBookingByUserId(long userId, Pageable pageable);
+
     List<Booking> findByUserId(long userId);
     @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '1'")
     Long countHandlingBooking();
@@ -35,5 +37,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByBookingDateAndReservationId(LocalDate dateArrive, long reservationId);
     List<Booking> findByDateArrive(LocalDate dateArrive);
+
+    List<Booking> findByReservationId(long reservationId);
+    Page<Booking> findByReservationId(long reservationId, Pageable pageable);
 
 }

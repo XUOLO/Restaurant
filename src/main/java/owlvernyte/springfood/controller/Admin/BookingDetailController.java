@@ -30,6 +30,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,40 +58,29 @@ public class BookingDetailController {
     @Autowired
     private BookingDetailService bookingDetailService;
 
-    @GetMapping("/admin/list_booking")
-    public String showListBooking(Model model, Authentication authentication){
-        String username = authentication.getName();
-        model.addAttribute("listStaff", userService.getAllUser());
-        model.addAttribute("listRole", roleService.getAllRole());
-        User user = userRepository.findByUsername(username);
-        model.addAttribute("user", user);
-        model.addAttribute("username", username);
+    @Autowired
+    private ReservationService reservationService;
 
-        model.addAttribute("listBooking", bookingService.getAllBooking());
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+//    @GetMapping("/admin/list_booking")
+//    public String showListBooking(Model model, Authentication authentication){
+//        String username = authentication.getName();
+//        model.addAttribute("listStaff", userService.getAllUser());
+//        model.addAttribute("listRole", roleService.getAllRole());
+//        User user = userRepository.findByUsername(username);
+//        model.addAttribute("user", user);
+//        model.addAttribute("username", username);
+//
+//        model.addAttribute("listBooking", bookingService.getAllBooking());
+//
+//
+//        return findPaginatedBooking(1,model,"name","asc");
+//    }
 
 
-        return findPaginatedBooking(1,model,"name","asc");
-    }
 
-
-    @GetMapping("/admin/pageBooking/{pageNo}")
-    public String findPaginatedBooking(@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
-        int pageSize=10;
-        Page<Booking> page= bookingService.findPaginatedBooking(pageNo,pageSize,sortField,sortDir);
-        List<Booking> bookingList = page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages",page.getTotalPages());
-        model.addAttribute("totalItems",page.getTotalElements());
-        model.addAttribute("pageSize", pageSize);
-
-        model.addAttribute("sortField",sortField);
-        model.addAttribute("sortDir",sortDir);
-        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
-
-        model.addAttribute("listBooking",bookingList);
-        return "Admin/list_booking";
-
-    }
     @PostMapping("/admin/{id}/updateBookingStatus")
     public String updateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
@@ -122,7 +112,7 @@ public class BookingDetailController {
     }
 
     @PostMapping("/admin/booking/search")
-    public String searchBooking(@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+    public String searchBooking(@RequestParam("idReservation") long idReservation,@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
         String username = authentication.getName();
         model.addAttribute("listStaff", userService.getAllUser());
         model.addAttribute("listRole", roleService.getAllRole());
@@ -133,7 +123,7 @@ public class BookingDetailController {
         if (listBooking.isEmpty()) {
             String errorMessage = "No matching booking found";
             model.addAttribute("errorMessage", errorMessage);
-            return findPaginatedBooking(1,model,"name","asc");
+            return findPaginatedBooking(idReservation,1,model,"name","asc");
         } else {
             model.addAttribute("listBooking", listBooking);
         }
@@ -338,4 +328,80 @@ public class BookingDetailController {
         workbook.close();
     }
 
+
+
+
+
+
+
+
+
+    @GetMapping("/admin/list_room")
+    public String showListRoom(Model model, Authentication authentication){
+        String username = authentication.getName();
+        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+
+        model.addAttribute("listBooking", reservationRepository.findAll());
+
+
+        return findPaginatedRoom(1,model,"name","asc");
+    }
+
+
+    @GetMapping("/admin/pageRoom/{pageNo}")
+    public String findPaginatedRoom(@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
+        int pageSize=10;
+        Page<Reservation> page= reservationService.findPaginatedReservation(pageNo,pageSize,sortField,sortDir);
+        List<Reservation> reservationList  = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+        model.addAttribute("reservationList",reservationList);
+        return "Admin/list_room";
+
+    }
+
+    @GetMapping("/admin/reservationDetail/{id}")
+    public String showAllReservationDetail(  Authentication authentication,@PathVariable(value = "id") long id, Model model) {
+        String username = authentication.getName();
+        model.addAttribute("idReservation",id);
+        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+
+        List<Booking> bookingsByReservationId = bookingService.getBookingsByReservationId(id);
+        model.addAttribute("listBooking", bookingsByReservationId);
+
+        return findPaginatedBooking(id,1,model,"name","asc");
+    }
+    @GetMapping("/admin/pageBooking/{pageNo}")
+    public String findPaginatedBooking(@RequestParam("idReservation") long reservationId, @PathVariable(value = "pageNo") int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
+
+        int pageSize = 10;
+        Page<Booking> page = bookingService.findPaginatedIdReservation(reservationId, pageNo, pageSize, sortField, sortDir);
+        List<Booking> bookingList = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("idReservation",reservationId);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("listBooking", bookingList);
+        return "Admin/list_booking";
+    }
 }

@@ -13,6 +13,7 @@
     <button type="submit" title="Search"><i class="bi bi-search"></i></button>
   </form>
 </div>
+
 <main id="main" layout:fragment="main"class="main">
 
 
@@ -25,7 +26,7 @@
 
     <div class="card-body pb-0">
 
-      <h5 class="card-title">List order  <a class="btn btn-primary excel" style="margin-left: 70%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>
+      <h5 class="card-title">Danh sách phòng  <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>
       </h5>
       <div th:if="${errorMessage}" class="alert alert-danger">
         <p th:text="${errorMessage}"></p>
@@ -34,65 +35,31 @@
         <thead>
         <tr>
           <th scope="col">No.</th>
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=code&sortDir=' + ${reverseSortDir}}">Booking id</a>
-          </th>
 
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=name&sortDir=' + ${reverseSortDir}}">Customer name</a>
-          </th>
 
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=phone&sortDir=' + ${reverseSortDir}}">Phone</a>
-          </th>
+          <th scope="col"> <a th:href="@{'/admin/pageRoom/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Tên phòng</a> </th>
+          <th scope="col"> <a th:href="@{'/admin/pageRoom/' + ${currentPage} + '?sortField=reservationCategory.name&sortDir=' +${reverseSortDir}}">Danh mục</a> </th>
 
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=bookingDate&sortDir=' + ${reverseSortDir}}">Create date</a>
-          </th>
-
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=dateArrive&sortDir=' + ${reverseSortDir}}">Date arrive</a>
-          </th>
-
-          <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=status&sortDir=' + ${reverseSortDir}}">Status</a>
-          </th>
           <th scope="col">Action</th>
           <th scope="col"> </th>
 
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list, index : ${listBooking}">
+        <tr th:each="list, index : ${reservationList}">
           <td th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
-          <td th:text="${list.code}"></td>
 
           <td th:text="${list.name}"></td>
-          <td th:text="${list.phone}"></td>
+          <td th:text="${list.reservationCategory.name}"></td>
 
-
-          <td th:text="${#temporals.format(list.bookingDate, 'dd/MM/yyyy')}"> </td>
-          <td th:text="${#temporals.format(list.dateArrive, 'dd/MM/yyyy')}"> </td>
-
-          <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : (list.status == '2' ? 'color: blue' : (list.status == '3' ? 'color: red' : 'color: black'))}">Status</td>
           <td>
-            <form method="POST" th:object="${booking}" th:action="@{/admin/{id}/updateBookingStatus(id=${list.id})}">
-              <div th:if="${list.status == '3'}">Đã hủy</div>
-              <select name="status" th:if="${list.status != '3'}" onchange="submit()">
-                <option value="1" th:selected="${list.status == '1'}"  >Đã xác nhận</option>
-                <option value="2" th:selected="${list.status == '2'}"th:disabled="${list.status == '1'}">Đang xử lý</option>
-                <option value="3" th:selected="${list.status == '3'}">Đã hủy</option>
-              </select>
-              <input type="hidden" name="status" value="3" th:if="${list.status == '3'}" />
-            </form>
-          </td>
-          <td>
-            <a th:href="@{/admin/bookingDetail/{id}(id=${list.id})}">
+            <a th:href="@{/admin/reservationDetail/{id}(id=${list.id})}">
               <i class="bi bi-list"></i>
             </a>
 
 
           </td>
+
 
         </tr>
 
@@ -102,20 +69,20 @@
         <div class="d-flex justify-content-between col-md-6">
           <div class="col-md-4 text-center">
             <span th:if="${currentPage > 1}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
+                <a th:href="@{/admin/pageRoom/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
             </span>
             <span hidden  th:unless="${currentPage > 1}">Last</span>
           </div>
           <div class="col-md-4 text-center">
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
-                   th:href="@{/admin/pageBooking/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
+                   th:href="@{/admin/pageRoom/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
                 <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
             </span>
           </div>
           <div class="col-md-4 text-center">
             <span th:if="${currentPage < totalPages}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
+                <a th:href="@{/admin/pageRoom/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
             </span>
             <span th:unless="${currentPage < totalPages}">Next</span>
           </div>

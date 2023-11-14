@@ -174,6 +174,8 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
                                @RequestParam("selectDesk") String selectedDesk,
                                @RequestParam("reservationId") long reservationId,
                                @RequestParam("numberOfPeople") int numberOfPeople,
+                               @RequestParam("timeArrive") LocalTime timeArrive,
+
                                Model model,
                                HttpServletRequest request,
                                @ModelAttribute("booking") @Valid Booking booking,
@@ -185,9 +187,14 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         Reservation reservation = reservationService.viewById(reservationId);
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
-        User user = userService.viewById(userId);
 
 
+        User user = null;
+
+        if (userId != null) {
+            user = userService.viewById(userId);
+        }
+        booking.setTimeArrive(timeArrive);
         booking.setUser(user);
         booking.setNumberOfPeople(numberOfPeople);
         booking.setName(name);
@@ -220,12 +227,14 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
-        LocalDate date = booking.getDateArrive() ;
-        if (bookingRepository.existsByDateArriveAndDesk(date, selectedDesk)) {
-            redirectAttributes.addFlashAttribute("DuplicateDate", "Rất tiếc nhà hàng không phục vụ khung giờ đã chọn. Chọn 1 khung giờ khác.");
-            String referer = request.getHeader("Referer");
-            return "redirect:" + referer;
-        }else
+
+//        LocalDate date = booking.getDateArrive();
+//        if (bookingRepository.existsByDateArriveAndDesk(date, selectedDesk, reservationId)) {
+//            redirectAttributes.addFlashAttribute("DuplicateDate", "Rất tiếc nhà hàng không phục vụ khung giờ đã chọn. Chọn 1 khung giờ khác.");
+//            String referer = request.getHeader("Referer");
+//            return "redirect:" + referer;
+//        }
+        else
         bookingService.saveBooking(booking);
 
 
@@ -294,7 +303,7 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
 //        }
         bookingService.clear();
 
-        return "redirect:/user/checkOutSuccess";
+        return "redirect:/user/placeBookingSuccess";
     }
     @PostMapping("/user/booking-list")
     public String showBookingList( @RequestParam("reservationId") long reservationId,   @RequestParam("dateArrive") LocalDate dateArrive, Model model, Principal principal, HttpSession session ) {
@@ -342,5 +351,19 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
 
 
         return bookingRepository.findByDateArrive(dateArrive );
+    }
+
+
+    @GetMapping("/user/placeBookingSuccess")
+    public String placeBookingSuccess(Model model,HttpSession session,Principal principal) {
+        String name = (String) session.getAttribute("name");
+
+        model.addAttribute("name", name);
+//        boolean isAuthenticated = principal != null;
+//        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("listCategory", categoryService.getAllCategory());
+
+
+        return "User/placeBookingSuccess";
     }
 }
