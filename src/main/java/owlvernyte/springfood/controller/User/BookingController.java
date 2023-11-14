@@ -22,12 +22,15 @@ import java.security.Principal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
 public class BookingController {
 
+    @Autowired
+    private DeskService deskService;
     @Autowired
     private BookingService bookingService;
 
@@ -91,54 +94,51 @@ public class BookingController {
 //
 //        return "User/booking";
 //    }
+public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentDate, long reservationId) {
+    List<Booking> allBookings = bookingRepository.findAll(); // Lấy tất cả đặt bàn từ nguồn dữ liệu
+    List<Booking> filteredBookings = new ArrayList<>();
+    Reservation reservation = reservationService.viewById(reservationId);
+    for (Booking booking : allBookings) {
+        if (booking.getDateArrive().isEqual(currentDate) && booking.getReservation().equals(reservation)) {
+            filteredBookings.add(booking);
+        }
+    }
 
+    return filteredBookings;
+}
     @GetMapping("/user/showReservation/{id}")
     public String viewReservation(Model model, Principal principal, HttpSession session,@PathVariable(value = "id") long id) {
 
 
 
         List<Desk> desks = deskRepository.findByReservationId(id);
+        LocalDate currentDate = LocalDate.now();
+        List<Booking> bookings = bookingService.getBookingsByCurrentDateAndReservationId(currentDate, id);
+        model.addAttribute("bookings", getBookingsByCurrentDateAndReservationId(currentDate,id));
+        model.addAttribute("currentDate", currentDate);
         model.addAttribute("desks", desks);
 
 
         Reservation reservation = reservationService.getReservationById(id);
         model.addAttribute("reservation", reservation);
         Reservation reservationId =reservationService.viewById(id);
-        model.addAttribute("reservationId",reservationId);
+        model.addAttribute("reservationId",reservationId.getId());
 
-        Collection<ReservationItem> allReservationItems = bookingService.getAllReservationItem();
 
-        model.addAttribute("allReservationItem", allReservationItems);
         model.addAttribute("listReservationCategory", reservationCategoryService.getAllReservationCategory());
         model.addAttribute("totalAmount", bookingService.getAmount());
         String name = (String) session.getAttribute("name");
         model.addAttribute("name", name);
-        boolean hasItems = !allReservationItems.isEmpty();
-        model.addAttribute("hasItems", hasItems);
         boolean isAuthenticated = principal != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
-        Booking booking = new Booking(); // Khởi tạo đối tượng booking
-        model.addAttribute("booking", booking); // Truyền booking vào model attribute
-
-         model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
+        Booking booking = new Booking();
+        model.addAttribute("booking", booking);
+        model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
         model.addAttribute("listProduct",productService.getAllProduct());
 
-        if (reservation != null) {
-            List<Product> allProducts = productService.getAllProduct();
 
-            for (Product product : allProducts) {
-                ReservationItem reservationItem = new ReservationItem();
-                reservationItem.setProductId(product.getId());
-                reservationItem.setName(product.getName());
-                reservationItem.setImage(product.getImage());
-                reservationItem.setPrice(product.getPrice());
-                reservationItem.setQuantity(product.getQuantity());
-                 reservationItem.setProductCategory(product.getProductCategory().getName());
-                bookingService.add(reservationItem);
-            }
-        }
         String username = (String) session.getAttribute("username");
-         Long userId = (Long) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
         model.addAttribute("username", username);
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
@@ -165,77 +165,44 @@ public class BookingController {
 
         return "redirect:/user/showReservation/{id}";
     }
-    @PostMapping("/submitForm")
-    public String submitForm(@RequestParam("selectedDeskId") Long selectedDeskId, Model model) {
-        // Lấy bàn được chọn từ cơ sở dữ liệu
-        Desk selectedDesk = deskRepository.findById(selectedDeskId).orElse(null);
 
-        // Kiểm tra xem bàn có tồn tại hay không
-        if (selectedDesk != null) {
-            // Cập nhật trạng thái của bàn thành "2" (Đang dùng)
-            selectedDesk.setStatus("2");
-
-            // Lưu trạng thái bàn vào cơ sở dữ liệu
-            deskRepository.save(selectedDesk);
-        }
-
-        // Tiếp tục xử lý các công việc khác sau khi submit form
-
-        return "redirect:/successPage";
-    }
 
     @PostMapping("/user/placeBooking")
     public String placeBooking(@RequestParam("name") String name,
                               @RequestParam("phone") String phone,
                              @RequestParam("email") String email,
+                               @RequestParam("selectDesk") String selectedDesk,
                                @RequestParam("reservationId") long reservationId,
+                               @RequestParam("numberOfPeople") int numberOfPeople,
                                Model model,
                                HttpServletRequest request,
                                @ModelAttribute("booking") @Valid Booking booking,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
                               HttpSession session) {
+
+
         Reservation reservation = reservationService.viewById(reservationId);
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
         User user = userService.viewById(userId);
-//        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(bookingId));
-//        booking.setId(reservationId);
+
+
+        booking.setUser(user);
+        booking.setNumberOfPeople(numberOfPeople);
         booking.setName(name);
         booking.setPhone(phone);
         booking.setEmail(email);
         booking.setBookingDate(LocalDate.now());
         booking.setReservation(reservation);
 
-        booking.setUser(user);
-        booking.setTotal(bookingService.getAmount());
+        booking.setDesk(selectedDesk);
+
         booking.setStatus("1");
 
         Collection<ReservationItem> reservationItems = bookingService.getAllReservationItem();
-        List<String> errorMessages = new ArrayList<>();
 
-        for (ReservationItem reservationItem : reservationItems) {
-            if (reservationItem.getProductId() != null) {
-                Long productId = reservationItem.getProductId();
-                int quantityToOrder = reservationItem.getQuantity();
 
-                Product product = productRepository.findById(productId).orElse(null);
-                if (product != null) {
-                    int availableQuantity = product.getQuantity();
-                    if (quantityToOrder > availableQuantity) {
-                        String errorMessage = "Product '" + product.getName() + "' not enough quantity.";
-                        errorMessages.add(errorMessage);
-
-                    }
-                }
-            }
-        }
-
-        if (!errorMessages.isEmpty()) {
-            // Có ít nhất một sản phẩm không đủ số lượng, thực hiện xử lý thông báo lỗi, ví dụ: đẩy danh sách thông báo lỗi vào model và trả về trang lỗi
-            model.addAttribute("errorMessages", errorMessages);
-            return "User/ErrorPageBooking";
-        }
         Random random = new Random();
         int randomNumber = random.nextInt(900000) + 100000;
         String code = "TB" + String.valueOf(randomNumber);
@@ -243,113 +210,137 @@ public class BookingController {
 
         if (bindingResult.hasErrors()) {
 
-            redirectAttributes.addFlashAttribute("failMessage", "Invalid date");
+            redirectAttributes.addFlashAttribute("failMessage", "Ngày không hợp lệ");
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
-        if (bookingRepository.existsByDateTime(booking.getDateTime())) {
-            redirectAttributes.addFlashAttribute("DuplicateDate", "The selected time is already booked. Please choose another time.");
+
+        if (selectedDesk == null || selectedDesk.isEmpty()) {
+            redirectAttributes.addFlashAttribute("NotChosenYet", "Bạn chưa chọn bàn");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        LocalDate date = booking.getDateArrive() ;
+        if (bookingRepository.existsByDateArriveAndDesk(date, selectedDesk)) {
+            redirectAttributes.addFlashAttribute("DuplicateDate", "Rất tiếc nhà hàng không phục vụ khung giờ đã chọn. Chọn 1 khung giờ khác.");
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }else
         bookingService.saveBooking(booking);
 
-        // Trừ số lượng sản phẩm trong cơ sở dữ liệu
-        for (ReservationItem reservationItem : reservationItems) {
-            if (reservationItem.getProductId() != null) {
-                Long productId = reservationItem.getProductId();
-                int quantityToOrder = reservationItem.getQuantity();
 
-                Product product = productRepository.findById(productId).orElse(null);
-                if (product != null) {
-                    int availableQuantity = product.getQuantity();
-                    int updatedQuantity = availableQuantity - quantityToOrder;
-                    product.setQuantity(updatedQuantity);
-                    productRepository.save(product);
-                }
-            }
-        }
 
-        for (ReservationItem reservationItem : reservationItems) {
-            if (reservationItem.getProductId() != null) {
-                Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
-                if (product != null && reservationItem.getQuantity() > 0) {
-                    BookingDetail bookingDetail = new BookingDetail();
-                    bookingDetail.setBooking(booking);
-                    bookingDetail.setProduct(product);
-                    bookingDetail.setPrice(product.getPrice());
-                    bookingDetail.setQuantity(reservationItem.getQuantity());
-                    bookingDetail.setDateTime(LocalDateTime.now());
-                    bookingDetailRepository.save(bookingDetail);
-                }
-            }
-        }
 
-        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        String formattedPriceTotal = formatterTotal.format(booking.getTotal());
-         MimeMessage message = mailSender.createMimeMessage();
-
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            // Đặt các thuộc tính của email
-            helper.setTo(email);
-            helper.setSubject("Order info #" + booking.getCode());
-
-            // Đặt nội dung email dưới dạng HTML
-            String tableContent = "<table style=\"border-collapse: collapse;\">";
-            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
-
-            for (ReservationItem reservationItem : reservationItems) {
-                if (reservationItem.getProductId() != null) {
-                    Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
-                    if (product != null && reservationItem.getQuantity() > 0) {
-                        tableContent += "<tr>";
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + product.getName() + "</td>";
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + reservationItem.getQuantity() + "</td>";
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                        String formattedPrice = formatter.format(product.getPrice());
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + formattedPrice + "</td>";
-                        tableContent += "</tr>";
-                    }
-                }
-            }
-
-            tableContent += "</table>";
-
-            String htmlContent = "<html><body>";
-            htmlContent += "<h2>Order info #" + booking.getCode() + "</h2>";
-            htmlContent += "<p>Hello " + booking.getName() + ",</p>";
-            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
-            htmlContent += "<p>Order code " + booking.getCode() + "</p>";
-
-            LocalDate bookingDate = booking.getBookingDate();
-            DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
-            String formattedBookingDate = bookingDate.format(formatterBookingDate);
-            htmlContent += "<p>Booking date " + formattedBookingDate + "</p>";
-
-            LocalDateTime dateTime = booking.getDateTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            String formattedDateTime = dateTime.format(formatter);
-            htmlContent += "<p>Date come: " + formattedDateTime + "</p>";
-
-             htmlContent += "<p>Total: " + formattedPriceTotal + "</p>";
-            htmlContent += tableContent;
-            htmlContent += "</body></html>";
-
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            model.addAttribute("errorMessage", "email fail.");
-            return "User/ErrorPage";
-        }
+//        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+//
+//         MimeMessage message = mailSender.createMimeMessage();
+//
+//        try {
+//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//
+//            // Đặt các thuộc tính của email
+//            helper.setTo(email);
+//            helper.setSubject("Order info #" + booking.getCode());
+//
+//            // Đặt nội dung email dưới dạng HTML
+//            String tableContent = "<table style=\"border-collapse: collapse;\">";
+//            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
+//
+//            for (ReservationItem reservationItem : reservationItems) {
+//                if (reservationItem.getProductId() != null) {
+//                    Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
+//                    if (product != null && reservationItem.getQuantity() > 0) {
+//                        tableContent += "<tr>";
+//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + product.getName() + "</td>";
+//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + reservationItem.getQuantity() + "</td>";
+//                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+//                        String formattedPrice = formatter.format(product.getPrice());
+//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + formattedPrice + "</td>";
+//                        tableContent += "</tr>";
+//                    }
+//                }
+//            }
+//
+//            tableContent += "</table>";
+//
+//            String htmlContent = "<html><body>";
+//            htmlContent += "<h2>Order info #" + booking.getCode() + "</h2>";
+//            htmlContent += "<p>Hello " + booking.getName() + ",</p>";
+//            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
+//            htmlContent += "<p>Order code " + booking.getCode() + "</p>";
+//
+//            LocalDate bookingDate = booking.getBookingDate();
+//            DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
+//            String formattedBookingDate = bookingDate.format(formatterBookingDate);
+//            htmlContent += "<p>Booking date " + formattedBookingDate + "</p>";
+//
+//            LocalDateTime dateTime = booking.getDateTime();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+//            String formattedDateTime = dateTime.format(formatter);
+//            htmlContent += "<p>Date come: " + formattedDateTime + "</p>";
+//
+//            htmlContent += tableContent;
+//            htmlContent += "</body></html>";
+//
+//            helper.setText(htmlContent, true);
+//
+//            mailSender.send(message);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//            model.addAttribute("errorMessage", "email fail.");
+//            return "User/ErrorPage";
+//        }
         bookingService.clear();
 
         return "redirect:/user/checkOutSuccess";
     }
+    @PostMapping("/user/booking-list")
+    public String showBookingList( @RequestParam("reservationId") long reservationId,   @RequestParam("dateArrive") LocalDate dateArrive, Model model, Principal principal, HttpSession session ) {
+        // Lấy danh sách đặt bàn từ cơ sở dữ liệu dựa trên ngày đến đã chọn (dateArrive)
 
+        List<Booking> bookingList = getBookingList(dateArrive );
+        LocalDate currentDate = LocalDate.now();
+        model.addAttribute("bookings", getBookingsByCurrentDateAndReservationId(dateArrive,reservationId));
+        // Gửi danh sách đặt bàn đến view để hiển thị
+
+        model.addAttribute("dateArrive", dateArrive);
+        Reservation reservation = reservationService.getReservationById(reservationId);
+        model.addAttribute("reservation", reservation);
+        Reservation reservationIds =reservationService.viewById(reservationId);
+        model.addAttribute("reservationId",reservationIds.getId());
+
+
+        model.addAttribute("listReservationCategory", reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("totalAmount", bookingService.getAmount());
+        String name = (String) session.getAttribute("name");
+        model.addAttribute("name", name);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        Booking booking = new Booking();
+        model.addAttribute("booking", booking);
+        model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
+        model.addAttribute("listProduct",productService.getAllProduct());
+
+
+        String username = (String) session.getAttribute("username");
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("listCategory",categoryService.getAllCategory());
+        return "User/findBooking";
+    }
+    private List<Booking> getBookingList(LocalDate dateArrive ) {
+
+
+        return bookingRepository.findByDateArrive(dateArrive );
+    }
 }

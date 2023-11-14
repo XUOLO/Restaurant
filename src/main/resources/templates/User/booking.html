@@ -117,13 +117,26 @@
 
             </form>
         </div>
+        <div class="searching">
+            <form method="POST" action="/user/booking-list" >
+                <label for="dateArrive">Chọn ngày đến:</label>
+                <input type="date"  name="dateArrive" required>
+                <input type="hidden" th:value="${reservationId}" name="reservationId">
 
-        <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng   </h2>
+                <button type="submit">Xem   bàn</button>
+            </form>
+        </div>
 
 
-           <style>
+        <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}" onsubmit="checkFormSubmission(event)">
+        <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng hôm nay  </h2>
 
 
+           <style   >
+
+.searching {
+    margin-left: 55px;
+}
  .checkout-container {
         margin-left: 45%;
     }
@@ -419,33 +432,64 @@ color:#cda45e;
         }
 
     </style>
-                <th:block th:each="item, iteration : ${desks}">
-                    <div th:class="'table table-' + ${iteration.index + 1}"
-                         th:style="${item.status == '1' ? 'background-color: #44ae44;' : (item.status == '2' ? 'background-color: #ee0c0c;' : '')}"
-                         th:text="${item.name}"  onclick="selectTable(this)"
-                            th:value="${item.id}">Bàn </div>
+                <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
+                <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
+                <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
+                <div class="table table-4"onclick="selectTable(this)"style="background-color: #44ae44;"value="4"name="selectDesk">Bàn 4</div>
+                <div class="table table-5"onclick="selectTable(this)"style="background-color: #44ae44;"value="5"name="selectDesk">Bàn 5</div>
+                <div class="table table-6"onclick="selectTable(this)"style="background-color: #44ae44;"value="6"name="selectDesk">Bàn 6</div>
+                <div class="table table-7"onclick="selectTable(this)"style="background-color: #44ae44;"value="7"name="selectDesk">Bàn 7</div>
+                <div class="table table-8"onclick="selectTable(this)"style="background-color: #44ae44;"value="8"name="selectDesk">Bàn 8</div>
+                <div class="table table-9"onclick="selectTable(this)"style="background-color: #44ae44;"value="9"name="selectDesk">Bàn 9</div>
+                <div class="table table-10"onclick="selectTable(this)"style="background-color: #44ae44;"value="10" name="selectDesk">Bàn 10</div>
+
+                <th:block th:each="item, iteration : ${bookings}">
+                    <div th:class="'table table-' + ${item.desk}"
+                         th:style="${item.status == '2' || item.status == '1' ? 'background-color: #ee0c0c;' : ''}"
+                         th:text="'Bàn ' + ${item.desk}"
+                         onclick="selectTable(this)"
+                         th:value="${item.id}">Bàn </div>
                 </th:block>
                 <div  class="table table-status1">   <div class="empty">: Trống</div></div>
 
-                <div  class="table table-status2">  <div class="using">: Đang dùng</div ></div>
+                <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
                 <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
                 <script>
-        function selectTable(table) {
-            // Check if the table has background color other than #ee0c0c
-            if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
-                // Remove 'table-selected' class from all tables
-                var tables = document.getElementsByClassName('table');
-                for (var i = 0; i < tables.length; i++) {
-                    tables[i].classList.remove('table-selected');
-                     tables[i].removeAttribute('name');
-                }
-
-                // Add 'table-selected' class to the clicked table
-                table.classList.add('table-selected');
-                 table.setAttribute('name', 'selectDesk');
-            }
+function selectTable(table) {
+    // Check if the table has background color other than #ee0c0c
+    if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
+        // Remove 'table-selected' class from all tables
+        var tables = document.getElementsByClassName('table');
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].classList.remove('table-selected');
         }
-    </script>
+
+        // Add 'table-selected' class to the clicked table
+        table.classList.add('table-selected');
+
+        // Get the value of the table
+        var tableValue = table.getAttribute('value');
+
+        // Set the value of the input field
+        var inputField = document.getElementById('selectedDeskInput');
+        inputField.value = tableValue;
+    }
+}
+
+function checkFormSubmission(event) {
+    // Get the selected table
+    var selectedTable = document.querySelector('.table-selected');
+
+    // Check if a table is selected
+    if (!selectedTable) {
+        // Prevent form submission
+        event.preventDefault();
+
+        // Display an alert
+        alert('Vui lòng chọn một bàn trước khi tạo đơn.');
+    }
+}
+</script>
             </div>
 
 
@@ -454,6 +498,7 @@ color:#cda45e;
 
         <div class="checkout-container" style="margin-left: 41%;">
             <div class="address-section">
+
                 <h2>Thông tin khách hàng</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">
                     <p style="text-align:center;" th:text="${DuplicateDate}"></p>
@@ -461,9 +506,12 @@ color:#cda45e;
                 <div th:if="${failMessage}" class="alert alert-danger">
                     <p style="text-align:center;" th:text="${failMessage}"></p>
                 </div>
-                 <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}"     >
-                    <input type="hidden" th:value="${reservation.id}" name="reservationId">
+                <div th:if="${NotChosenYet}" class="alert alert-danger">
+                    <p style="text-align:center;" th:text="${NotChosenYet}"></p>
+                </div>
 
+                    <input type="hidden" th:value="${reservationId}" name="reservationId">
+                <input type="hidden" id="selectedDeskInput" name="selectDesk" value="">
                     <div class="form-group">
                         <label for="name">Họ tên</label>
                         <input type="text" id="namee" name="name" required>
@@ -477,14 +525,26 @@ color:#cda45e;
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" required>
                     </div>
+
+                         <select name="numberOfPeople"  style="width: 20%;">
+                             <option value="1">1 người</option>
+                             <option value="2">2 người</option>
+                             <option value="3">3 người</option>
+                             <option value="4">4 người</option>
+                             <option value="5">5 người</option>
+                         </select>
+
+
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('dateTime')} ? 'has-error'">
-                        <label for="dateTime">Ngày đến:</label>
-                        <input type="datetime-local" id="dateTime" name="dateTime" th:field="*{dateTime}" />
+                <div class="form-group" th:classappend="${#fields.hasErrors('dateArrive')} ? 'has-error'">
 
+                    <input type="date" hidden  id="dateArrive" name="dateArrive" th:value="${currentDate}" />
+                </div>
 
-
-                    </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('timeArrive')} ? 'has-error'">
+                    <label for="timeArrive">Giờ đến:</label>
+                    <input type="time" id="timeArrive" name="timeArrive" th:field="*{timeArrive}" />
+                </div>
                     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
                     <button type="submit" style="background-color:#cda45e;padding: 10px 20px;
 
@@ -493,10 +553,11 @@ color:#cda45e;
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;">Tạo đơn</button>
-                </form>
+
             </div>
 
         </div>
+        </form>
     </section><!-- End Menu Section -->
 
 </main>

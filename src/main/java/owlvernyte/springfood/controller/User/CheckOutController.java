@@ -264,9 +264,6 @@ private OrderDetailRepository orderDetailRepository;
 
         return "User/checkOutSuccess";
     }
-    @GetMapping("user/vnpay_return")
-    public String returnPay(){
-        return "User/vnpay_return";
-    }
+
 
 }

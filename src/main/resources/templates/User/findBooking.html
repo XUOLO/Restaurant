@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Lign</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="/User/img/favicon.png" rel="icon">
+  <link href="/User/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/User/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/User/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/User/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/User/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/User/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/User/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="/User/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Restaurantly - v3.1.0
+  * Template URL: https://bootstrapmade.com/restaurantly-restaurant-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+</head>
+
+<body  >
+
+<!-- ======= Top Bar ======= -->
+<div id="topbar" class="d-flex align-items-center fixed-top">
+  <div class="container d-flex justify-content-center justify-content-md-between">
+
+    <div class="contact-info d-flex align-items-center">
+      <i class="bi bi-phone d-flex align-items-center"><span>0906303905</span></i>
+      <i class="bi bi-clock d-flex align-items-center ms-4"><span>T2-T7: 11AM - 23PM</span></i>
+    </div>
+
+    <div class="languages d-none d-md-flex align-items-center">
+      <ul>
+        <li>En</li>
+        <li><a href="#">De</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-cente">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
+
+    <h1 class="logo me-auto me-lg-0"><a href="/">Lign</a></h1>
+    <!-- Uncomment below if you prefer to use an image logo -->
+    <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="/User/img/logo.png" alt="" class="img-fluid"></a>-->
+
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <ul>
+        <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
+        <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
+          <ul>
+            <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
+
+            <li><a sec:authorize="!isAuthenticated()"  href="/login">Đăng nhập </a></li>
+            <li><a sec:authorize="!isAuthenticated()"  href="/user/register">Đăng kí</a></li>
+            <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
+          </ul>
+        </li>
+        <li>    <a  sec:authorize="isAuthenticated()">Xin chào<span> </span> <span class="ml-1" sec:authentication="name"></span>
+        </a></li>
+        <a class="cart" href="/user/viewCart">
+          <span class="cart-item-count"></span>
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+    <a href="/user/BookATable" >
+      <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
+    </a>
+
+  </div>
+</header><!-- End Header -->
+
+<main id="main">
+
+  <!-- ======= Menu Section ======= -->
+  <section id="menu" style="padding-top: 165px;" class="menu section-bg">
+    <div class="table-info" style="
+    width: 100%;
+    padding: 20px;">
+      <h2>Thông tin phòng</h2>
+      <form th:object="${reservation}" method="POST" action="/user/bookReservation" >
+
+        <p type="hidden" th:field="*{id}" />
+        <p type="text"  id="name" name="name" th:text="'Phòng : '+ *{name}"  ></p>
+        <!--                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="'Số lượng người: ' + *{numberOfPeople}"  ></p>-->
+
+        <!--                 <p type="text"  id="description" name="description" th:text="'Mô tả: '+ *{description}" ></p>-->
+
+      </form>
+    </div>
+    <div class="searching">
+      <form method="POST" action="/user/booking-list" >
+        <label for="dateArrive">Chọn ngày đến:</label>
+        <input type="date"  name="dateArrive" required>
+        <input type="hidden" th:value="${reservationId}" name="reservationId">
+
+        <button type="submit">Xem bàn</button>
+      </form>
+    </div>
+
+    <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}" onsubmit="checkFormSubmission(event)">
+      <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng ngày<p  th:text="${#temporals.format(dateArrive, 'dd/MM/yyyy')}"> </p>  </h2>
+
+
+      <style>
+
+.searching {
+    margin-left: 55px;
+}
+ .checkout-container {
+        margin-left: 45%;
+    }
+
+    .address-section {
+            margin-top: -41px;
+    }
+
+    .address-section h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .has-error input[type="datetime-local"] {
+        border-color: red;
+    }
+
+<!--    button[type="submit"] {-->
+<!--        background-color: #4CAF50;-->
+<!--        color: white;-->
+<!--        padding: 10px 20px;-->
+<!--        border: none;-->
+<!--        cursor: pointer;-->
+<!--        font-size: 16px;-->
+<!--        border-radius: 5px;-->
+<!--    }-->
+.table-info {
+    background-color: #1a1814;
+    color:white;
+    text-align:center;
+    width: 100%;
+    padding: 20px;
+}
+
+
+.customer-info {
+    background-color: #ffffff;
+    width: 50%;
+    float: right;
+    padding: 20px;
+}
+
+.menu-items {
+    margin-bottom: 20px;
+}
+
+
+
+.menu-items p {
+    margin-bottom: 5px;
+}
+
+.menu-items input {
+    margin-bottom: 10px;
+}
+
+<!--button[type="submit"] {-->
+<!--    padding: 10px 20px;-->
+<!--    background-color: #4CAF50;-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    cursor: pointer;-->
+<!--    font-size: 16px;-->
+<!--    border-radius: 5px;-->
+<!--}-->
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.menu-image {
+    width: 100px;
+    height: 100px;
+}
+
+
+
+.table-info h2 {
+    margin-bottom: 20px;
+}
+
+.customer-info h2 {
+    margin-bottom: 30px;
+}
+
+.menu-items h3 {
+    color:#fff;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+         margin-right: 100px;
+}
+
+.menu-items p {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.menu-items input {
+    color: black;
+    font-family: Arial, sans-serif;
+    margin-top: 85px;
+    font-size: 16px;
+    margin-left: -5%;
+}
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+input[type="email"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+<!--button[type="submit"] {-->
+<!--    color: #ffffff;-->
+<!--}-->
+
+.menu-image {
+    border-radius: 5px;
+}
+
+.menu-items img {
+    border: 1px solid #ccc;
+}
+.menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border: 1px solid #cda45e;
+    margin-bottom: 50px;
+    height: 130px;
+}
+
+.menu-item {
+    width: 50%;
+    border-radius: 5px;
+}
+.price {
+margin-bottom: -30px;
+color:#cda45e;
+}
+
+    </style>
+      <div class="room-plan">
+        <style>
+        .room-plan {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+.table-selected {
+            background-color: yellow;
+        }
+        .table {
+           border: 1px solid #c5d3e0;
+    padding: 3px;
+    text-align: center;
+    position: absolute;
+    color:white;
+        }
+
+        .table-1 {
+           top: 435px;
+    left: 65px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-2 {
+           top: 435px;
+    left: 135px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-3 {
+               top: 500px;
+    left: 65px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-4 {
+                top: 500px;
+    left: 135px;
+    width: 50px;
+    height: 50px;
+}
+
+        .table-5 {
+                top: 464px;
+    left: 258px;
+    width: 50px;
+    height: 90px;
+        }
+
+        .table-6 {
+               top: 586px;
+    left: 200px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+        }
+
+        .table-7 {
+               top: 435px;
+    left: 365px;
+    width: 90px;
+    height: 50px;
+        }
+
+        .table-8 {
+               top: 435px;
+    left: 475px;
+    width: 90px;
+    height: 50px;
+        }
+
+        .table-9 {
+                top: 690px;
+    left: 60px;
+    width: 90px;
+    height: 50px;
+        }
+        .table-10 {
+                   top: 620px;
+    left: 400px;
+    width: 120px;
+    height: 50px;
+        }
+        .table-status1{
+        top: 755px;
+    left: 145px;
+    width: 20px;
+    height: 20px;
+    background-color: #44ae44;
+        }
+            .table-status2{
+          top: 755px;
+    left: 255px;
+    width: 20px;
+    height: 20px;
+    background-color: #ee0c0c;
+        }
+        .table-onSelected{
+          top: 755px;
+    left: 400px;
+    width: 20px;
+    height: 20px;
+    background-color: yellow;
+        }
+.empty {
+    width: 100px;
+    margin-block-start: -6px;
+}
+.using {
+    width: 140px;
+    margin-block-start: -6px;
+}
+.onSelected{
+    width: 140px;
+    margin-block-start: -6px;
+}
+ .table-selected {
+            background-color: yellow !important;
+            color:black;
+        }
+
+    </style>
+        <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
+        <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
+        <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
+        <div class="table table-4"onclick="selectTable(this)"style="background-color: #44ae44;"value="4"name="selectDesk">Bàn 4</div>
+        <div class="table table-5"onclick="selectTable(this)"style="background-color: #44ae44;"value="5"name="selectDesk">Bàn 5</div>
+        <div class="table table-6"onclick="selectTable(this)"style="background-color: #44ae44;"value="6"name="selectDesk">Bàn 6</div>
+        <div class="table table-7"onclick="selectTable(this)"style="background-color: #44ae44;"value="7"name="selectDesk">Bàn 7</div>
+        <div class="table table-8"onclick="selectTable(this)"style="background-color: #44ae44;"value="8"name="selectDesk">Bàn 8</div>
+        <div class="table table-9"onclick="selectTable(this)"style="background-color: #44ae44;"value="9"name="selectDesk">Bàn 9</div>
+        <div class="table table-10"onclick="selectTable(this)"style="background-color: #44ae44;"value="10" name="selectDesk">Bàn 10</div>
+
+        <th:block th:each="item, iteration : ${bookings}">
+          <div th:class="'table table-' + ${item.desk}"
+               th:style="${item.status == '2' ? 'background-color: #44ae44;' : (item.status == '1' ? 'background-color: #ee0c0c;' : '')}"
+               th:text="'Bàn '+${item.desk}"  onclick="selectTable(this)"
+
+               th:value="${item.id}">Bàn </div>
+        </th:block>
+        <div  class="table table-status1">   <div class="empty">: Trống</div></div>
+
+        <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
+        <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
+        <script>
+function selectTable(table) {
+    // Check if the table has background color other than #ee0c0c
+    if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
+        // Remove 'table-selected' class from all tables
+        var tables = document.getElementsByClassName('table');
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].classList.remove('table-selected');
+        }
+
+        // Add 'table-selected' class to the clicked table
+        table.classList.add('table-selected');
+
+        // Get the value of the table
+        var tableValue = table.getAttribute('value');
+
+        // Set the value of the input field
+        var inputField = document.getElementById('selectedDeskInput');
+        inputField.value = tableValue;
+    }
+}
+
+function checkFormSubmission(event) {
+    // Get the selected table
+    var selectedTable = document.querySelector('.table-selected');
+
+    // Check if a table is selected
+    if (!selectedTable) {
+        // Prevent form submission
+        event.preventDefault();
+
+        // Display an alert
+        alert('Vui lòng chọn một bàn trước khi tạo đơn.');
+    }
+}
+</script>
+      </div>
+
+
+
+
+
+      <div class="checkout-container" style="margin-left: 41%;">
+        <div class="address-section">
+
+          <h2>Thông tin khách hàng</h2>
+          <div th:if="${DuplicateDate}" class="alert alert-danger">
+            <p style="text-align:center;" th:text="${DuplicateDate}"></p>
+          </div>
+          <div th:if="${failMessage}" class="alert alert-danger">
+            <p style="text-align:center;" th:text="${failMessage}"></p>
+          </div>
+
+          <input type="hidden" th:value="${reservationId}" name="reservationId">
+          <input type="hidden" id="selectedDeskInput" name="selectDesk" value="">
+          <div class="form-group">
+            <label for="name">Họ tên</label>
+            <input type="text" id="namee" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">SDT:</label>
+            <input type="text" id="phone" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <select name="numberOfPeople"  style="width: 20%;">
+            <option value="1">1 người</option>
+            <option value="2">2 người</option>
+            <option value="3">3 người</option>
+            <option value="4">4 người</option>
+            <option value="5">5 người</option>
+          </select>
+
+
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+          <div class="form-group" th:classappend="${#fields.hasErrors('dateArrive')} ? 'has-error'">
+
+            <input type="date" hidden  id="dateArrive" name="dateArrive" th:value="${dateArrive}" />
+          </div>
+
+          <div class="form-group" th:classappend="${#fields.hasErrors('timeArrive')} ? 'has-error'">
+            <label for="timeArrive">Giờ đến:</label>
+            <input type="time" id="timeArrive" name="timeArrive" th:field="*{timeArrive}" />
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+          <button type="submit" style="background-color:#cda45e;padding: 10px 20px;
+
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;">Tạo đơn</button>
+
+        </div>
+
+      </div>
+    </form>
+
+
+  </section><!-- End Menu Section -->
+
+</main>
+
+
+
+
+
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-info">
+            <h3>Lign</h3>
+            <p>
+              123 HCM <br>
+              <br><br>
+              <strong>SDT:</strong> 0906303905 <br>
+              <strong>Email:</strong> xuanloc290901@gmail.com<br>
+            </p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+</footer><!-- End Footer -->
+
+
+<div id="preloader"></div>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/User/vendor/aos/aos.js"></script>
+<script src="/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/User/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="/User/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="/User/vendor/php-email-form/validate.js"></script>
+<script src="/User/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/User/js/jquery-3.4.1.min.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/User/js/main.js"></script>
+
+<!-- End Google Map -->
+<script>
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Phone numbers must start with 0 and be 10 digits long');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
+</script>
+
+<script src="/User/js/jquery-3.4.1.min.js"></script>
+
+</body>
+
+</html>

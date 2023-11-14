@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import owlvernyte.springfood.entity.*;
 import owlvernyte.springfood.repository.BookingRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -35,8 +36,13 @@ public class BookingService {
 
         reservationCart.remove(id);
     }
-
-
+    public List<Booking> getBookingsByCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        return bookingRepository.findBookingsByDate(currentDate);
+    }
+    public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentDate, long reservationId) {
+        return bookingRepository.findByBookingDateAndReservationId(currentDate, reservationId);
+    }
     public ReservationItem update(long productId, int quantity){
         ReservationItem reservationItem = reservationCart.get(productId);
         if (reservationItem != null) {

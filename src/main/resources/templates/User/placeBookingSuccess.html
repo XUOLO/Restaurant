@@ -10,7 +10,7 @@
   <title>Lign</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-
+  <link href="/User/css/styleRecipe.css" rel="stylesheet" />
   <!-- Favicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="/User/img/favicon.png" rel="icon">
@@ -83,7 +83,7 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-        <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
+        <li>    <a  sec:authorize="isAuthenticated()">Xin chào<span> </span> <span class="ml-1" sec:authentication="name"></span>
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -92,7 +92,7 @@
       </ul>
       <i class="bi bi-list mobile-nav-toggle"></i>
     </nav><!-- .navbar -->
-   <a href="/user/BookATable" >
+    <a href="/user/BookATable" >
       <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Đặt bàn</button>
     </a>
 
@@ -100,147 +100,11 @@
 </header><!-- End Header -->
 
 <main id="main">
-
-  <!-- ======= Menu Section ======= -->
-  <section   style="padding-top: 165px;" class="menu section-bg">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <div class="container bootstrap snippets bootdey">
-      <div class="row">
-        <div class="profile-nav col-md-3">
-          <div class="panel">
-            <div class="user-heading round">
-              <a href="#">
-
-                <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile"
-              </a>
-              <h1 th:text="${username}"> </h1>
-            </div>
-
-            <div class="belowPicInfo" style="padding-block: 15px;">
-              <div class="div-link"><a style="color:#89817e;" href="/user/info"><i class="fa fa-user"></i> Thông tin cá nhân</a></div>
-              <div class="div-link"><a style="color:#89817e;" href="/user/userOrderInfo"><i class="fa fa-calendar"></i> Đơn đặt món  </a></div>
-              <div class="div-link"><a style="color:#89817e;" href="/user/userBookingInfo"><i class="fa fa-calendar"></i> Đơn đặt bàn  </a></div>
-
-              <div class="div-link"><a style="color:#89817e;" href="/user/editProfile"><i class="fa fa-edit"></i> Chỉnh sửa thông tin cá nhân</a></div>
-
-
-            </div>
-
-
-          </div>
-        </div>
-        <div class="profile-info col-md-9" style="padding-left: 70px;">
-          <div class="panel">
-
-
-          </div>
-          <div class="panel">
-            <div>
-              <h1>Table list</h1>
-
-              <div class="searchOrder" style="margin-left:200px;margin-top:-55px;margin-bottom:25px;">
-                <form class="search-form" method="post" action="/user/booking/search">
-                  <input class="search-input" type="text" required name="keyword" placeholder="tìm kiếm" title="Nhập thông tin cần tìm">
-                  <button class="search-button" type="submit" title="Search">Tìm kiếm</button>
-                </form>
-                <style>
-    .search-form {
-        display: flex;
-        align-items: center;
-    }
-
-    .search-input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        width: 225px;
-    }
-
-    .search-button {
-        background-color: #333;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        margin-left: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .search-button:hover {
-        background-color: #555;
-    }
-</style>
-              </div>
-
-            </div>
-
-
-
-
-            <table style="border-collapse: collapse; width: 100%; background-color: #0c0b09;">
-              <div th:if="${errorMessage}" class="alert alert-danger">
-                <p th:text="${errorMessage}"></p>
-              </div>
-              <thead style="background-color: #d5a84d">
-              <tr>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">NO.</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Booking id</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Booking Date</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Date arrive</th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Status</th>
-<!--                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>-->
-              </tr>
-              </thead>
-              <tbody style="background-color: #202020;">
-              <tr th:each="booking, index : ${userBooking}">
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${index.index + 1}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${booking.code}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}"></td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#temporals.format(booking.dateArrive, 'dd/MM/yyyy')}"></td>
-
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2; display: flex; align-items: center;">
-                  <span th:text="${booking.statusString}" th:style="${booking.status == '1' ? 'color: #1cff1c' : (booking.status == '2' ? 'color: #01f5ef' : (booking.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
-                  <form method="post" th:object="${booking}" th:action="@{/user/{id}/updateOrderStatus(id=${booking.id})}" style="margin-left: 10px;">
-                    <div th:if="${booking.status != '3'}">
-                      <button class="cancel-button" type="submit" name="status" value="3">Cancel</button>
-                    </div>
-                  </form>
-                </td>
-<!--                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">-->
-<!--                  <a th:href="@{/user/bookingDetail/{id}(id=${booking.id})}">-->
-<!--                    Detail<i class="bi bi-list"></i>-->
-<!--                  </a>-->
-<!--                </td>-->
-              </tr>
-              </tbody>
-            </table>
-            <style>
-  .cancel-button {
-    background-color: #ff0000;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-</style>
-
-
-
-
-          </div>
-        </div>
-      </div>
-      <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-      <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-      <script type="text/javascript">
-
-      </script>
-    </div>
-  </section><!-- End Menu Section -->
-
+  <div style="text-align: center; padding: 20px; padding-top:160px; border-radius: 5px; margin: 0 auto; max-width: 500px;">
+    <h1 style="color: #37cc37; font-size:40px; margin-bottom: 10px;">Đặt bàn thành công!</h1>
+    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Cảm ơn bạn đã đặt bàn tại nhà hàng của chúng tôi.</p>
+    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Vui lòng kiểm tra <a href="/user/userBookingInfo" style="color:#37cc37; text-decoration: none; font-weight: bold;">thông tin đặt bàn</a> của bạn. Chúng tôi sẽ liên hệ để xác nhận trong thời gian sớm nhất.</p>
+    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Nếu bạn có bất kỳ câu hỏi nào, xin vui lòng liên hệ với chúng tôi.</p>    </div>
 </main>
 
 
@@ -320,36 +184,7 @@
 <script src="/User/js/main.js"></script>
 
 <!-- End Google Map -->
-<script>
-    function valideNumber() {
-        var charCode = (event.which) ? event.which : event.keyCode;
-        if (charCode >= 48 && charCode <= 57) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-        function validPhoneNumber(event) {
-  // Chỉ nhận các giá trị số và phím xoá
-  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
-    var phoneNumberInputs = document.getElementsByName('Phone');
-        for(var i = 0; i < phoneNumberInputs.length; i++) {
-      var phoneNumber = phoneNumberInputs[i].value;
-        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
-        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
-            phoneNumberInputs[i].setCustomValidity('Phone numbers must start with 0 and be 10 digits long');
-        } else {
-            phoneNumberInputs[i].setCustomValidity('');
-      }
-    }
-        return true;
-  } else {
-            event.preventDefault();
-        return false;
-  }
-}
-</script>
 </body>
 
 </html>

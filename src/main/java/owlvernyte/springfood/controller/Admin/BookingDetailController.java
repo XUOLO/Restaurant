@@ -28,6 +28,7 @@ import owlvernyte.springfood.service.*;
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -93,9 +94,9 @@ public class BookingDetailController {
     @PostMapping("/admin/{id}/updateBookingStatus")
     public String updateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
-        LocalDateTime currentDateTime = booking.getDateTime();
+        LocalDate currentDateTime = booking.getDateArrive();
         booking.setStatus(status);
-        booking.setDateTime(currentDateTime);
+        booking.setDateArrive(currentDateTime);
         bookingRepository.save(booking);
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
@@ -111,7 +112,6 @@ public class BookingDetailController {
         // Lấy danh sách OrderDetail theo Order
         List<BookingDetail> bookingDetails = bookingDetailService.getBookingDetailsByBooking(booking);
         model.addAttribute("bookingDetails", bookingDetails);
-        model.addAttribute("totalAmount",booking.getTotal());
 
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
@@ -154,11 +154,11 @@ public class BookingDetailController {
         document.open();
 
         // Tạo bảng để hiển thị thông tin ticket
-        PdfPTable table = new PdfPTable(9);
+        PdfPTable table = new PdfPTable(8);
         table.setWidthPercentage(100f);
         table.setSpacingBefore(10f);
         table.setSpacingAfter(10f);
-        float[] columnWidths = { 1f, 2.5f, 3f, 4f, 3f, 3f, 3f, 3f, 2f };
+        float[] columnWidths = { 1f, 2.5f, 3f, 4f, 3f, 3f, 3f, 2f };
         table.setWidths(columnWidths);
         // Tạo tiêu đề cho các cột
         PdfPCell noCell = new PdfPCell(new Paragraph("No."));
@@ -166,8 +166,7 @@ public class BookingDetailController {
         PdfPCell nameCell = new PdfPCell(new Paragraph("Customer Name"));
         PdfPCell emailCell = new PdfPCell(new Paragraph("Email"));
         PdfPCell phoneCell = new PdfPCell(new Paragraph("phone"));
-        PdfPCell totalCell = new PdfPCell(new Paragraph("Total"));
-        PdfPCell createDateCell = new PdfPCell(new Paragraph("Create date"));
+         PdfPCell createDateCell = new PdfPCell(new Paragraph("Create date"));
         PdfPCell dateTimeCell = new PdfPCell(new Paragraph("Date arrive"));
         PdfPCell statusCell = new PdfPCell(new Paragraph("Status"));
 
@@ -177,8 +176,7 @@ public class BookingDetailController {
         nameCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         emailCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         phoneCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        totalCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        createDateCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+         createDateCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         dateTimeCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         statusCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 
@@ -188,8 +186,7 @@ public class BookingDetailController {
         table.addCell(nameCell);
         table.addCell(emailCell);
         table.addCell(phoneCell);
-        table.addCell(totalCell);
-        table.addCell(createDateCell);
+         table.addCell(createDateCell);
         table.addCell(dateTimeCell);
         table.addCell(statusCell);
 
@@ -203,10 +200,9 @@ public class BookingDetailController {
             table.addCell(booking.getName());
             table.addCell(booking.getEmail());
             table.addCell(booking.getPhone());
-            String total = currencyFormat.format(booking.getTotal());
-            table.addCell(total);
+
             table.addCell(String.valueOf(booking.getBookingDate()));
-            table.addCell(String.valueOf(booking.getDateTime()));
+            table.addCell(String.valueOf(booking.getDateArrive()));
             table.addCell(booking.getStatusString());
             rowNum++;
         }
@@ -277,19 +273,17 @@ public class BookingDetailController {
         phoneCell.setCellValue("Phone");
         phoneCell.setCellStyle(headerStyle);
 
-        Cell totalCell = headerRow.createCell(5);
-        totalCell.setCellValue("Total");
-        totalCell.setCellStyle(headerStyle);
 
-        Cell orderDateCell = headerRow.createCell(6);
+
+        Cell orderDateCell = headerRow.createCell(5);
         orderDateCell.setCellValue("Order date");
         orderDateCell.setCellStyle(headerStyle);
 
-        Cell addressCell = headerRow.createCell(7);
+        Cell addressCell = headerRow.createCell(6);
         addressCell.setCellValue("Date arrive");
         addressCell.setCellStyle(headerStyle);
 
-        Cell statusCell = headerRow.createCell(8);
+        Cell statusCell = headerRow.createCell(7);
         statusCell.setCellValue("Status");
         statusCell.setCellStyle(headerStyle);
 
@@ -298,18 +292,16 @@ public class BookingDetailController {
         // Thêm thông tin của từng ticket vào sheet
         int rowNum = 1;
         for (Booking booking : bookings) {
-            String total = currencyFormat.format(booking.getTotal());
-            Row row = sheet.createRow(rowNum++);
+             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(rowNum - 1);
             row.createCell(1).setCellValue(booking.getCode());
             row.createCell(2).setCellValue(booking.getName());
             row.createCell(3).setCellValue(booking.getEmail());
 
             row.createCell(4).setCellValue(booking.getPhone());
-            row.createCell(5).setCellValue(total);
-            row.createCell(6).setCellValue(booking.getBookingDate().toString());
-            row.createCell(7).setCellValue(booking.getDateTime().toString());
-            row.createCell(8).setCellValue(booking.getStatusString());
+             row.createCell(5).setCellValue(booking.getBookingDate().toString());
+            row.createCell(6).setCellValue(booking.getDateArrive().toString());
+            row.createCell(7).setCellValue(booking.getStatusString());
         }
 
         // Tạo định dạng cho ngày xuất file

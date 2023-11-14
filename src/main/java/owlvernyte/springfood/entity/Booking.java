@@ -2,9 +2,11 @@ package owlvernyte.springfood.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 @Entity
 @Table(name = "booking")
@@ -20,23 +22,27 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
-    @ManyToOne
-    @JoinColumn(name = "desk_id")
-    private Desk desk;
+    @Column(name = "desk_id")
+    private String desk;
 
-    public Desk getDesk() {
+    public String getDesk() {
         return desk;
     }
 
-    public void setDesk(Desk desk) {
+    public void setDesk(String desk) {
         this.desk = desk;
     }
 
     @Column(name = "booking_date")
     private LocalDate bookingDate;
-    @Column(name = "date_time")
-    @FutureOrPresent(message = "The booking date and time cannot be in the past.")
-    private LocalDateTime dateTime;
+
+
+    @Column(name = "date_arrive")
+    @FutureOrPresent(message = "The booking date cannot be in the past.")
+    private LocalDate dateArrive;
+
+    @Column(name = "time_arrive")
+    private LocalTime timeArrive;
 
     @Column(name = "customer_name")
     private String name;
@@ -46,8 +52,9 @@ public class Booking {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "Total")
-    private double  total;
+    @Column(name = "NumberOfPeople")
+    private int numberOfPeople;
+
     private String status;
     private String code;
     public void setStatus(String status) {
@@ -56,9 +63,9 @@ public class Booking {
     public String getStatusString() {
         switch (status) {
             case "1":
-                return "Đang xử lý";
-            case "2":
                 return "Đã xác nhận";
+            case "2":
+                return "Đang xử lý";
             case "3":
                 return "Đã hủy";
 
@@ -112,12 +119,21 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+
+    public LocalDate getDateArrive() {
+        return dateArrive;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDateArrive(LocalDate dateArrive) {
+        this.dateArrive = dateArrive;
+    }
+
+    public LocalTime getTimeArrive() {
+        return timeArrive;
+    }
+
+    public void setTimeArrive(LocalTime timeArrive) {
+        this.timeArrive = timeArrive;
     }
 
     public String getName() {
@@ -144,11 +160,11 @@ public class Booking {
         this.email = email;
     }
 
-    public double getTotal() {
-        return total;
+    public int getNumberOfPeople() {
+        return numberOfPeople;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
+    public void setNumberOfPeople(int numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
     }
 }

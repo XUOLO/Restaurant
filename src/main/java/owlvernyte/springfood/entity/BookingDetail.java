@@ -26,6 +26,8 @@ public class BookingDetail {
 
     @Column(name = "price")
     private double price;
+    @Column(name = "total")
+    private double total;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
@@ -76,5 +78,13 @@ public class BookingDetail {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

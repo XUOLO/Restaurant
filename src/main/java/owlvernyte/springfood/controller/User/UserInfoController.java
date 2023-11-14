@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -559,7 +560,6 @@ public class UserInfoController {
         // Lấy danh sách OrderDetail theo Order
         List<BookingDetail> bookingDetails = bookingDetailService.getBookingDetailsByBooking(booking);
         model.addAttribute("bookingDetails", bookingDetails);
-        model.addAttribute("totalAmount",booking.getTotal());
 
 
 
@@ -568,9 +568,9 @@ public class UserInfoController {
     @PostMapping("/user/{id}/updateBookingStatus")
     public String userUpdateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
-        LocalDateTime currentDateTime = booking.getDateTime();
+        LocalDate currentDateTime = booking.getDateArrive();
         booking.setStatus(status);
-        booking.setDateTime(currentDateTime);
+        booking.setDateArrive(currentDateTime);
         bookingRepository.save(booking);
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;

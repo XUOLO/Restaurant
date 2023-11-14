@@ -6,15 +6,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import owlvernyte.springfood.entity.Booking;
+import owlvernyte.springfood.entity.Desk;
 import owlvernyte.springfood.entity.Order;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    boolean existsByDateTime(LocalDateTime dateTime);
+
+    boolean existsByDateArriveAndDesk(LocalDate dateArrive, String desk);
     @Query("SELECT o FROM Booking o WHERE CONCAT(o.name, o.code, o.phone, o.email) LIKE %?1%")
     List<Booking> findAll(String keyword);
 
@@ -26,4 +29,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Long countConfirmedBooking();
     @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '3'")
     Long countCancelBooking();
+    @Query("SELECT b FROM Booking b WHERE b.dateArrive = :date")
+    List<Booking> findBookingsByDate(LocalDate date);
+
+
+    List<Booking> findByBookingDateAndReservationId(LocalDate dateArrive, long reservationId);
+    List<Booking> findByDateArrive(LocalDate dateArrive);
+
 }

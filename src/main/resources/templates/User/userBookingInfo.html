@@ -195,9 +195,9 @@
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">Stt.</th>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserBooking/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}" style="color: #f2f2f2;">Mã bàn</a> </th>
                 <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserBooking/' + ${currentPage} + '?sortField=bookingDate&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Ngày đặt</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserBooking/' + ${currentPage} + '?sortField=dateTime&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;"> Ngày tới</a> </th>
+                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserBooking/' + ${currentPage} + '?sortField=dateArrive&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;"> Ngày tới</a> </th>
                  <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"><a th:href="@{'/user/pageUserBooking/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}"style="color: #f2f2f2;">Tình trạng</a> </th>
-                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>
+<!--                <th style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"> </th>-->
               </tr>
               </thead>
               <tbody style="background-color: #202020;">
@@ -205,7 +205,7 @@
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;"  th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${booking.code}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}"></td>
-                  <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#temporals.format(booking.dateTime, 'dd/MM/yyyy HH:mm')}"></td>
+                  <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;" th:text="${#temporals.format(booking.dateArrive, 'dd/MM/yyyy')}"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2; display: flex; align-items: center;">
                   <span th:text="${booking.statusString}" th:style="${booking.status == '1' ? 'color: #1cff1c' : (booking.status == '2' ? 'color: #01f5ef' : (booking.status == '3' ? 'color: red' : 'color: #f2f2f2'))}"></span>
                   <form method="post" th:object="${booking}" th:action="@{/user/{id}/updateBookingStatus(id=${booking.id})}" style="margin-left: 10px;">
@@ -214,11 +214,11 @@
                     </div>
                   </form>
                 </td>
-                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">
-                  <a th:href="@{/user/bookingDetail/{id}(id=${booking.id})}">
-                    Chi tiết<i class="bi bi-list"></i>
-                  </a>
-                </td>
+<!--                <td style="padding: 8px; border: 1px solid #ddd; color: #f2f2f2;">-->
+<!--                  <a th:href="@{/user/bookingDetail/{id}(id=${booking.id})}">-->
+<!--                    Chi tiết<i class="bi bi-list"></i>-->
+<!--                  </a>-->
+<!--                </td>-->
               </tr>
               </tbody>
             </table>
