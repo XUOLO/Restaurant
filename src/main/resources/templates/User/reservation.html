@@ -194,7 +194,8 @@
           <img class="menu-img" style="width: 135px;border-radius: 5%;float: left;border: 5px solid rgba(255, 255, 255, 0.2);margin-right: 10px;" th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
 
           <div class="menu-content">
-            <a href="#" th:text="${list.name}"> </a><span th:text="'Số lượng người: '+ ${list.numberOfPeople}" > </span>
+            <a href="#" th:text="${list.name}"> </a>
+<!--            <span th:text="'Số lượng người: '+ ${list.numberOfPeople}" > </span>-->
           </div>
           <div class="menu-ingredients"th:text="${list.description}">
 

@@ -7,6 +7,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +32,7 @@ import owlvernyte.springfood.repository.*;
 import owlvernyte.springfood.service.*;
 
 import java.io.ByteArrayOutputStream;
+import java.net.http.HttpRequest;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -74,23 +78,8 @@ public class BookingDetailController {
     private BookingDetailRepository bookingDetailRepository;
     @Autowired
     private JavaMailSender mailSender;
-
-//    @GetMapping("/admin/list_booking")
-//    public String showListBooking(Model model, Authentication authentication){
-//        String username = authentication.getName();
-//        model.addAttribute("listStaff", userService.getAllUser());
-//        model.addAttribute("listRole", roleService.getAllRole());
-//        User user = userRepository.findByUsername(username);
-//        model.addAttribute("user", user);
-//        model.addAttribute("username", username);
-//
-//        model.addAttribute("listBooking", bookingService.getAllBooking());
-//
-//
-//        return findPaginatedBooking(1,model,"name","asc");
-//    }
-
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @PostMapping("/admin/{id}/updateBookingStatus")
     public String updateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
@@ -105,11 +94,12 @@ public class BookingDetailController {
 
 
     @GetMapping("/admin/bookingDetail/{id}")
-    public String showBookingDetail(Authentication authentication,@PathVariable(value = "id") long id, Model model) {
+    public String showBookingDetail(Authentication authentication, @PathVariable(value = "id") long id, Model model) {
         Booking booking = bookingService.getBookingById(id);
         model.addAttribute("booking", booking);
-        model.addAttribute("TableName",booking.getDesk());
-        model.addAttribute("RoomName",booking.getReservation().getName());
+        model.addAttribute("bookingId", booking.getId());
+        model.addAttribute("TableName", booking.getDesk());
+        model.addAttribute("RoomName", booking.getReservation().getName());
         String statusCanceled = booking.getStatus();
         if (statusCanceled.equals("3")) {
             model.addAttribute("statusCanceled", true);
@@ -155,11 +145,21 @@ public class BookingDetailController {
                 }
             }
         }
-        model.addAttribute("listChosen",listChosen);
+        model.addAttribute("listChosen", listChosen);
 
 
+        double total = calculateTotalForBooking(id);
 
+        model.addAttribute("totalBooking", total);
         return "Admin/booking_detail";
+    }
+
+    public double calculateTotalForBooking(Long bookingId) {
+        String queryString = "SELECT SUM(bd.total) FROM BookingDetail bd WHERE bd.booking.id = :bookingId";
+        TypedQuery<Double> query = entityManager.createQuery(queryString, Double.class);
+        query.setParameter("bookingId", bookingId);
+        Double total = query.getSingleResult();
+        return total != null ? total : 0.0;
     }
 
     @PostMapping("/admin/booking/updateBooking")
@@ -168,8 +168,23 @@ public class BookingDetailController {
         return "redirect:/admin/bookingDetail/" + reservationId;
     }
 
+    @GetMapping("/admin/ListDishes/clear")
+    public String clearListDishesBooking(Model model, HttpServletRequest request) {
+        bookingService.clear();
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
+
+    @GetMapping("/admin/ListDishes/remove/{id}")
+    public String removeListDishes(@PathVariable("id") int id, HttpServletRequest request) {
+        bookingService.remove(id);
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
     @PostMapping("/admin/booking/search")
-    public String searchBooking(@RequestParam("idReservation") long idReservation,@RequestParam("keyword") String keyword, Model model ,Authentication authentication ) {
+    public String searchBooking(@RequestParam("idReservation") long idReservation, @RequestParam("keyword") String keyword, Model model, Authentication authentication) {
         String username = authentication.getName();
         model.addAttribute("listStaff", userService.getAllUser());
         model.addAttribute("listRole", roleService.getAllRole());
@@ -180,12 +195,12 @@ public class BookingDetailController {
         if (listBooking.isEmpty()) {
             String errorMessage = "No matching booking found";
             model.addAttribute("errorMessage", errorMessage);
-            return findPaginatedBooking(idReservation,1,model,"name","asc");
+            return findPaginatedBooking(idReservation, 1, model, "name", "asc");
         } else {
             model.addAttribute("listBooking", listBooking);
         }
 
-        return "Admin/list_searchBooking"  ;
+        return "Admin/list_searchBooking";
     }
 
 
@@ -205,7 +220,7 @@ public class BookingDetailController {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(10f);
         table.setSpacingAfter(10f);
-        float[] columnWidths = { 1f, 2.5f, 3f, 4f, 3f, 3f, 3f, 2f };
+        float[] columnWidths = {1f, 2.5f, 3f, 4f, 3f, 3f, 3f, 2f};
         table.setWidths(columnWidths);
         // Tạo tiêu đề cho các cột
         PdfPCell noCell = new PdfPCell(new Paragraph("No."));
@@ -213,7 +228,7 @@ public class BookingDetailController {
         PdfPCell nameCell = new PdfPCell(new Paragraph("Customer Name"));
         PdfPCell emailCell = new PdfPCell(new Paragraph("Email"));
         PdfPCell phoneCell = new PdfPCell(new Paragraph("phone"));
-         PdfPCell createDateCell = new PdfPCell(new Paragraph("Create date"));
+        PdfPCell createDateCell = new PdfPCell(new Paragraph("Create date"));
         PdfPCell dateTimeCell = new PdfPCell(new Paragraph("Date arrive"));
         PdfPCell statusCell = new PdfPCell(new Paragraph("Status"));
 
@@ -223,7 +238,7 @@ public class BookingDetailController {
         nameCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         emailCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         phoneCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-         createDateCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        createDateCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         dateTimeCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         statusCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 
@@ -233,7 +248,7 @@ public class BookingDetailController {
         table.addCell(nameCell);
         table.addCell(emailCell);
         table.addCell(phoneCell);
-         table.addCell(createDateCell);
+        table.addCell(createDateCell);
         table.addCell(dateTimeCell);
         table.addCell(statusCell);
 
@@ -315,11 +330,9 @@ public class BookingDetailController {
         emailCell.setCellStyle(headerStyle);
 
 
-
         Cell phoneCell = headerRow.createCell(4);
         phoneCell.setCellValue("Phone");
         phoneCell.setCellStyle(headerStyle);
-
 
 
         Cell orderDateCell = headerRow.createCell(5);
@@ -339,14 +352,14 @@ public class BookingDetailController {
         // Thêm thông tin của từng ticket vào sheet
         int rowNum = 1;
         for (Booking booking : bookings) {
-             Row row = sheet.createRow(rowNum++);
+            Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(rowNum - 1);
             row.createCell(1).setCellValue(booking.getCode());
             row.createCell(2).setCellValue(booking.getName());
             row.createCell(3).setCellValue(booking.getEmail());
 
             row.createCell(4).setCellValue(booking.getPhone());
-             row.createCell(5).setCellValue(booking.getBookingDate().toString());
+            row.createCell(5).setCellValue(booking.getBookingDate().toString());
             row.createCell(6).setCellValue(booking.getDateArrive().toString());
             row.createCell(7).setCellValue(booking.getStatusString());
         }
@@ -386,15 +399,8 @@ public class BookingDetailController {
     }
 
 
-
-
-
-
-
-
-
     @GetMapping("/admin/list_room")
-    public String showListRoom(Model model, Authentication authentication){
+    public String showListRoom(Model model, Authentication authentication) {
         String username = authentication.getName();
         model.addAttribute("listStaff", userService.getAllUser());
         model.addAttribute("listRole", roleService.getAllRole());
@@ -405,33 +411,33 @@ public class BookingDetailController {
         model.addAttribute("listBooking", reservationRepository.findAll());
 
 
-        return findPaginatedRoom(1,model,"name","asc");
+        return findPaginatedRoom(1, model, "name", "asc");
     }
 
 
     @GetMapping("/admin/pageRoom/{pageNo}")
-    public String findPaginatedRoom(@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
-        int pageSize=10;
-        Page<Reservation> page= reservationService.findPaginatedReservation(pageNo,pageSize,sortField,sortDir);
-        List<Reservation> reservationList  = page.getContent();
+    public String findPaginatedRoom(@PathVariable(value = "pageNo") int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
+        int pageSize = 10;
+        Page<Reservation> page = reservationService.findPaginatedReservation(pageNo, pageSize, sortField, sortDir);
+        List<Reservation> reservationList = page.getContent();
         model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages",page.getTotalPages());
-        model.addAttribute("totalItems",page.getTotalElements());
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("pageSize", pageSize);
 
-        model.addAttribute("sortField",sortField);
-        model.addAttribute("sortDir",sortDir);
-        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
-        model.addAttribute("reservationList",reservationList);
+        model.addAttribute("reservationList", reservationList);
         return "Admin/list_room";
 
     }
 
     @GetMapping("/admin/reservationDetail/{id}")
-    public String showAllReservationDetail(  Authentication authentication,@PathVariable(value = "id") long id, Model model) {
+    public String showAllReservationDetail(Authentication authentication, @PathVariable(value = "id") long id, Model model) {
         String username = authentication.getName();
-        model.addAttribute("idReservation",id);
+        model.addAttribute("idReservation", id);
         model.addAttribute("listStaff", userService.getAllUser());
         model.addAttribute("listRole", roleService.getAllRole());
         User user = userRepository.findByUsername(username);
@@ -441,8 +447,9 @@ public class BookingDetailController {
         List<Booking> bookingsByReservationId = bookingService.getBookingsByReservationId(id);
         model.addAttribute("listBooking", bookingsByReservationId);
 
-        return findPaginatedBooking(id,1,model,"name","asc");
+        return findPaginatedBooking(id, 1, model, "name", "asc");
     }
+
     @GetMapping("/admin/pageBooking/{pageNo}")
     public String findPaginatedBooking(@RequestParam("idReservation") long reservationId, @PathVariable(value = "pageNo") int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
 
@@ -453,40 +460,22 @@ public class BookingDetailController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("pageSize", pageSize);
-        model.addAttribute("idReservation",reservationId);
+        model.addAttribute("idReservation", reservationId);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         Reservation reservation = reservationService.getReservationById(reservationId);
-        model.addAttribute("RoomName",reservation.getName());
+        model.addAttribute("RoomName", reservation.getName());
         model.addAttribute("listBooking", bookingList);
         return "Admin/list_booking";
     }
 
     @PostMapping("/admin/placeDishes")
-    public String AminPlaceBooking(@RequestParam("name") String name,
-                               @RequestParam("phone") String phone,
-                               @RequestParam("email") String email,
-                               @RequestParam("reservationId") long reservationId,
-                               Model model,
-                               HttpServletRequest request,
-                               @ModelAttribute("booking") @Valid Booking booking,
-                               BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes,
-                               HttpSession session) {
-        Reservation reservation = reservationService.viewById(reservationId);
+    public String AminPlaceBooking(@RequestParam("bookingId") long bookingId, Model model, @ModelAttribute("bookingDetail") @Valid BookingDetail bookingDetaill, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpSession session) {
         String username = (String) session.getAttribute("username");
         Long userId = (Long) session.getAttribute("userId");
         User user = userService.viewById(userId);
-        booking.setName(name);
-        booking.setPhone(phone);
-        booking.setEmail(email);
-        booking.setBookingDate(LocalDate.now());
-        booking.setReservation(reservation);
 
-        booking.setUser(user);
-//        booking.setTotal(bookingService.getAmount());
-        booking.setStatus("1");
 
         Collection<ReservationItem> reservationItems = bookingService.getAllReservationItem();
         List<String> errorMessages = new ArrayList<>();
@@ -509,16 +498,10 @@ public class BookingDetailController {
         }
 
         if (!errorMessages.isEmpty()) {
-             model.addAttribute("errorMessages", errorMessages);
+            model.addAttribute("errorMessages", errorMessages);
             return "Admin/errorPageBooking";
         }
-        Random random = new Random();
-        int randomNumber = random.nextInt(900000) + 100000;
-        String code = "TB" + String.valueOf(randomNumber);
-        booking.setCode(code);
 
-
-            bookingService.saveBooking(booking);
 
         // Trừ số lượng sản phẩm trong cơ sở dữ liệu
         for (ReservationItem reservationItem : reservationItems) {
@@ -535,92 +518,35 @@ public class BookingDetailController {
                 }
             }
         }
+        Booking bo = bookingService.getBookingById(bookingId);
 
         for (ReservationItem reservationItem : reservationItems) {
             if (reservationItem.getProductId() != null) {
                 Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
                 if (product != null && reservationItem.getQuantity() > 0) {
                     BookingDetail bookingDetail = new BookingDetail();
-                    bookingDetail.setBooking(booking);
+                    bookingDetail.setBooking(bo);
                     bookingDetail.setProduct(product);
                     bookingDetail.setPrice(product.getPrice());
                     bookingDetail.setQuantity(reservationItem.getQuantity());
                     bookingDetail.setDateTime(LocalDateTime.now());
+                    bookingDetail.setTotal(product.getPrice() * reservationItem.getQuantity());
                     bookingDetailRepository.save(bookingDetail);
                 }
             }
         }
 
-        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//        String formattedPriceTotal = formatterTotal.format(booking.getTotal());
-        MimeMessage message = mailSender.createMimeMessage();
 
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            // Đặt các thuộc tính của email
-            helper.setTo(email);
-            helper.setSubject("Order info #" + booking.getCode());
-
-            // Đặt nội dung email dưới dạng HTML
-            String tableContent = "<table style=\"border-collapse: collapse;\">";
-            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
-
-            for (ReservationItem reservationItem : reservationItems) {
-                if (reservationItem.getProductId() != null) {
-                    Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
-                    if (product != null && reservationItem.getQuantity() > 0) {
-                        tableContent += "<tr>";
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + product.getName() + "</td>";
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + reservationItem.getQuantity() + "</td>";
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                        String formattedPrice = formatter.format(product.getPrice());
-                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + formattedPrice + "</td>";
-                        tableContent += "</tr>";
-                    }
-                }
-            }
-
-            tableContent += "</table>";
-
-            String htmlContent = "<html><body>";
-            htmlContent += "<h2>Order info #" + booking.getCode() + "</h2>";
-            htmlContent += "<p>Hello " + booking.getName() + ",</p>";
-            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
-            htmlContent += "<p>Order code " + booking.getCode() + "</p>";
-
-            LocalDate bookingDate = booking.getBookingDate();
-            DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
-            String formattedBookingDate = bookingDate.format(formatterBookingDate);
-            htmlContent += "<p>Booking date " + formattedBookingDate + "</p>";
-
-//            LocalDateTime dateTime = booking.getDateTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//            String formattedDateTime = dateTime.format(formatter);
-//            htmlContent += "<p>Date come: " + formattedDateTime + "</p>";
-//
-//            htmlContent += "<p>Total: " + formattedPriceTotal + "</p>";
-            htmlContent += tableContent;
-            htmlContent += "</body></html>";
-
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            model.addAttribute("errorMessage", "email fail.");
-            return "User/ErrorPage";
-        }
         bookingService.clear();
 
-        return "redirect:/user/checkOutSuccess";
+        redirectAttributes.addFlashAttribute("successMessage", "Gọi món thành công");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
     }
 
     @GetMapping("/admin/errorPageBooking")
-    private String e(){
-        return"Admin/errorPageBooking";
+    private String e() {
+        return "Admin/errorPageBooking";
     }
 
 }
