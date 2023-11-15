@@ -26,8 +26,9 @@
 
         <div class="card-body pb-0">
 <input type="hidden" name="idReservation" th:value="${idReservation}">
-            <h5 class="card-title">Danh sách bàn <a class="btn btn-primary excel" style="margin-left: 66%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>
+            <h5 class="card-title"th:text="'Danh sách các bàn đặt trước của phòng '+${RoomName}">
             </h5>
+<!--            <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>-->
             <div th:if="${errorMessage}" class="alert alert-danger">
                 <p th:text="${errorMessage}"></p>
             </div>
@@ -41,23 +42,23 @@
                     </th>
 
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=name&sortDir=' + ${reverseSortDir}}">Customer name</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=name&sortDir=' + ${reverseSortDir}}">Tên khách</a>
                     </th>
 
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=phone&sortDir=' + ${reverseSortDir}}">Phone</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=phone&sortDir=' + ${reverseSortDir}}">SDT</a>
                     </th>
 
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=bookingDate&sortDir=' + ${reverseSortDir}}">Create date</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=desk&sortDir=' + ${reverseSortDir}}">Bàn</a>
                     </th>
 
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=dateArrive&sortDir=' + ${reverseSortDir}}">Date arrive</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=dateArrive&sortDir=' + ${reverseSortDir}}">Ngày đến</a>
                     </th>
 
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=status&sortDir=' + ${reverseSortDir}}">Status</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=status&sortDir=' + ${reverseSortDir}}">Tình trạng</a>
                     </th>
                     <th scope="col">Action</th>
                     <th scope="col"> </th>
@@ -73,7 +74,7 @@
                      <td th:text="${list.phone}"></td>
 
 
-                    <td th:text="${#temporals.format(list.bookingDate, 'dd/MM/yyyy')}"> </td>
+                    <td th:text="${list.desk}"> </td>
                     <td th:text="${#temporals.format(list.dateArrive, 'dd/MM/yyyy')}"> </td>
 
                     <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : (list.status == '2' ? 'color: blue' : (list.status == '3' ? 'color: red' : 'color: black'))}">Status</td>
@@ -81,9 +82,9 @@
                         <form method="POST" th:object="${booking}" th:action="@{/admin/{id}/updateBookingStatus(id=${list.id})}">
                             <div th:if="${list.status == '3'}">Đã hủy</div>
                             <select name="status" th:if="${list.status != '3'}" onchange="submit()">
-                                <option value="1" th:selected="${list.status == '1'}"  >Đã xác nhận</option>
+                                <option value="1" th:selected="${list.status == '1'}"   >Đã xác nhận</option>
                                 <option value="2" th:selected="${list.status == '2'}"th:disabled="${list.status == '1'}">Đang xử lý</option>
-                                <option value="3" th:selected="${list.status == '3'}">Đã hủy</option>
+                                <option value="3" th:selected="${list.status == '3'}" >Đã hủy</option>
                             </select>
                             <input type="hidden" name="status" value="3" th:if="${list.status == '3'}" />
                         </form>

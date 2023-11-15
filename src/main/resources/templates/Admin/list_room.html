@@ -26,8 +26,7 @@
 
     <div class="card-body pb-0">
 
-      <h5 class="card-title">Danh sách phòng  <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>
-      </h5>
+
       <div th:if="${errorMessage}" class="alert alert-danger">
         <p th:text="${errorMessage}"></p>
       </div>

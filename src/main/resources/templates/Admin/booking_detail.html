@@ -3,61 +3,261 @@
       layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Menu</title>
 </head>
 <body>
 
 
 <main id="main" layout:fragment="main"class="main">
 
-
-
-  <!-- Top Selling -->
-
   <div class="card top-selling overflow-auto">
 
 
 
     <div class="card-body pb-0">
-      <h5 class="card-title">List dishes in table <span style=" padding: 20px 0 15px 0;
+      <h5 class="card-title">Chọn món cho bàn   <span style=" padding: 20px 0 15px 0;
     font-size: 18px;
     font-weight: 500;
     color: #012970;
     font-family: Poppins, sans-serif;" th:text="${TableName}"></span>
       </h5>
-
-      <table class="table table-borderless">
-        <thead>
-        <tr>
-          <th scope="col">No.</th>
-
-          <th scope="col">Product name</th>
-          <th scope="col">Quantity</th>
-
-          <th scope="col">Price</th>
+      <h5 th:text="'Phòng '+${RoomName}"></h5>
+<div class="row">
+  <div class="menu">
+    <div class="filter-buttons">
+      <button class="filter-button" data-category="all">Tất cả</button>
+      <button class="filter-button" th:each="productCategory : ${listProductCategory}"th:data-category="${productCategory.name}"th:text="${productCategory.name}">Danh Mục 1</button>
 
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="list, index : ${bookingDetails}">
-          <td th:text="${index.index + 1}"> </td>
-          <td th:text="${list.product.name}"></td>
-          <td th:text="${list.quantity}"></td>
-          <td th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}"></td>
+    </div>
 
-        </tr>
-
-        </tbody>
-      </table>
-      <div class="total-price">
-        <p>Total: <p th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></p></p>
+    <div class="menu-items">
+      <div class="scrollable-menu">
+        <div th:each="item : ${allReservationItem}" class="menu-item" th:data-category="${item.productCategory}">
+          <img th:if="${item.image != null}" th:src="@{'/display?id=' + ${item.productId}}" alt="Ảnh mục 1">
+          <img th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
+          <span class="item-name" th:text="${item.name}">Mục 1</span>
+          <span class="item-price" th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}">50,000 VND</span>
+          <form action="#" th:action="@{/admin/booking/updateBooking}" method="POST">
+            <input type="hidden" th:name="productId" th:value="${item.productId}">
+            <input type="hidden" th:name="id" th:value="${id}">
+            <input class="quantity-input" type="number" min="1" th:name="quantity" th:value="${item.quantity}" onblur="this.form.submit()"  >
+          </form>
+        </div>
       </div>
+
+    </div>
+  </div>
+
+  <div class="listOrder">
+    <h4>Danh sách món đã chọn</h4>
+    <div class="scrollable-list">
+      <ul th:each="item : ${listChosen}">
+        <li>
+          <span class="food-name" th:text="${item.name}"> </span>
+          <span class="price" th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}"> </span>
+        </li>
+      </ul>
+    </div>
+    <div class="total">
+      <span class="total-label" th:text="'Tổng tiền: ' + ${#numbers.formatInteger(totalAmount,3,'POINT') + ' VND'}"> </span>
+    </div>
+    <div th:if="${statusCanceled}">
+      <p>Đã hủy</p>
+    </div>
+    <div th:unless="${statusCanceled}">
+      <button>Gọi món</button>
+    </div>
+  </div>
+
+</div>
+
+
+      <style>
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.scrollable-menu {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu-item {
+  width: calc(33.33% - 10px); /* Đặt kích thước của mỗi mục menu */
+  margin: 5px; /* Khoảng cách giữa các mục menu */
+}
+      .listOrder {
+         width: 27%;
+  font-family: Arial, sans-serif;
+}
+
+.listOrder ul {
+  list-style: none;
+  padding: 0;
+}
+
+.listOrder li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.food-name {
+  flex: 1;
+}
+
+.price {
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.total {
+  margin-top: 85%;
+  }
+
+.total-label {
+  font-weight: bold;
+}
+
+.total-amount {
+  font-size: 1.2em;
+  color: #ff0000;
+}
+
+  .menu {
+  width: 73%;
+  text-align: center;
+}
+
+.filter-buttons {
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: none;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.menu-items {
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.menu-item {
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: relative;
+}
+
+.menu-item.hide {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  display: none;
+}
+.menu-item {
+  width: 228px;
+  height: 260px;
+  border: 1px solid #ccc;
+  background-color: #f2f2f2;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  transition: opacity 0.3s ease;
+}
+
+.menu-item.hide {
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+.menu-item img {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  object-fit: unset;
+}
+
+.item-name {
+    width: inherit;
+     font-size: 17px;
+    position: absolute;
+    bottom: 43px;
+
+  color: #fff;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+.item-price {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+.quantity-input {
+    bottom: 0%;
+  position: absolute;
+  right: 10px;
+  width: 50px;
+  padding: 5px;
+  font-size: 14px;
+}
+</style>
+      <script>
+ // Filter menu items when a filter button is clicked
+const filterButtons = document.querySelectorAll('.filter-button');
+const menuItems = document.querySelectorAll('.menu-item');
+
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const category = button.getAttribute('data-category');
+
+    menuItems.forEach(item => {
+      const itemCategory = item.getAttribute('data-category');
+
+      if (category === 'all' || itemCategory === category) {
+        item.classList.remove('hide');
+      } else {
+        item.classList.add('hide');
+      }
+    });
+
+    const filteredItems = Array.from(menuItems).filter(item => !item.classList.contains('hide'));
+
+    menuItems.forEach(item => {
+      item.style.order = '';
+      item.style.transform = '';
+    });
+
+    filteredItems.forEach((item, index) => {
+      item.style.order = index + 1;
+      item.style.transform = 'scale(1)';
+    });
+  });
+});
+</script>
+
     </div>
 
   </div>
   <!-- End Top Selling -->
-  <a href="/admin/list_booking"><button class="btn btn-danger">Back</button></a>
+  <a href="/admin/list_booking"><button class="btn btn-danger">Quay lại</button></a>
 
 
 
