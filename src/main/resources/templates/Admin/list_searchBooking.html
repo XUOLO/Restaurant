@@ -25,7 +25,7 @@
 
     <div class="card-body pb-0">
 
-      <h5 class="card-title">List order  <a class="btn btn-primary excel" style="margin-left: 70%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>
+      <h5 class="card-title">Danh sách bàn  <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Xuất PDF</a>
       </h5>
       <div th:if="${errorMessage}" class="alert alert-danger">
         <p th:text="${errorMessage}"></p>
@@ -33,38 +33,39 @@
       <table class="table table-borderless">
         <thead>
         <tr>
-          <th scope="col">No.</th>
+          <th scope="col">Stt.</th>
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=code&sortDir=' + ${reverseSortDir}}">Booking id</a>
+            <a >Mã bàn</a>
           </th>
 
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=name&sortDir=' + ${reverseSortDir}}">Customer name</a>
+            <a >Tên khách</a>
           </th>
 
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=phone&sortDir=' + ${reverseSortDir}}">Phone</a>
+            <a  >SDT</a>
           </th>
 
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=bookingDate&sortDir=' + ${reverseSortDir}}">Create date</a>
+            <a >Ngày đặt</a>
           </th>
 
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=dateArrive&sortDir=' + ${reverseSortDir}}">Date arrive</a>
+            <a >Ngày đến</a>
           </th>
 
           <th scope="col">
-            <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=status&sortDir=' + ${reverseSortDir}}">Status</a>
+            <a>Tình trạng</a>
           </th>
-          <th scope="col">Action</th>
+          <th scope="col">Cập nhật</th>
+          <th scope="col"> </th>
           <th scope="col"> </th>
 
         </tr>
         </thead>
         <tbody>
         <tr th:each="list, index : ${listBooking}">
-          <td th:text="${(currentPage - 1) * pageSize + index.index + 1}"></td>
+          <td th:text="${index.index + 1}"></td>
           <td th:text="${list.code}"></td>
 
           <td th:text="${list.name}"></td>
@@ -78,55 +79,66 @@
           <td>
             <form method="POST" th:object="${booking}" th:action="@{/admin/{id}/updateBookingStatus(id=${list.id})}">
               <div th:if="${list.status == '3'}">Đã hủy</div>
-              <select name="status" th:if="${list.status != '3'}" onchange="submit()">
-                <option value="1" th:selected="${list.status == '1'}"  >Đã xác nhận</option>
-                <option value="2" th:selected="${list.status == '2'}"th:disabled="${list.status == '1'}">Đang xử lý</option>
-                <option value="3" th:selected="${list.status == '3'}">Đã hủy</option>
-              </select>
+              <div th:if="${list.status == '4'}">Hoàn tất</div>
+              <div th:if="${list.status != '3' && list.status != '4'}">
+                <select name="status" onchange="submit()">
+                  <option value="1" th:selected="${list.status == '1'}">Đã xác nhận</option>
+                  <option value="2" th:selected="${list.status == '2'}" th:disabled="${list.status == '1'}">Đang xử lý</option>
+                  <option value="3" th:selected="${list.status == '3'}">Đã hủy</option>
+                </select>
+              </div>
               <input type="hidden" name="status" value="3" th:if="${list.status == '3'}" />
             </form>
           </td>
           <td>
             <a th:href="@{/admin/bookingDetail/{id}(id=${list.id})}">
-              <i class="bi bi-list"></i>
+              <!--                            <i class="bi bi-list"></i>-->
+
+              <button type="button" class="btn btn-info">Xem</button>
             </a>
 
 
+          </td>
+          <td>
+            <form th:action="@{/admin/paymentBooking}" method="post" th:object="${receipt}" onsubmit="checkFormSubmission(event)">
+              <input type="hidden" th:value="${list.id}" name="bookingId">
+              <button type="submit" class="btn btn-success" th:hidden="${list.status == '3' or list.status == '4' }">Thanh toán</button>
+            </form>
           </td>
 
         </tr>
 
         </tbody>
       </table>
-      <div th:if="${totalPages > 1}">
-        <div class="d-flex justify-content-between col-md-6">
-          <div class="col-md-4 text-center">
-            <span th:if="${currentPage > 1}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
-            </span>
-            <span hidden  th:unless="${currentPage > 1}">Last</span>
-          </div>
-          <div class="col-md-4 text-center">
-            <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}"
-                   th:href="@{/admin/pageBooking/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
-                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-            </span>
-          </div>
-          <div class="col-md-4 text-center">
-            <span th:if="${currentPage < totalPages}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
-            </span>
-            <span th:unless="${currentPage < totalPages}">Next</span>
-          </div>
-          <!--                    <div class="col-md-4 text-center">-->
-          <!--            <span th:if="${currentPage < totalPages}">-->
-          <!--                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>-->
-          <!--            </span>-->
-          <!--                        <span th:unless="${currentPage < totalPages}">Next</span>-->
-          <!--                    </div>-->
-        </div>
-      </div>
+<!--      <div th:if="${totalPages > 1}">-->
+<!--        <div class="d-flex justify-content-between col-md-6">-->
+<!--          <div class="col-md-4 text-center">-->
+<!--            <span th:if="${currentPage > 1}">-->
+<!--                <a th:href="@{/admin/pageBooking/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>-->
+<!--            </span>-->
+<!--            <span hidden  th:unless="${currentPage > 1}">Last</span>-->
+<!--          </div>-->
+<!--          <div class="col-md-4 text-center">-->
+<!--            <span th:each="i: ${#numbers.sequence(1, totalPages)}">-->
+<!--                <a th:if="${currentPage != i}"-->
+<!--                   th:href="@{/admin/pageBooking/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>-->
+<!--                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;-->
+<!--            </span>-->
+<!--          </div>-->
+<!--          <div class="col-md-4 text-center">-->
+<!--            <span th:if="${currentPage < totalPages}">-->
+<!--                <a th:href="@{/admin/pageBooking/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>-->
+<!--            </span>-->
+<!--            <span th:unless="${currentPage < totalPages}">Next</span>-->
+<!--          </div>-->
+<!--          &lt;!&ndash;                    <div class="col-md-4 text-center">&ndash;&gt;-->
+<!--          &lt;!&ndash;            <span th:if="${currentPage < totalPages}">&ndash;&gt;-->
+<!--          &lt;!&ndash;                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>&ndash;&gt;-->
+<!--          &lt;!&ndash;            </span>&ndash;&gt;-->
+<!--          &lt;!&ndash;                        <span th:unless="${currentPage < totalPages}">Next</span>&ndash;&gt;-->
+<!--          &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
   </div>

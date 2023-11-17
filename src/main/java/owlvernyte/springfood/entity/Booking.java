@@ -38,7 +38,7 @@ public class Booking {
 
 
     @Column(name = "date_arrive")
-    @FutureOrPresent(message = "The booking date cannot be in the past.")
+//    @FutureOrPresent(message = "The booking date cannot be in the past.")
     private LocalDate dateArrive;
 
     @Column(name = "time_arrive")
@@ -68,7 +68,8 @@ public class Booking {
                 return "Đang xử lý";
             case "3":
                 return "Đã hủy";
-
+            case "4":
+                return "Hoàn tất";
             default:
                 return "Unknown";
         }

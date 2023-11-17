@@ -13,6 +13,7 @@ import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.RoleRepository;
 import owlvernyte.springfood.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -146,7 +147,36 @@ public class UserService {
         }
         return count;
     }
+    public List<User> getCustomerByRoleUser() {
+        List<User> users = userRepository.findAll();
+        List<User> usersWithRoleUser = new ArrayList<>();
 
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("USER")) {
+                    usersWithRoleUser.add(user);
+                    break;
+                }
+            }
+        }
+
+        return usersWithRoleUser;
+    }
+    public List<User> getEmployeesByRole() {
+        List<User> users = userRepository.findAll();
+        List<User> usersWithRoleUser = new ArrayList<>();
+
+        for (User user : users) {
+            for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
+                if (role.getName().equals("ADMIN")||role.getName().equals("EMPLOYEE")) {
+                    usersWithRoleUser.add(user);
+                    break;
+                }
+            }
+        }
+
+        return usersWithRoleUser;
+    }
 
     public int countAdmin() {
         List<User> users = userRepository.findAll();

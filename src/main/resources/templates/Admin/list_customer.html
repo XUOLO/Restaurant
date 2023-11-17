@@ -3,13 +3,12 @@
       layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Liên hệ</title>
+    <title>Title</title>
 </head>
 <body>
-
 <div  layout:fragment="search-bar" class="search-bar">
-    <form class="search-form d-flex align-items-center" method="post" action="/admin/contact/search">
-        <input type="text" name="keyword" placeholder="Tìm,..." title="Enter search keyword">
+    <form class="search-form d-flex align-items-center" method="post" action="/admin/user/search">
+        <input type="text" name="keyword" placeholder="Tìm..." title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
 </div>
@@ -25,31 +24,60 @@
 
 
         <div class="card-body pb-0">
-            <h5 class="card-title">Danh sách phản hồi
+            <h5 class="card-title">Danh sách khách hàng
+<!--                <a href="/admin/new_staff"><button type="button" class="btn btn-primary">Add staff</button></a>-->
             </h5>
 
             <table class="table table-borderless">
                 <thead>
                 <tr>
                     <th scope="col">Stt.</th>
-                    <th scope="col">Tên khách</th>
+
+                    <th scope="col">Tên</th>
                     <th scope="col">Email</th>
                     <th scope="col">SDT</th>
-                    <th scope="col">Lời Nhắn</th>
+                    <th scope="col">Địa chỉ</th>
+                    <!--                    <th scope="col">Username</th>-->
+                    <th scope="col"> Quyền</th>
+                    <th scope="col">Ngày tạo</th>
+
+                    <th scope="col">Action</th>
                     <th scope="col"> </th>
 
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list,index : ${listContact}">
+                <tr th:each="user, index : ${listStaff}">
                     <td th:text="${index.index +1}"></td>
-                    <td th:text="${list.name}"></td>
-                    <td th:text="${list.email}"></td>
-                    <td th:text="${list.phone}"></td>
-                    <td th:text="${list.message}"></td>
+
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phone}"></td>
+                    <td th:text="${user.address}"></td>
+                    <!--                    <td th:text="${user.username}"></td>-->
+                    <!--                    <td>-->
+                    <!--                        <ul>-->
+                    <!--                            <li th:each="role : ${user.roles}" th:text="${role.name}"></li>-->
+                    <!--                        </ul>-->
+                    <!--                    </td>-->
+                    <td th:each="role : ${user.roles}" th:text="${role.name}">
+
+                    </td>
 
 
-                     <td></td>
+
+                    <td th:text="${#temporals.format(user.createTime, 'dd/MM/yyyy')}">Create date</td>
+
+                    <!--                    <td >-->
+
+                    <!--                        <a   th:href="@{/admin/showFormForUpdateProduct/{id}(id=${user.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>-->
+
+                    <!--                        <a  th:if="${isAdmin}" th:href="@{/admin/deleteProduct/{id}(id=${user.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>-->
+
+
+                    <!--                    </td>-->
+
+
                 </tr>
 
                 </tbody>

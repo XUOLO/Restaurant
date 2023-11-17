@@ -9,7 +9,7 @@
 
 <div  layout:fragment="search-bar" class="search-bar">
   <form class="search-form d-flex align-items-center" method="post" action="/admin/product/search">
-    <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+    <input type="text" name="keyword" placeholder="Tìm phòng,..." title="Enter search keyword">
     <button type="submit" title="Search"><i class="bi bi-search"></i></button>
   </form>
 </div>
@@ -24,20 +24,20 @@
 
 
     <div class="card-body pb-0">
-      <h5 class="card-title">List product <a href="/admin/new_reservation"><button type="button" class="btn btn-primary">Add reservation </button></a>
+      <h5 class="card-title">Danh sách phòng <a href="/admin/new_reservation"><button type="button" class="btn btn-primary">Thêm phòng </button></a>
       </h5>
 
       <table class="table table-borderless">
         <thead>
         <tr>
-          <th scope="col">Image</th>
-          <th scope="col">Name</th>
-          <th scope="col">Reservation category</th>
-          <th scope="col">Number of people</th>
-          <th scope="col">Create date</th>
-          <th scope="col">Description</th>
-           <th scope="col">Status</th>
-          <th scope="col">Action</th>
+          <th scope="col">ảnh</th>
+          <th scope="col">Tên phòng</th>
+          <th scope="col">Danh mục phòng</th>
+
+          <th scope="col">Ngày tạo</th>
+<!--          <th scope="col">Description</th>-->
+<!--           <th scope="col">Status</th>-->
+<!--          <th scope="col">Action</th>-->
           <th scope="col"> </th>
 
         </tr>
@@ -55,17 +55,17 @@
 
 
           <td th:text="${#temporals.format(list.createTime, 'dd/MM/yyyy')}">Create date</td>
-          <td th:text="${list.description}"></td>
-           <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : 'color: red'}">Status</td>
+<!--          <td th:text="${list.description}"></td>-->
+<!--           <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : 'color: red'}">Status</td>-->
 
-          <td>
-            <form method="POST" th:object="${reservation}" th:action="@{/admin/{id}/updateStatusReservation(id=${list.id})}">
-              <select name="status" onchange="submit()" class="custom-select">
-                <option value="1" th:selected="${list.status == '1'}" >Empty</option>
-                <option value="2" th:selected="${list.status == '2'}">Using</option>
-              </select>
-            </form>
-          </td>
+<!--          <td>-->
+<!--            <form method="POST" th:object="${reservation}" th:action="@{/admin/{id}/updateStatusReservation(id=${list.id})}">-->
+<!--              <select name="status" onchange="submit()" class="custom-select">-->
+<!--                <option value="1" th:selected="${list.status == '1'}" >Empty</option>-->
+<!--                <option value="2" th:selected="${list.status == '2'}">Using</option>-->
+<!--              </select>-->
+<!--            </form>-->
+<!--          </td>-->
           <td sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">
             <a sec:authorize="hasAnyAuthority('ADMIN')" th:href="@{/admin/deleteReservation/{id}(id=${list.id})}">
               <i style="color:red;" class="bx bxs-trash"></i>

@@ -9,7 +9,7 @@
 <div  layout:fragment="search-bar" class="search-bar">
     <form class="search-form d-flex align-items-center" method="post" action="/admin/booking/search">
         <input type="hidden" name="idReservation" th:value="${idReservation}">
-        <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+        <input type="text" name="keyword" placeholder="Tìm bàn,tên khách,..." title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
 </div>
@@ -28,7 +28,7 @@
 <input type="hidden" name="idReservation" th:value="${idReservation}">
             <h5 class="card-title"th:text="'Danh sách các bàn đặt trước của phòng '+${RoomName}">
             </h5>
-<!--            <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Export to pdf</a>-->
+<!--            <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Xuất PDF</a>-->
             <div th:if="${errorMessage}" class="alert alert-danger">
                 <p th:text="${errorMessage}"></p>
             </div>
@@ -36,9 +36,9 @@
 
                 <thead>
                 <tr>
-                    <th scope="col">No.</th>
+                    <th scope="col">Stt.</th>
                     <th scope="col">
-                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=code&sortDir=' + ${reverseSortDir}}">Booking id</a>
+                        <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=code&sortDir=' + ${reverseSortDir}}">Mã bàn</a>
                     </th>
 
                     <th scope="col">
@@ -60,7 +60,8 @@
                     <th scope="col">
                         <a th:href="@{'/admin/pageBooking/' + ${currentPage} + '?idReservation=' + ${idReservation} + '&sortField=status&sortDir=' + ${reverseSortDir}}">Tình trạng</a>
                     </th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Cập nhật</th>
+                    <th scope="col"> </th>
                     <th scope="col"> </th>
 
                 </tr>
@@ -81,20 +82,31 @@
                     <td>
                         <form method="POST" th:object="${booking}" th:action="@{/admin/{id}/updateBookingStatus(id=${list.id})}">
                             <div th:if="${list.status == '3'}">Đã hủy</div>
-                            <select name="status" th:if="${list.status != '3'}" onchange="submit()">
-                                <option value="1" th:selected="${list.status == '1'}"   >Đã xác nhận</option>
-                                <option value="2" th:selected="${list.status == '2'}"th:disabled="${list.status == '1'}">Đang xử lý</option>
-                                <option value="3" th:selected="${list.status == '3'}" >Đã hủy</option>
-                            </select>
+                            <div th:if="${list.status == '4'}">Hoàn tất</div>
+                            <div th:if="${list.status != '3' && list.status != '4'}">
+                                <select name="status" onchange="submit()">
+                                    <option value="1" th:selected="${list.status == '1'}">Đã xác nhận</option>
+                                    <option value="2" th:selected="${list.status == '2'}" th:disabled="${list.status == '1'}">Đang xử lý</option>
+                                    <option value="3" th:selected="${list.status == '3'}">Đã hủy</option>
+                                </select>
+                            </div>
                             <input type="hidden" name="status" value="3" th:if="${list.status == '3'}" />
                         </form>
                     </td>
                     <td>
                         <a th:href="@{/admin/bookingDetail/{id}(id=${list.id})}">
-                            <i class="bi bi-list"></i>
+<!--                            <i class="bi bi-list"></i>-->
+
+                            <button type="button" class="btn btn-info">Xem</button>
                         </a>
 
 
+                    </td>
+                    <td>
+                        <form th:action="@{/admin/paymentBooking}" method="post" th:object="${receipt}" onsubmit="checkFormSubmission(event)">
+                            <input type="hidden" th:value="${list.id}" name="bookingId">
+                            <button type="submit" class="btn btn-success" th:hidden="${list.status == '3' or list.status == '4' }">Thanh toán</button>
+                        </form>
                     </td>
 
 
@@ -106,29 +118,26 @@
                 <div class="d-flex justify-content-between col-md-6">
                     <div class="col-md-4 text-center">
             <span th:if="${currentPage > 1}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
+                <a th:href="@{/admin/pageBooking/} + ${currentPage - 1} + '?idReservation=' + ${idReservation}+ '&sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
             </span>
-                        <span hidden  th:unless="${currentPage > 1}">Last</span>
+
+
+                        <span hidden  th:unless="${currentPage > 1}">Trước</span>
                     </div>
                     <div class="col-md-4 text-center">
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                 <a th:if="${currentPage != i}"
-                   th:href="@{/admin/pageBooking/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
+                   th:href="@{/admin/pageBooking/} + ${i} + '?idReservation=' + ${idReservation}+ '&sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
                 <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
             </span>
                     </div>
                     <div class="col-md-4 text-center">
             <span th:if="${currentPage < totalPages}">
-                <a th:href="@{/admin/pageBooking/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
+                <a th:href="@{/admin/pageBooking/} + ${currentPage + 1}+ '?idReservation=' + ${idReservation}+ '&sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
             </span>
-                        <span th:unless="${currentPage < totalPages}">Next</span>
+                        <span th:unless="${currentPage < totalPages}">Sau</span>
                     </div>
-                    <!--                    <div class="col-md-4 text-center">-->
-                    <!--            <span th:if="${currentPage < totalPages}">-->
-                    <!--                <a th:href="@{/admin/pageOrder/} + ${totalPages}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Last</a>-->
-                    <!--            </span>-->
-                    <!--                        <span th:unless="${currentPage < totalPages}">Next</span>-->
-                    <!--                    </div>-->
+
                 </div>
             </div>
         </div>

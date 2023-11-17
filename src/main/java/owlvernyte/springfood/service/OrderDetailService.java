@@ -19,4 +19,9 @@ public class OrderDetailService {
     public List<OrderDetail> getOrderDetailsByOrder(Order order) {
         return orderDetailRepository.findByOrder(order);
     }
+
+    public List<OrderDetail> getTop4ProductsByProductIdCount() {
+        // Gọi phương thức tương ứng từ repository để lấy top 4 món có Product ID nhiều nhất
+        return orderDetailRepository.findTop4ProductsByProductIdCount();
+    }
 }

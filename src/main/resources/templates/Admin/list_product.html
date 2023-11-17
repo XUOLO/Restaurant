@@ -9,7 +9,7 @@
 
 <div  layout:fragment="search-bar" class="search-bar">
     <form class="search-form d-flex align-items-center" method="post" action="/admin/product/search">
-        <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+        <input type="text" name="keyword" placeholder="Tìm món,..." title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
 </div>
@@ -24,7 +24,7 @@
 
 
             <div class="card-body pb-0">
-                <h5 class="card-title">List product <a href="/admin/new_product"><button type="button" class="btn btn-primary">Add Product</button></a><a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportDishes-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportDishes-pdf">Export to pdf</a>
+                <h5 class="card-title">List product <a href="/admin/new_product"><button type="button" class="btn btn-primary">Add Product</button></a><a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportDishes-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportDishes-pdf">Xuất PDF</a>
                 </h5>
                 <div th:if="${errorMessage}" class="alert alert-danger">
                     <p th:text="${errorMessage}"></p>
@@ -32,18 +32,18 @@
                 <table class="table table-borderless">
                     <thead>
                     <tr>
-                        <th scope="col">No.</th>
+                        <th scope="col">Stt.</th>
 
-                        <th scope="col">Image</th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Name</a>  </th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=productCategory.name&sortDir=' +${reverseSortDir}}">Product category</a>  </th>
+                        <th scope="col">Ảnh</th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Tên món</a>  </th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=productCategory.name&sortDir=' +${reverseSortDir}}">Danh mục món</a>  </th>
 
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=quantity&sortDir=' +${reverseSortDir}}">Quantity</a>  </th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=createTime&sortDir=' +${reverseSortDir}}"> Create date</a>  </th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=description&sortDir=' +${reverseSortDir}}">Description</a>  </th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=price&sortDir=' +${reverseSortDir}}">Price</a>  </th>
-                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Status</a>  </th>
-                        <th scope="col">Action</th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=quantity&sortDir=' +${reverseSortDir}}">Số lượng</a>  </th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=createTime&sortDir=' +${reverseSortDir}}"> Ngày tạo</a>  </th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=description&sortDir=' +${reverseSortDir}}">Mô tả</a>  </th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=price&sortDir=' +${reverseSortDir}}">Giá</a>  </th>
+                        <th scope="col"> <a th:href="@{'/admin/pageProduct/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Tình trạng</a>  </th>
+                        <th scope="col">Cập nhật</th>
                         <th scope="col"> </th>
 
                     </tr>
@@ -95,7 +95,7 @@
             <span th:if="${currentPage > 1}">
                 <a th:href="@{/admin/pageProduct/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
             </span>
-                            <span hidden  th:unless="${currentPage > 1}">Last</span>
+                            <span hidden  th:unless="${currentPage > 1}">Trước</span>
                         </div>
                         <div class="col-md-4 text-center">
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
@@ -108,7 +108,7 @@
             <span th:if="${currentPage < totalPages}">
                 <a th:href="@{/admin/pageProduct/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
             </span>
-                            <span th:unless="${currentPage < totalPages}">Next</span>
+                            <span th:unless="${currentPage < totalPages}">Sau</span>
                         </div>
 
                     </div>

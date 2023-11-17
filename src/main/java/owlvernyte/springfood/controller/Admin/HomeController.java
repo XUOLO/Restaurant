@@ -7,12 +7,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import owlvernyte.springfood.entity.OrderDetail;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.UserRepository;
+import owlvernyte.springfood.service.OrderDetailService;
+
+import java.util.List;
 
 @Controller
 public class HomeController {
-
+@Autowired
+private OrderDetailService orderDetailService;
 
 //    @Autowired
 //    private UserService userService;
@@ -40,7 +45,8 @@ public class HomeController {
         model.addAttribute("username", username);
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isEmployee", isEmployee);
-
+//        List<OrderDetail> topProducts = orderDetailService.getTop4ProductsByProductIdCount();
+//        model.addAttribute("topProducts", topProducts);
         return "Admin/index";
     }
 

@@ -8,7 +8,7 @@
 <body>
 <div  layout:fragment="search-bar" class="search-bar">
     <form class="search-form d-flex align-items-center" method="post" action="/admin/order/search">
-        <input type="text" name="keyword" placeholder="Search" title="Enter search keyword">
+        <input type="text" name="keyword" placeholder="Tìm đơn hàng, danh mục,..." title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
     </form>
 </div>
@@ -25,7 +25,7 @@
 
         <div class="card-body pb-0">
 
-            <h5 class="card-title">List order  <a class="btn btn-primary excel" style="margin-left: 71%;margin-right: 1%;background-color: green;" href="/admin/exportOrder-excel">Export to excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportOrder-pdf">Export to pdf</a>
+            <h5 class="card-title">Danh sách đơn hàng  <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportOrder-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportOrder-pdf">Xuất PDF</a>
             </h5>
             <div th:if="${errorMessage}" class="alert alert-danger">
                 <p th:text="${errorMessage}"></p>
@@ -33,18 +33,18 @@
             <table class="table table-borderless">
                 <thead>
                 <tr>
-                    <th scope="col">No.</th>
+                    <th scope="col">Stt.</th>
                     <th scope="col">
-                        <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}">Order id</a>
+                        <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=code&sortDir=' +${reverseSortDir}}">Mã đơn</a>
                     </th>
 
-                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Customer name</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Tên khách</a> </th>
                     <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=email&sortDir=' +${reverseSortDir}}">Email</a> </th>
-                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}">Total</a> </th>
-                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}">Create date</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=total&sortDir=' +${reverseSortDir}}">Tổng tiền</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=orderDate&sortDir=' +${reverseSortDir}}">Ngày đặt</a> </th>
 
-                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Status</a> </th>
-                    <th scope="col">Action</th>
+                    <th scope="col"> <a th:href="@{'/admin/pageOrder/' + ${currentPage} + '?sortField=status&sortDir=' +${reverseSortDir}}">Tình trạng</a> </th>
+                    <th scope="col">Cập nhật</th>
                     <th scope="col"> </th>
 
                 </tr>
@@ -91,7 +91,7 @@
             <span th:if="${currentPage > 1}">
                 <a th:href="@{/admin/pageOrder/} + ${currentPage - 1} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Last</a>
             </span>
-                        <span hidden  th:unless="${currentPage > 1}">Last</span>
+                        <span hidden  th:unless="${currentPage > 1}">Trước</span>
                     </div>
                     <div class="col-md-4 text-center">
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
@@ -104,7 +104,7 @@
             <span th:if="${currentPage < totalPages}">
                 <a th:href="@{/admin/pageOrder/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Next</a>
             </span>
-                        <span th:unless="${currentPage < totalPages}">Next</span>
+                        <span th:unless="${currentPage < totalPages}">Sau</span>
                     </div>
                     <!--                    <div class="col-md-4 text-center">-->
                     <!--            <span th:if="${currentPage < totalPages}">-->

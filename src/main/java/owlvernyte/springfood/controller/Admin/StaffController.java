@@ -55,7 +55,7 @@ public class StaffController {
     @GetMapping("/admin/list_staff")
     public String listStaff(Model model ,Authentication authentication){
         String username = authentication.getName();
-        model.addAttribute("listStaff", userService.getAllUser());
+        model.addAttribute("listStaff", userService.getEmployeesByRole());
         model.addAttribute("listRole", roleService.getAllRole());
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
@@ -63,7 +63,17 @@ public class StaffController {
 
         return "Admin/list_staff";
     }
+    @GetMapping("/admin/list_customer")
+    public String listCustomer(Model model ,Authentication authentication){
+        String username = authentication.getName();
+        model.addAttribute("listStaff", userService.getCustomerByRoleUser());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
 
+        return "Admin/list_customer";
+    }
 
     @PostMapping("/admin/addStaff")
     public String newStaff(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("image") MultipartFile file, @RequestParam(value = "roles", required = false) List<Long> roleIds, Model model) throws IOException, SerialException, SQLException {

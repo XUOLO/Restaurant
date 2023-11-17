@@ -81,6 +81,9 @@ public class BookingDetailController {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private ReceiptRepository receiptRepository;
+
     @PostMapping("/admin/{id}/updateBookingStatus")
     public String updateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
@@ -98,6 +101,8 @@ public class BookingDetailController {
         Booking booking = bookingService.getBookingById(id);
         model.addAttribute("booking", booking);
         model.addAttribute("bookingId", booking.getId());
+        model.addAttribute("id", booking.getReservation().getId());
+
         model.addAttribute("TableName", booking.getDesk());
         model.addAttribute("RoomName", booking.getReservation().getName());
         String statusCanceled = booking.getStatus();
@@ -146,12 +151,50 @@ public class BookingDetailController {
             }
         }
         model.addAttribute("listChosen", listChosen);
+        return "Admin/booking_detail";
+    }
 
+    @PostMapping("/admin/paymentBooking")
+    private String paymentBooking(Model model, @ModelAttribute("receipt") @Valid Receipt receiptt,@RequestParam("bookingId") long bookingId,Authentication authentication){
+        double total = calculateTotalForBooking(bookingId);
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user.getName());
+        model.addAttribute("username", username);
+        Booking bo = bookingService.getBookingById(bookingId);
+        Receipt receipt = new Receipt();
+        receipt.setBooking(bo);
+        receipt.setName(user.getName());
+        LocalDate localDate = LocalDate.now();
+        receipt.setPaymentDate(localDate);
+        receipt.setTotal(total);
+        receiptRepository.save(receipt);
 
-        double total = calculateTotalForBooking(id);
+        List<Product> listChosen = new ArrayList<>();
+        List<BookingDetail> bookingDetailList = bookingDetailRepository.findAll();
+        for (BookingDetail bookingDetail : bookingDetailList) {
+            if (bookingDetail.getBooking().getId().equals(bo.getId())) {
+                Product product = productRepository.findById(bookingDetail.getProduct().getId()).orElse(null);
+                if (product != null) {
+                    product.setQuantity((int) bookingDetail.getQuantity());
+                    listChosen.add(product);
+                }
+            }
+        }
+
+        model.addAttribute("listChosen", listChosen);
+        Booking booking = bookingService.getBookingById(bookingId);
+        booking.setStatus("4");
+        bookingRepository.save(booking);
+        model.addAttribute("TableName", booking.getDesk());
+
+        Reservation reservation = reservationService.getReservationById(bo.getReservation().getId());
+        model.addAttribute("RoomName", reservation.getName());
+
+        model.addAttribute("localDate", localDate);
 
         model.addAttribute("totalBooking", total);
-        return "Admin/booking_detail";
+        return "Admin/page_receipt";
     }
 
     public double calculateTotalForBooking(Long bookingId) {
@@ -524,14 +567,29 @@ public class BookingDetailController {
             if (reservationItem.getProductId() != null) {
                 Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
                 if (product != null && reservationItem.getQuantity() > 0) {
-                    BookingDetail bookingDetail = new BookingDetail();
-                    bookingDetail.setBooking(bo);
-                    bookingDetail.setProduct(product);
-                    bookingDetail.setPrice(product.getPrice());
-                    bookingDetail.setQuantity(reservationItem.getQuantity());
-                    bookingDetail.setDateTime(LocalDateTime.now());
-                    bookingDetail.setTotal(product.getPrice() * reservationItem.getQuantity());
-                    bookingDetailRepository.save(bookingDetail);
+
+                    BookingDetail existingBookingDetail = bookingDetailService.findBookingDetailByBookingAndProduct(bo, product);
+
+                    if (existingBookingDetail != null) {
+                        LocalDateTime dateTime = LocalDateTime.now();
+                        // Món đã được gọi trước đó, cập nhật thông tin
+                        existingBookingDetail.setQuantity(existingBookingDetail.getQuantity() + reservationItem.getQuantity());
+                        existingBookingDetail.setTotal(existingBookingDetail.getTotal() + product.getPrice() * reservationItem.getQuantity());
+                        existingBookingDetail.setDateTime(dateTime);
+                        // Lưu cập nhật vào cơ sở dữ liệu
+                        bookingDetailRepository.save(existingBookingDetail);
+                    } else {
+
+                        BookingDetail bookingDetail = new BookingDetail();
+                        bookingDetail.setBooking(bo);
+                        bookingDetail.setProduct(product);
+                        bookingDetail.setPrice(product.getPrice());
+                        bookingDetail.setQuantity(reservationItem.getQuantity());
+                        bookingDetail.setDateTime(LocalDateTime.now());
+                        bookingDetail.setTotal(product.getPrice() * reservationItem.getQuantity());
+                        bookingDetailRepository.save(bookingDetail);
+
+                    }
                 }
             }
         }
@@ -548,5 +606,8 @@ public class BookingDetailController {
     private String e() {
         return "Admin/errorPageBooking";
     }
+
+
+
 
 }
