@@ -112,7 +112,6 @@ public class BookingDetailController {
             model.addAttribute("statusCanceled", false);
         }
 
-
         if (booking != null) {
             List<Product> allProducts = productService.getAllProduct();
 
@@ -151,6 +150,13 @@ public class BookingDetailController {
             }
         }
         model.addAttribute("listChosen", listChosen);
+        model.addAttribute("statusCanceled",statusCanceled);
+        List<BookingDetail> bookingDetails = bookingDetailService.getBookingDetailsByBooking(booking);
+        model.addAttribute("bookingDetails", bookingDetails);
+        double total = calculateTotalForBooking(id);
+        model.addAttribute("totalAmount",total);
+
+
         return "Admin/booking_detail";
     }
 
@@ -161,7 +167,9 @@ public class BookingDetailController {
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user.getName());
         model.addAttribute("username", username);
+
         Booking bo = bookingService.getBookingById(bookingId);
+        model.addAttribute("id", bo.getReservation().getId());
         Receipt receipt = new Receipt();
         receipt.setBooking(bo);
         receipt.setName(user.getName());

@@ -11,94 +11,198 @@
 </div>
 
 <main id="main" layout:fragment="main" class="main">
+    <div th:if="${statusCanceled == '4'}">
 
+<div th:if="${totalAmount > 0}">
     <div class="card top-selling overflow-auto">
 
 
+
         <div class="card-body pb-0">
-            <h5 class="card-title">Chọn món cho bàn <span style=" padding: 20px 0 15px 0;
+            <h5 class="card-title">Danh sách món của bàn <span style=" padding: 20px 0 15px 0;
     font-size: 18px;
     font-weight: 500;
     color: #012970;
     font-family: Poppins, sans-serif;" th:text="${TableName}"></span>
             </h5>
-            <h5 th:text="'Phòng '+${RoomName}"></h5>
-            <div th:if="${successMessage}" class="alert alert-success">
-                <p style="text-align:center;" th:text="${successMessage}"></p>
+
+            <table class="table table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col">Stt.</th>
+
+                    <th scope="col">Tên món</th>
+                    <th scope="col">Số lượng</th>
+
+                    <th scope="col">Giá</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list, index : ${bookingDetails}">
+                    <td th:text="${index.index + 1}"> </td>
+                    <td th:text="${list.product.name}"></td>
+                    <td th:text="${list.quantity}"></td>
+                    <td th:text="${#numbers.formatInteger(list.price,3,'POINT')+' VND'}"></td>
+
+                </tr>
+
+                </tbody>
+            </table>
+            <div class="total-price">
+                <p>Total: <p th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></p></p>
             </div>
-            <div class="row">
-                <div class="menu">
-                    <div class="filter-buttons">
-                        <button class="filter-button" data-category="all">Tất cả</button>
-                        <button class="filter-button" th:each="productCategory : ${listProductCategory}"
-                                th:data-category="${productCategory.name}" th:text="${productCategory.name}">Danh Mục 1
-                        </button>
+        </div>
+
+    </div>
+
+</div>
+        <div th:if="${totalAmount<= 0.0}">
+            <h1>Thông báo</h1>
+            <p>Bàn này không có món cần thanh toán.</p>
+        </div>
+
+    <a th:href="@{/admin/reservationDetail/{id}(id=${id})}">
+        <button class="btn btn-danger">Quay lại</button>
+    </a>
 
 
-                    </div>
 
-                    <div class="menu-items">
-                        <div class="scrollable-menu">
-                            <div th:each="item : ${allReservationItem}" class="menu-item"
-                                 th:data-category="${item.productCategory}">
-                                <img th:if="${item.image != null}" th:src="@{'/display?id=' + ${item.productId}}"
-                                     alt="Ảnh mục 1">
-                                <img th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
-                                <span class="item-name" th:text="${item.name}">Mục 1</span>
-                                <span class="item-price"
-                                      th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}">50,000 VND</span>
-                                <form action="#" th:action="@{/admin/booking/updateBooking}" method="POST">
-                                    <input type="hidden" th:name="productId" th:value="${item.productId}">
-                                    <input type="hidden" th:name="id" th:value="${id}">
-                                    <input class="quantity-input" type="number" min="0" th:name="quantity"
-                                           th:value="${item.quantity}" onblur="this.form.submit()">
-                                </form>
-                            </div>
+    <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+</div>
+
+    <div th:unless="${statusCanceled == '4'}">
+        <div class="card top-selling overflow-auto">
+
+
+            <div class="card-body pb-0">
+                <h5 class="card-title">Chọn món cho bàn <span style=" padding: 20px 0 15px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #012970;
+    font-family: Poppins, sans-serif;" th:text="${TableName}"></span>
+                </h5>
+                <h5 th:text="'Phòng '+${RoomName}"></h5>
+                <div th:if="${successMessage}" class="alert alert-success">
+                    <p style="text-align:center;" th:text="${successMessage}"></p>
+                </div>
+                <div class="row">
+                    <div class="menu">
+                        <div class="filter-buttons">
+                            <button class="filter-button" data-category="all">Tất cả</button>
+                            <button class="filter-button" th:each="productCategory : ${listProductCategory}"
+                                    th:data-category="${productCategory.name}" th:text="${productCategory.name}">Danh Mục 1
+                            </button>
+
+
                         </div>
 
-                    </div>
-                </div>
+                        <div class="menu-items">
+                            <div class="scrollable-menu">
+                                <div th:each="item : ${allReservationItem}" class="menu-item"
+                                     th:data-category="${item.productCategory}">
+                                    <img th:if="${item.image != null}" th:src="@{'/display?id=' + ${item.productId}}"
+                                         alt="Ảnh mục 1">
+                                    <img th:unless="${item.image != null}" src="/Admin/img/foodDefault.png" alt="">
+                                    <span class="item-name" th:text="${item.name}">Mục 1</span>
+                                    <span class="item-price"
+                                          th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}">50,000 VND</span>
+                                    <form action="#" th:action="@{/admin/booking/updateBooking}" method="POST">
+                                        <input type="hidden" th:name="productId" th:value="${item.productId}">
+                                        <input type="hidden" th:name="id" th:value="${id}">
+                                        <input class="quantity-input" type="number" min="0" th:name="quantity"
+                                               th:value="${item.quantity}" onblur="this.form.submit()">
+                                    </form>
+                                </div>
+                            </div>
 
-                <div class="listOrder">
-                    <h4>Danh sách món đã chọn</h4>
-                    <div class="scrollable-list">
-                        <ul th:each="item : ${listChosen}">
-                            <li>
-                                <span class="food-name" th:text="${item.name}"></span>
-                                <span class="price" th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}"></span>
-                                <a th:href="@{/admin/ListDishes/remove/{id}(id=${item.id})}" class="remove-link"><i class="bi bi-trash-fill" style="color:red;"></i></a>
-                            </li>
-                        </ul>
+                        </div>
                     </div>
-                    <div class="total">
+
+                    <div class="listOrder">
+                        <h4>Danh sách món đã chọn</h4>
+                        <div class="scrollable-list">
+                            <ul th:each="item : ${listChosen}">
+                                <li>
+                                    <span class="food-name" th:text="${item.name}"></span>
+                                    <span class="price" th:text="${#numbers.formatInteger(item.price,3,'POINT') + ' VND'}"></span>
+                                    <a th:href="@{/admin/ListDishes/remove/{id}(id=${item.id})}" class="remove-link"><i class="bi bi-trash-fill" style="color:red;"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="total">
                         <span class="total-label"
                               th:text="'Tổng tiền: ' + ${#numbers.formatInteger(totalAmount,3,'POINT') + ' VND'}"> </span>
+                        </div>
+
+                        <!--                    <p  th:text="'Tổng tiền: ' + ${#numbers.formatInteger(totalBooking,3,'POINT') + ' VND'}">>totalBooking</p>-->
+
+
+
+                            <form  th:action="@{/admin/placeDishes}" method="post" th:object="${bookingDetail}" onsubmit="checkFormSubmission(event)">
+
+                                <input type="hidden" th:value="${bookingId}"name="bookingId">
+                                <button type="submit" class="btn btn-warning">Gọi món</button>
+                            </form>
+
+
+                            <a href="/admin/ListDishes/clear"> <button type="submit"  class="btn btn-danger" style="margin-left: 100px;margin-top: -65px;"> Bỏ chọn tất cả</button></a>
+
+
+
+
                     </div>
-
-<!--                    <p  th:text="'Tổng tiền: ' + ${#numbers.formatInteger(totalBooking,3,'POINT') + ' VND'}">>totalBooking</p>-->
-                    <div th:if="${statusCanceled}">
-                        <p>Đã hủy</p>
-                    </div>
-                    <div th:unless="${statusCanceled}">
-
-                        <form  th:action="@{/admin/placeDishes}" method="post" th:object="${bookingDetail}" onsubmit="checkFormSubmission(event)">
-
-                            <input type="hidden" th:value="${bookingId}"name="bookingId">
-                            <button type="submit" class="btn btn-warning">Gọi món</button>
-                         </form>
-
-
-                        <a href="/admin/ListDishes/clear"> <button type="submit"  class="btn btn-danger" style="margin-left: 100px;margin-top: -65px;"> Bỏ chọn tất cả</button></a>
-
-                    </div>
-
 
                 </div>
 
-            </div>
 
-
-            <style>
+                <style>
 .scrollable-list {
   max-height: 200px;
   overflow-y: auto;
@@ -246,7 +350,7 @@
 
 
             </style>
-            <script>
+                <script>
  // Filter menu items when a filter button is clicked
 const filterButtons = document.querySelectorAll('.filter-button');
 const menuItems = document.querySelectorAll('.menu-item');
@@ -282,17 +386,17 @@ filterButtons.forEach(button => {
 
             </script>
 
+            </div>
+
         </div>
+        <!-- End Top Selling -->
 
-    </div>
-    <!-- End Top Selling -->
-
-    <a th:href="@{/admin/reservationDetail/{id}(id=${id})}">
-        <button class="btn btn-danger">Quay lại</button>
-    </a>
+        <a th:href="@{/admin/reservationDetail/{id}(id=${id})}">
+            <button class="btn btn-danger">Quay lại</button>
+        </a>
 
 
-    <style>
+        <style>
 
 
 .custom-select {
@@ -327,7 +431,7 @@ filterButtons.forEach(button => {
 
     </style>
 
-    <script>
+        <script>
     document.addEventListener('DOMContentLoaded', function() {
         var selectElement = document.querySelector('.custom-select');
         selectElement.addEventListener('change', function() {
@@ -342,6 +446,12 @@ filterButtons.forEach(button => {
 
 
     </script>
+
+
+
+    </div>
+
+
 </main>
 </body>
 </html>
