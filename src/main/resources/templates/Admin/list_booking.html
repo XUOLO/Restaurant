@@ -26,8 +26,9 @@
 
         <div class="card-body pb-0">
 <input type="hidden" name="idReservation" th:value="${idReservation}">
-            <h5 class="card-title"th:text="'Danh sách các bàn đặt trước của phòng '+${RoomName}">
+            <h5 class="card-title"th:text="'Danh sách các bàn đặt trước của phòng '+${RoomName}"> <button type="button" class="btn btn-primary">Thêm bàn </button>
             </h5>
+
 <!--            <a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportBooking-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportBooking-pdf">Xuất PDF</a>-->
             <div th:if="${errorMessage}" class="alert alert-danger">
                 <p th:text="${errorMessage}"></p>
@@ -97,7 +98,7 @@
                         <a th:href="@{/admin/bookingDetail/{id}(id=${list.id})}">
 <!--                            <i class="bi bi-list"></i>-->
 
-                            <button type="button" class="btn btn-info">Xem</button>
+                            <button type="button" class="btn btn-info" th:hidden="${list.status == '3'}">Xem</button>
                         </a>
 
 

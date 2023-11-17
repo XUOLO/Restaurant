@@ -6,7 +6,9 @@
     <title>Menu</title>
 </head>
 <body>
+<div  layout:fragment="search-bar" class="search-bar">
 
+</div>
 
 <main id="main" layout:fragment="main" class="main">
 
@@ -82,11 +84,11 @@
                         <form  th:action="@{/admin/placeDishes}" method="post" th:object="${bookingDetail}" onsubmit="checkFormSubmission(event)">
 
                             <input type="hidden" th:value="${bookingId}"name="bookingId">
-                            <button type="submit">Gọi món</button>
-                        </form>
+                            <button type="submit" class="btn btn-warning">Gọi món</button>
+                         </form>
 
 
-                        <a href="/admin/ListDishes/clear">Bỏ chọn tất cả</a>
+                        <a href="/admin/ListDishes/clear"> <button type="submit"  class="btn btn-danger" style="margin-left: 100px;margin-top: -65px;"> Bỏ chọn tất cả</button></a>
 
                     </div>
 
