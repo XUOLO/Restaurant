@@ -21,6 +21,25 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    public double calculateRevenueByDate(LocalDate date) {
+        List<Order> orders = orderRepository.findByOrderDate(date);
+        return orders.stream().mapToDouble(Order::getTotal).sum();
+    }
+
+    public double calculateRevenueByMonth(int month, int year) {
+        List<Order> orders = orderRepository.findByMonthAndYear(month, year);
+        return orders.stream().mapToDouble(Order::getTotal).sum();
+    }
+
+    public double calculateRevenueByYear(int year) {
+        List<Order> orders = orderRepository.findByYear(year);
+        return orders.stream().mapToDouble(Order::getTotal).sum();
+    }
+    public long countOrdersToday() {
+        LocalDate today = LocalDate.now();
+        return orderRepository.countByOrderDate(today);
+    }
+
     public Order getOrderById(long id) {
         Optional<Order> optional = orderRepository.findById(id);
         Order order = null;
@@ -122,5 +141,8 @@ public class OrderService {
         }
         return totalRevenue;
     }
-
+    public List<Order> getOrdersInRange(LocalDate startDate, LocalDate endDate) {
+        List<Order> orders = orderRepository.findByOrderDateBetween(startDate, endDate);
+        return orders;
+    }
 }
