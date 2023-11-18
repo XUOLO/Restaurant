@@ -33,10 +33,12 @@ import owlvernyte.springfood.service.*;
 
 import java.io.ByteArrayOutputStream;
 import java.net.http.HttpRequest;
+import java.security.Principal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -80,6 +82,10 @@ public class BookingDetailController {
     private JavaMailSender mailSender;
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private DeskRepository deskRepository;
+    @Autowired
+    private ReservationCategoryService reservationCategoryService;
 
     @Autowired
     private ReceiptRepository receiptRepository;
@@ -257,88 +263,104 @@ public class BookingDetailController {
 
     @GetMapping("/admin/exportBooking-pdf")
     public void exportPdfBooking(HttpServletResponse response) throws Exception {
-        // Lấy danh sách ticket
         List<Booking> bookings = bookingRepository.findAll();
 
-        // Tạo tài liệu PDF bằng iText
         Document document = new Document();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, baos);
         document.open();
 
-        // Tạo bảng để hiển thị thông tin ticket
-        PdfPTable table = new PdfPTable(8);
+        // Create a table to display booking information
+        PdfPTable table = new PdfPTable(9);
         table.setWidthPercentage(100f);
         table.setSpacingBefore(10f);
         table.setSpacingAfter(10f);
-        float[] columnWidths = {1f, 2.5f, 3f, 4f, 3f, 3f, 3f, 2f};
-        table.setWidths(columnWidths);
-        // Tạo tiêu đề cho các cột
-        PdfPCell noCell = new PdfPCell(new Paragraph("No."));
-        PdfPCell idCell = new PdfPCell(new Paragraph("Booking ID"));
-        PdfPCell nameCell = new PdfPCell(new Paragraph("Customer Name"));
-        PdfPCell emailCell = new PdfPCell(new Paragraph("Email"));
-        PdfPCell phoneCell = new PdfPCell(new Paragraph("phone"));
-        PdfPCell createDateCell = new PdfPCell(new Paragraph("Create date"));
-        PdfPCell dateTimeCell = new PdfPCell(new Paragraph("Date arrive"));
-        PdfPCell statusCell = new PdfPCell(new Paragraph("Status"));
 
-        // Thiết lập style cho các cột
+        // Create column headers
+        PdfPCell noCell = new PdfPCell(new Paragraph("Stt."));
+        PdfPCell idCell = new PdfPCell(new Paragraph("Mã bàn"));
+        PdfPCell nameCell = new PdfPCell(new Paragraph("Tên khách"));
+        PdfPCell phoneCell = new PdfPCell(new Paragraph("SDT"));
+        PdfPCell roomCell = new PdfPCell(new Paragraph("Phòng"));
+        PdfPCell tableCell = new PdfPCell(new Paragraph("Bàn"));
+        PdfPCell createDateCell = new PdfPCell(new Paragraph("Ngày đặt"));
+        PdfPCell dateTimeCell = new PdfPCell(new Paragraph("Ngày đến"));
+        PdfPCell statusCell = new PdfPCell(new Paragraph("Tình trạng"));
+
+        // Set styles for column headers
         noCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         idCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         nameCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        emailCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         phoneCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        roomCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        tableCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         createDateCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         dateTimeCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         statusCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
 
-        // Thêm các cột vào bảng
+        // Add column headers to the table
         table.addCell(noCell);
         table.addCell(idCell);
         table.addCell(nameCell);
-        table.addCell(emailCell);
         table.addCell(phoneCell);
+        table.addCell(roomCell);
+        table.addCell(tableCell);
         table.addCell(createDateCell);
         table.addCell(dateTimeCell);
         table.addCell(statusCell);
 
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        // Thêm thông tin của từng ticket vào bảng
+        // Add booking information to the table
         int rowNum = 1;
         for (Booking booking : bookings) {
+            LocalDate bookingDate = booking.getBookingDate();
+            String formattedBookingDate = bookingDate.format(dateFormatter);
+
+            LocalDate dateArrive = booking.getDateArrive();
+            String formattedDateArrive = dateArrive.format(dateFormatter);
             table.addCell(String.valueOf(rowNum));
             table.addCell(booking.getCode());
             table.addCell(booking.getName());
-            table.addCell(booking.getEmail());
             table.addCell(booking.getPhone());
-
-            table.addCell(String.valueOf(booking.getBookingDate()));
-            table.addCell(String.valueOf(booking.getDateArrive()));
+            table.addCell(booking.getReservation().getName());
+            table.addCell(booking.getDesk());
+            table.addCell(formattedBookingDate);
+            table.addCell(formattedDateArrive);
             table.addCell(booking.getStatusString());
             rowNum++;
         }
 
-        // Thêm bảng vào tài liệu PDF
+        // Set column widths based on content length
+        float[] columnWidths = new float[table.getNumberOfColumns()];
+        for (int i = 0; i < table.getNumberOfColumns(); i++) {
+            float maxWidth = 0f;
+            for (int j = 0; j < table.getRows().size(); j++) {
+                PdfPCell cell = table.getRow(j).getCells()[i];
+                float cellWidth = cell.getPhrase().getContent().length() * 7f; // Adjust the multiplier based on the desired width
+                maxWidth = Math.max(maxWidth, cellWidth);
+            }
+            columnWidths[i] = maxWidth + 5f; // Add a small padding to the column width
+        }
+        table.setWidths(columnWidths);
+
+        // Add the table to the PDF document
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        document.add(new Paragraph("Booking list"));
-        document.add(new Paragraph("Export Date: " + dateFormat.format(new Date())));
+        document.add(new Paragraph("Danh_sách_đặt_bàn"));
+        document.add(new Paragraph("Xuất_ngày: " + dateFormat.format(new Date())));
         document.add(table);
         document.close();
 
-        // Thiết lập thông tin trả về
+        // Set response headers and write the PDF document to the response
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"Booking-list.pdf\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"Booking_list.pdf\"");
         response.setContentLength(baos.size());
 
-        // Ghi tài liệu PDF vào Response
         ServletOutputStream outputStream = response.getOutputStream();
         baos.writeTo(outputStream);
         outputStream.flush();
     }
-
-
     @GetMapping("/admin/exportBooking-excel")
     public void exportExcelBooking(HttpServletResponse response) throws Exception {
 
@@ -348,7 +370,7 @@ public class BookingDetailController {
         Workbook workbook = new XSSFWorkbook();
 
         // Tạo một trang mới
-        Sheet sheet = workbook.createSheet("All Booking");
+        Sheet sheet = workbook.createSheet("Danh sách đặt bàn");
 
         // Tạo tiêu đề cho các cột
         Row headerRow = sheet.createRow(0);
@@ -365,15 +387,15 @@ public class BookingDetailController {
         headerStyle.setFont(headerFont);
 
         Cell noCell = headerRow.createCell(0);
-        noCell.setCellValue("No.");
+        noCell.setCellValue("Stt.");
         noCell.setCellStyle(headerStyle);
 
         Cell idCell = headerRow.createCell(1);
-        idCell.setCellValue("Booking ID");
+        idCell.setCellValue("Mã bàn");
         idCell.setCellStyle(headerStyle);
 
         Cell nameCell = headerRow.createCell(2);
-        nameCell.setCellValue("Customer name");
+        nameCell.setCellValue("Tên khách ");
         nameCell.setCellStyle(headerStyle);
 
         Cell emailCell = headerRow.createCell(3);
@@ -382,27 +404,42 @@ public class BookingDetailController {
 
 
         Cell phoneCell = headerRow.createCell(4);
-        phoneCell.setCellValue("Phone");
+        phoneCell.setCellValue("SDT");
         phoneCell.setCellStyle(headerStyle);
 
+        Cell roomCell = headerRow.createCell(5);
+        roomCell.setCellValue("Phòng");
+        roomCell.setCellStyle(headerStyle);
 
-        Cell orderDateCell = headerRow.createCell(5);
-        orderDateCell.setCellValue("Order date");
+        Cell tableCell = headerRow.createCell(6);
+        tableCell.setCellValue("Bàn");
+        tableCell.setCellStyle(headerStyle);
+
+        Cell orderDateCell = headerRow.createCell(7);
+        orderDateCell.setCellValue("Ngày đặt");
         orderDateCell.setCellStyle(headerStyle);
 
-        Cell addressCell = headerRow.createCell(6);
-        addressCell.setCellValue("Date arrive");
+        Cell addressCell = headerRow.createCell(8);
+        addressCell.setCellValue("Ngày đến");
         addressCell.setCellStyle(headerStyle);
 
-        Cell statusCell = headerRow.createCell(7);
-        statusCell.setCellValue("Status");
+        Cell statusCell = headerRow.createCell(9);
+        statusCell.setCellValue("Tình trạng");
         statusCell.setCellStyle(headerStyle);
 
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        // Thêm thông tin của từng ticket vào sheet
+
+
+
         int rowNum = 1;
         for (Booking booking : bookings) {
+            LocalDate bookingDate = booking.getBookingDate();
+            String formattedBookingDate = bookingDate.format(dateFormatter);
+
+            LocalDate dateArrive = booking.getDateArrive();
+            String formattedDateArrive = dateArrive.format(dateFormatter);
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(rowNum - 1);
             row.createCell(1).setCellValue(booking.getCode());
@@ -410,9 +447,12 @@ public class BookingDetailController {
             row.createCell(3).setCellValue(booking.getEmail());
 
             row.createCell(4).setCellValue(booking.getPhone());
-            row.createCell(5).setCellValue(booking.getBookingDate().toString());
-            row.createCell(6).setCellValue(booking.getDateArrive().toString());
-            row.createCell(7).setCellValue(booking.getStatusString());
+            row.createCell(5).setCellValue(booking.getReservation().getName());
+            row.createCell(6).setCellValue(booking.getDesk());
+
+            row.createCell(7).setCellValue(formattedBookingDate);
+            row.createCell(8).setCellValue(formattedDateArrive);
+            row.createCell(9).setCellValue(booking.getStatusString());
         }
 
         // Tạo định dạng cho ngày xuất file
@@ -426,7 +466,7 @@ public class BookingDetailController {
         Row dateRow = sheet.createRow(rowNum++);
         dateRow.setHeightInPoints(20);
         Cell dateCell = dateRow.createCell(0);
-        dateCell.setCellValue("Exported on:");
+        dateCell.setCellValue(" Xuất ngày:");
         dateCell.setCellStyle(dateStyle);
 
         Cell exportDateCell = dateRow.createCell(1);
@@ -435,7 +475,7 @@ public class BookingDetailController {
         exportDateCell.setCellStyle(dateStyle);
 
         // Căn chỉnh cột và tự động điều chỉnh độ rộng của các cột
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 11; i++) {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
         }
@@ -617,5 +657,176 @@ public class BookingDetailController {
 
 
 
+    @GetMapping("/admin/addTable/{id}")
+    public String viewTable(Model model, Principal principal, HttpSession session, @PathVariable(value = "id") long id) {
 
+
+        List<Desk> desks = deskRepository.findByReservationId(id);
+        LocalDate currentDate = LocalDate.now();
+        List<Booking> bookings = bookingService.getBookingsByCurrentDateAndReservationId(currentDate, id);
+        model.addAttribute("bookings", getBookingsByCurrentDateAndReservationId(currentDate,id));
+        model.addAttribute("currentDate", currentDate);
+        model.addAttribute("desks", desks);
+
+
+        Reservation reservation = reservationService.getReservationById(id);
+        model.addAttribute("reservation", reservation);
+        Reservation reservationId =reservationService.viewById(id);
+        model.addAttribute("reservationId",reservationId.getId());
+
+
+        model.addAttribute("listReservationCategory", reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("totalAmount", bookingService.getAmount());
+        String name = (String) session.getAttribute("name");
+        model.addAttribute("name", name);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        Booking booking = new Booking();
+        model.addAttribute("booking", booking);
+        model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
+        model.addAttribute("listProduct",productService.getAllProduct());
+
+
+        String username = (String) session.getAttribute("username");
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+         return "Admin/booking";
+    }
+
+    public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentDate, long reservationId) {
+        List<Booking> allBookings = bookingRepository.findAll(); // Lấy tất cả đặt bàn từ nguồn dữ liệu
+        List<Booking> filteredBookings = new ArrayList<>();
+        Reservation reservation = reservationService.viewById(reservationId);
+        for (Booking booking : allBookings) {
+            if (booking.getDateArrive().isEqual(currentDate) && booking.getReservation().equals(reservation)) {
+                filteredBookings.add(booking);
+            }
+        }
+
+        return filteredBookings;
+    }
+
+
+    @PostMapping("/admin/placeBooking")
+    public String AdminPlaceBooking(@RequestParam("name") String name,
+                               @RequestParam("phone") String phone,
+                               @RequestParam("email") String email,
+                               @RequestParam("selectDesk") String selectedDesk,
+                               @RequestParam("reservationId") long reservationId,
+                               @RequestParam("numberOfPeople") int numberOfPeople,
+                               @RequestParam("timeArrive") LocalTime timeArrive,
+                               Model model,
+                               HttpServletRequest request,
+                               @ModelAttribute("booking") @Valid Booking booking,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes,
+                               HttpSession session) {
+
+
+        Reservation reservation = reservationService.viewById(reservationId);
+        String username = (String) session.getAttribute("username");
+        Long userId = (Long) session.getAttribute("userId");
+
+
+        User user = null;
+
+        if (userId != null) {
+            user = userService.viewById(userId);
+        }
+        booking.setTimeArrive(timeArrive);
+        booking.setUser(user);
+        booking.setNumberOfPeople(numberOfPeople);
+        booking.setName(name);
+        booking.setPhone(phone);
+        String setEmail= null;
+        if(email==null){
+            booking.setEmail(setEmail);
+        }
+        booking.setEmail(email);
+        booking.setBookingDate(LocalDate.now());
+        booking.setReservation(reservation);
+
+        booking.setDesk(selectedDesk);
+
+        booking.setStatus("1");
+
+        Collection<ReservationItem> reservationItems = bookingService.getAllReservationItem();
+
+
+        Random random = new Random();
+        int randomNumber = random.nextInt(900000) + 100000;
+        String code = "TB" + String.valueOf(randomNumber);
+        booking.setCode(code);
+
+        if (bindingResult.hasErrors()) {
+
+            redirectAttributes.addFlashAttribute("failMessage", "Ngày không hợp lệ");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+
+
+
+//        LocalDate date = booking.getDateArrive();
+//        if (bookingRepository.existsByDateArriveAndDesk(date, selectedDesk, reservationId)) {
+//            redirectAttributes.addFlashAttribute("DuplicateDate", "Rất tiếc nhà hàng không phục vụ khung giờ đã chọn. Chọn 1 khung giờ khác.");
+//            String referer = request.getHeader("Referer");
+//            return "redirect:" + referer;
+//        }
+        else
+            bookingService.saveBooking(booking);
+        bookingService.clear();
+        redirectAttributes.addFlashAttribute("SuccessMessage", "Tạo bàn thành công");
+
+        return "redirect:/admin/addTable/"+reservationId  ;
+    }
+
+    @PostMapping("/admin/booking-list")
+    public String showBookingList( @RequestParam("reservationId") long reservationId,   @RequestParam("dateArrive") LocalDate dateArrive, Model model, Principal principal, HttpSession session ) {
+        // Lấy danh sách đặt bàn từ cơ sở dữ liệu dựa trên ngày đến đã chọn (dateArrive)
+
+         LocalDate currentDate = LocalDate.now();
+        model.addAttribute("bookings", getBookingsByCurrentDateAndReservationId(dateArrive,reservationId));
+        // Gửi danh sách đặt bàn đến view để hiển thị
+
+        model.addAttribute("dateArrive", dateArrive);
+        Reservation reservation = reservationService.getReservationById(reservationId);
+        model.addAttribute("reservation", reservation);
+        Reservation reservationIds =reservationService.viewById(reservationId);
+        model.addAttribute("reservationId",reservationIds.getId());
+
+
+        model.addAttribute("listReservationCategory", reservationCategoryService.getAllReservationCategory());
+        model.addAttribute("totalAmount", bookingService.getAmount());
+        String name = (String) session.getAttribute("name");
+        model.addAttribute("name", name);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        Booking booking = new Booking();
+        model.addAttribute("booking", booking);
+        model.addAttribute("listProductCategory",productCategoryService.getAllProductCategory());
+        model.addAttribute("listProduct",productService.getAllProduct());
+
+
+        String username = (String) session.getAttribute("username");
+        Long userId = (Long) session.getAttribute("userId");
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+
+        model.addAttribute("username", username);
+        model.addAttribute("name", name);
+        model.addAttribute("userId", userId);
+        model.addAttribute("listReservation",reservationService.getAllReservation());
+        model.addAttribute("listReservationCategory",reservationCategoryService.getAllReservationCategory());
+         return "Admin/findBooking";
+    }
 }

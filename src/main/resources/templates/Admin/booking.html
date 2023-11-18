@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div  layout:fragment="search-bar" class="search-bar">
+
+</div>
+
+<main id="main" layout:fragment="main"class="main">
+
+    <section id="menu" class="menu section-bg">
+        <div class="table-info" style="
+    width: 100%;
+    padding: 20px;">
+            <h2>Thông tin phòng</h2>
+            <form th:object="${reservation}" method="POST" action="/user/bookReservation" >
+
+                <p type="hidden" th:field="*{id}" />
+                <p type="text"  id="name" name="name" th:text="'Phòng : '+ *{name}"  ></p>
+                <!--                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="'Số lượng người: ' + *{numberOfPeople}"  ></p>-->
+
+                <!--                 <p type="text"  id="description" name="description" th:text="'Mô tả: '+ *{description}" ></p>-->
+
+            </form>
+        </div>
+        <div class="searching">
+            <form method="POST" action="/admin/booking-list" >
+                <label for="dateArrive">Chọn ngày đến:</label>
+                <input type="date"  name="dateArrive" required>
+                <input type="hidden" th:value="${reservationId}" name="reservationId">
+
+                <button type="submit">Xem   bàn</button>
+            </form>
+        </div>
+
+
+        <form  th:action="@{/admin/placeBooking}" method="post" th:object="${booking}" onsubmit="checkFormSubmission(event)">
+            <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng hôm nay  </h2>
+
+
+            <style   >
+
+.searching {
+    margin-left: 55px;
+}
+
+    .address-section {
+            margin-top: -41px;
+    }
+
+    .address-section h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .has-error input[type="datetime-local"] {
+        border-color: red;
+    }
+
+<!--    button[type="submit"] {-->
+<!--        background-color: #4CAF50;-->
+<!--        color: white;-->
+<!--        padding: 10px 20px;-->
+<!--        border: none;-->
+<!--        cursor: pointer;-->
+<!--        font-size: 16px;-->
+<!--        border-radius: 5px;-->
+<!--    }-->
+.table-info {
+    background-color: #1a1814;
+    color:white;
+    text-align:center;
+    width: 100%;
+    padding: 20px;
+}
+
+
+.customer-info {
+    background-color: #ffffff;
+    width: 50%;
+    float: right;
+    padding: 20px;
+}
+
+.menu-items {
+    margin-bottom: 20px;
+}
+
+
+
+.menu-items p {
+    margin-bottom: 5px;
+}
+
+.menu-items input {
+    margin-bottom: 10px;
+}
+
+<!--button[type="submit"] {-->
+<!--    padding: 10px 20px;-->
+<!--    background-color: #4CAF50;-->
+<!--    color: white;-->
+<!--    border: none;-->
+<!--    cursor: pointer;-->
+<!--    font-size: 16px;-->
+<!--    border-radius: 5px;-->
+<!--}-->
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.menu-image {
+    width: 100px;
+    height: 100px;
+}
+
+
+
+.table-info h2 {
+    margin-bottom: 20px;
+}
+
+.customer-info h2 {
+    margin-bottom: 30px;
+}
+
+.menu-items h3 {
+    color:#fff;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+         margin-right: 100px;
+}
+
+.menu-items p {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.menu-items input {
+    color: black;
+    font-family: Arial, sans-serif;
+    margin-top: 85px;
+    font-size: 16px;
+    margin-left: -5%;
+}
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+input[type="email"] {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+<!--button[type="submit"] {-->
+<!--    color: #ffffff;-->
+<!--}-->
+
+.menu-image {
+    border-radius: 5px;
+}
+
+.menu-items img {
+    border: 1px solid #ccc;
+}
+.menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border: 1px solid #cda45e;
+    margin-bottom: 50px;
+    height: 130px;
+}
+
+.menu-item {
+    width: 50%;
+    border-radius: 5px;
+}
+.price {
+margin-bottom: -30px;
+color:#cda45e;
+}
+
+    </style>
+            <div class="row">
+                <div class="room-plan">
+                    <style>
+        .room-plan {
+            margin-top: 40px;
+               width: 45%;
+    display: inline-table;
+    padding-left: 20px;
+        }
+.table-selected {
+            background-color: yellow;
+        }
+        .table {
+           border: 1px solid #c5d3e0;
+    padding: 3px;
+    text-align: center;
+    position: absolute;
+    color:white;
+        }
+
+        .table-1 {
+              margin-left: 20px;
+    margin-top: -35px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-2 {
+              margin-left: 85px;
+    margin-top: -34px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-3 {
+         margin-left: 20px;
+    margin-top: 30px;
+    width: 50px;
+    height: 50px;
+        }
+
+        .table-4 {
+           margin-top: 31px;
+    margin-left: 85px;
+    width: 50px;
+    height: 50px;
+}
+
+        .table-5 {
+              margin-left: 210px;
+    margin-top: -10px;
+    width: 50px;
+    height: 90px;
+        }
+
+        .table-6 {
+         margin-top: 95px;
+    margin-left: 145px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+        }
+
+        .table-7 {
+                margin-top: -35px;
+    margin-left: 355px;
+    width: 90px;
+    height: 50px;
+        }
+
+        .table-8 {
+                  margin-top: -35px;
+    margin-left: 460px;
+    width: 90px;
+    height: 50px;
+        }
+
+        .table-9 {
+                 margin-left: 35px;
+    margin-top: 210px;
+    width: 90px;
+    height: 50px;
+        }
+        .table-10 {
+                   margin-top: 130px;
+    margin-left: 375px;
+    width: 120px;
+    height: 50px;
+        }
+        .table-status1{
+            margin-top: 300px;
+    margin-left: 100px;
+        color: black;
+    width: 20px;
+    height: 20px;
+    background-color: #44ae44;
+        }
+            .table-status2{
+         margin-top: 300px;
+    margin-left: 194px;
+    color: black;
+    width: 20px;
+    height: 20px;
+    background-color: #ee0c0c;
+        }
+        .table-onSelected{
+             margin-top: 300px;
+    margin-left: 300px;
+    color: black;
+    width: 20px;
+    height: 20px;
+    background-color: yellow;
+        }
+.empty {
+font-weight: bold;
+    width: 100px;
+    margin-block-start: -6px;
+}
+.using {
+font-weight: bold;
+    width: 110px;
+    margin-block-start: -6px;
+}
+.onSelected{
+font-weight: bold;
+    width: 140px;
+    margin-block-start: -6px;
+}
+ .table-selected {
+            background-color: yellow !important;
+            color:black;
+        }
+
+    </style>
+                    <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
+                    <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
+                    <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
+                    <div class="table table-4"onclick="selectTable(this)"style="background-color: #44ae44;"value="4"name="selectDesk">Bàn 4</div>
+                    <div class="table table-5"onclick="selectTable(this)"style="background-color: #44ae44;"value="5"name="selectDesk">Bàn 5</div>
+                    <div class="table table-6"onclick="selectTable(this)"style="background-color: #44ae44;"value="6"name="selectDesk">Bàn 6</div>
+                    <div class="table table-7"onclick="selectTable(this)"style="background-color: #44ae44;"value="7"name="selectDesk">Bàn 7</div>
+                    <div class="table table-8"onclick="selectTable(this)"style="background-color: #44ae44;"value="8"name="selectDesk">Bàn 8</div>
+                    <div class="table table-9"onclick="selectTable(this)"style="background-color: #44ae44;"value="9"name="selectDesk">Bàn 9</div>
+                    <div class="table table-10"onclick="selectTable(this)"style="background-color: #44ae44;"value="10" name="selectDesk">Bàn 10</div>
+
+                    <th:block th:each="item, iteration : ${bookings}">
+                        <div th:class="'table table-' + ${item.desk}"
+                             th:style="${item.status == '2' || item.status == '1' ? 'background-color: #ee0c0c;' : ''}"
+                             th:text="'Bàn ' + ${item.desk}"
+                             onclick="selectTable(this)"
+                             th:value="${item.id}"
+                             name="selectDesk">Bàn </div>
+                    </th:block>
+                    <div  class="table table-status1">   <div class="empty">: Trống</div></div>
+
+                    <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
+                    <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
+                    <script>
+function selectTable(table) {
+    // Check if the table has background color other than #ee0c0c
+    if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
+        // Remove 'table-selected' class from all tables
+        var tables = document.getElementsByClassName('table');
+        for (var i = 0; i < tables.length; i++) {
+            tables[i].classList.remove('table-selected');
+        }
+
+        // Add 'table-selected' class to the clicked table
+        table.classList.add('table-selected');
+
+        // Get the value of the table
+        var tableValue = table.getAttribute('value');
+
+        // Set the value of the input field
+        var inputField = document.getElementById('selectedDeskInput');
+        inputField.value = tableValue;
+    }
+}
+
+function checkFormSubmission(event) {
+    // Get the selected table
+    var selectedTable = document.querySelector('.table-selected');
+
+    // Check if a table is selected
+    if (!selectedTable) {
+        // Prevent form submission
+        event.preventDefault();
+
+        // Display an alert
+        alert('Vui lòng chọn một bàn trước khi tạo đơn.');
+    }
+}
+</script>
+                </div>
+
+
+                <div class="checkout-container" style="width: 55%;">
+                    <div class="address-section">
+                        <div th:if="${SuccessMessage}" class="alert alert-success">
+                            <p style="text-align:center;" th:text="${SuccessMessage}"></p>
+                        </div>
+                        <h2>Thông tin khách hàng</h2>
+                        <div th:if="${DuplicateDate}" class="alert alert-danger">
+                            <p style="text-align:center;" th:text="${DuplicateDate}"></p>
+                        </div>
+                        <div th:if="${failMessage}" class="alert alert-danger">
+                            <p style="text-align:center;" th:text="${failMessage}"></p>
+                        </div>
+                        <div th:if="${NotChosenYet}" class="alert alert-danger">
+                            <p style="text-align:center;" th:text="${NotChosenYet}"></p>
+                        </div>
+
+                        <input type="hidden" th:value="${reservationId}" name="reservationId">
+                        <input type="hidden" id="selectedDeskInput" name="selectDesk" value="">
+                        <div class="form-group">
+                            <label for="name">Họ tên</label>
+                            <input type="text" id="namee" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">SDT:</label>
+                            <input type="text" id="phone" name="phone" >
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" >
+                        </div>
+
+                        <select name="numberOfPeople"  style="width: 20%;">
+                            <option value="1">1 người</option>
+                            <option value="2">2 người</option>
+                            <option value="3">3 người</option>
+                            <option value="4">4 người</option>
+                            <option value="5">5 người</option>
+                        </select>
+
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('dateArrive')} ? 'has-error'">
+
+                            <input type="date" hidden  id="dateArrive" name="dateArrive" th:value="${currentDate}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="timeArrive">Giờ đến:</label>
+                            <select id="timeArrive" name="timeArrive">
+                                <option value="11:00">11:00 AM</option>
+                                <option value="11:15">11:15 AM</option>
+                                <option value="11:30">11:30 AM</option>
+                                <option value="11:45">11:45 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="12:15">12:15 PM</option>
+                                <option value="12:30">12:30 PM</option>
+                                <option value="12:45">12:45 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="13:15">1:15 PM</option>
+                                <option value="13:30">1:30 PM</option>
+                                <option value="13:45">1:45 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="14:15">2:15 PM</option>
+                                <option value="14:30">2:30 PM</option>
+                                <option value="14:45">2:45 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="15:15">3:15 PM</option>
+                                <option value="15:30">3:30 PM</option>
+                                <option value="15:45">3:45 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="16:15">4:15 PM</option>
+                                <option value="16:30">4:30 PM</option>
+                                <option value="16:45">4:45 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="17:15">5:15 PM</option>
+                                <option value="17:30">5:30 PM</option>
+                                <option value="17:45">5:45 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="18:15">6:15 PM</option>
+                                <option value="18:30">6:30 PM</option>
+                                <option value="18:45">6:45 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                                <option value="19:15">7:15 PM</option>
+                                <option value="19:30">7:30 PM</option>
+                                <option value="19:45">7:45 PM</option>
+                                <option value="20:00">8:00 PM</option>
+                                <option value="20:15">8:15 PM</option>
+                                <option value="20:30">8:30 PM</option>
+                                <option value="20:45">8:45 PM</option>
+                                <option value="21:00">9:00 PM</option>
+                                <option value="21:15">9:15 PM</option>
+                                <option value="21:30">9:30 PM</option>
+                                <option value="21:45">9:45 PM</option>
+                                <option value="22:00">10:00 PM</option>
+                                <option value="22:15">10:15 PM</option>
+                                <option value="22:30">10:30 PM</option>
+                                <option value="22:45">10:45 PM</option>
+                                <option value="23:00">11:00 PM</option>
+                            </select>
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                        <button type="submit" style="background-color:#cda45e;padding: 10px 20px;
+
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;">Tạo đơn</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+        </form>
+    </section>
+
+
+    <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+</main>
+</body>
+</html>
