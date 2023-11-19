@@ -33,7 +33,8 @@ public class HomeUserController {
 
     @Autowired
     private ProductService productService;
-
+    @Autowired
+    private OrderDetailService orderDetailService;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -93,6 +94,10 @@ public class HomeUserController {
         model.addAttribute("listProduct", sellingProducts);
         boolean isAuthenticated = principal != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
+
+        List<Long> topFourProductIds = orderDetailService.getTopFourProductIdsByQuantity();
+        List<Product> topFourProducts = productService.getTopFourProductsById(topFourProductIds);
+        model.addAttribute("top5FourProducts", topFourProducts);
         return "User/home";
     }
 

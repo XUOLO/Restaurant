@@ -93,4 +93,9 @@ public class ProductService {
         return this.productRepository.findAll(pageable);
     }
 
+
+    public List<Product> getTopFourProductsById(List<Long> productIds) {
+        return productRepository.findAllById(productIds);
+    }
+
 }

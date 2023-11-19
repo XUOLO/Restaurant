@@ -1,5 +1,6 @@
 package owlvernyte.springfood.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,9 @@ public interface OrderDetailRepository  extends JpaRepository<OrderDetail, Long>
             "ORDER BY SUM(od.quantity) DESC\n" +
             "LIMIT 4", nativeQuery = true)
     List<OrderDetail> findTop4ProductsByProductIdCount();
-
+    @Query(value = "SELECT od.product.id, SUM(od.quantity) AS totalQuantity " +
+            "FROM OrderDetail od " +
+            "GROUP BY od.product.id " +
+            "ORDER BY totalQuantity DESC")
+    List<Object[]> findTopFourProductIdsByQuantity(Pageable pageable);
 }

@@ -13,5 +13,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT t FROM Product t JOIN t.productCategory d WHERE CONCAT(t.name, t.description, d.name, t.price) LIKE %?1%")
     List<Product> findAll(String keyword);
-
+    List<Product> findAllByIdIn(List<Long> productIds);
 }
