@@ -169,4 +169,10 @@ public class BookingService {
     public List<Booking> getBookingsByReservationId(long reservationId) {
         return bookingRepository.findByReservationId(reservationId);
     }
+
+    public long countBookingsWithStatusOneOrTwoAndDateArriveToday() {
+        LocalDate today = LocalDate.now();
+        List<String> statuses = Arrays.asList("1", "2");
+        return bookingRepository.countByStatusInAndDateArrive(statuses, today);
+    }
 }

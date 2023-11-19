@@ -9,13 +9,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import owlvernyte.springfood.entity.BookingDetail;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.User;
+import owlvernyte.springfood.repository.BookingDetailRepository;
 import owlvernyte.springfood.repository.UserRepository;
+import owlvernyte.springfood.service.BookingDetailService;
+import owlvernyte.springfood.service.BookingService;
 import owlvernyte.springfood.service.OrderDetailService;
 import owlvernyte.springfood.service.OrderService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,6 +35,13 @@ public class HomeController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BookingDetailService bookingDetailService;
+    @Autowired
+    private BookingDetailRepository bookingDetailRepository;
+    @Autowired
+    private BookingService bookingService;
 
 @GetMapping("/admin/date")
 public String calculateRevenueByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Model model) {
@@ -71,6 +83,8 @@ public String calculateRevenueByDate(@RequestParam("date") @DateTimeFormat(iso =
         model.addAttribute("revenueMonth", revenue);
         long countOrder = orderService.countOrdersToday();
         model.addAttribute("countOrder", countOrder);
+        long bookingCount = bookingService.countBookingsWithStatusOneOrTwoAndDateArriveToday();
+        model.addAttribute("bookingCount", bookingCount);
         return "Admin/index";
     }
     private double calculateRevenue(LocalDate startDate, LocalDate endDate) {
@@ -103,6 +117,9 @@ public String calculateRevenueByDate(@RequestParam("date") @DateTimeFormat(iso =
 
         long countOrder = orderService.countOrdersToday();
         model.addAttribute("countOrder", countOrder);
+        long bookingCount = bookingService.countBookingsWithStatusOneOrTwoAndDateArriveToday();
+        model.addAttribute("bookingCount", bookingCount);
+         
 
         return "Admin/index";
     }
@@ -122,8 +139,10 @@ public String calculateRevenueByDate(@RequestParam("date") @DateTimeFormat(iso =
 //        List<OrderDetail> topProducts = orderDetailService.getTop4ProductsByProductIdCount();
 //        model.addAttribute("topProducts", topProducts);
 
-        long countOrder= orderService.countOrdersToday();
-        model.addAttribute("countOrder",countOrder);
+        long countOrder = orderService.countOrdersToday();
+        model.addAttribute("countOrder", countOrder);
+        long bookingCount = bookingService.countBookingsWithStatusOneOrTwoAndDateArriveToday();
+        model.addAttribute("bookingCount", bookingCount);
         return "Admin/index";
     }
 
@@ -131,7 +150,39 @@ public String calculateRevenueByDate(@RequestParam("date") @DateTimeFormat(iso =
     public String greeting() {
         return "welcome";
     }
+    @GetMapping("/admin/booking/date")
+    public String calculateRevenueBookingByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Model model) {
+        double revenue = bookingDetailService.calculateRevenueByDate(date);
+        model.addAttribute("revenueBookingDate", revenue);
+        long countOrder= orderService.countOrdersToday();
+        model.addAttribute("countOrder",countOrder);
+        return "Admin/index";
+    }
 
+    @GetMapping("/admin/booking/month")
+    public String calculateRevenueBookingByMonth(@RequestParam("month") String monthString,
+                                                 Model model) {
+        YearMonth yearMonth = YearMonth.parse(monthString);
+        int year = yearMonth.getYear();
+        int month = yearMonth.getMonthValue();
 
+        double revenue = bookingDetailService.calculateRevenueByMonth(year, month);
+        model.addAttribute("revenueBookingMonth", revenue);
+        long countOrder= orderService.countOrdersToday();
+        model.addAttribute("countOrder",countOrder);
 
+        return "Admin/index";
+    }
+
+    @GetMapping("/admin/booking/year")
+    public String calculateRevenueBookingByYear(
+            @RequestParam("year") int year,
+            Model model
+    ) {
+        double revenue = bookingDetailService.calculateRevenueByYear(year);
+        model.addAttribute("revenueBookingYear", revenue);
+        long countOrder= orderService.countOrdersToday();
+        model.addAttribute("countOrder",countOrder);
+        return "Admin/index";
+    }
 }

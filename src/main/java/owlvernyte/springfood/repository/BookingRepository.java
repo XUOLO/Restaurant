@@ -41,4 +41,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByReservationId(long reservationId);
     Page<Booking> findByReservationId(long reservationId, Pageable pageable);
 
+
+    long countByStatusInAndDateArrive(List<String> statuses, LocalDate dateArrive);
+
 }
