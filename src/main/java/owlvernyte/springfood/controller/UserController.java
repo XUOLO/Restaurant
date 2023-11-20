@@ -1,5 +1,6 @@
 package owlvernyte.springfood.controller;
 
+import org.springframework.web.client.RestTemplate;
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,14 @@ public class UserController {
         }
         userService.save(user);
         return "redirect:/login";
+    }
+
+    @GetMapping("/user/hello")
+    public String hello(Model model) {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiURL = "http://127.0.0.1:5000/api/hello";
+        String response = restTemplate.getForObject(apiURL, String.class);
+        model.addAttribute("message", response);
+        return "User/hello";
     }
 }

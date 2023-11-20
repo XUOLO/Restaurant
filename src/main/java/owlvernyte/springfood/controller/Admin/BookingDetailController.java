@@ -220,9 +220,10 @@ public class BookingDetailController {
     }
 
     @PostMapping("/admin/booking/updateBooking")
-    public String updateBookingCartAdmin(@RequestParam("productId") Integer productId, @RequestParam("quantity") Integer quantity, @RequestParam("id") long reservationId) {
+    public String updateBookingCartAdmin(@RequestParam("productId") Integer productId, HttpServletRequest request, @RequestParam("quantity") Integer quantity, @RequestParam("id") long reservationId) {
         bookingService.update(productId, quantity);
-        return "redirect:/admin/bookingDetail/" + reservationId;
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
     }
 
     @GetMapping("/admin/ListDishes/clear")

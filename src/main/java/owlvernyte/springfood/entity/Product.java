@@ -40,7 +40,8 @@ public class Product {
 	@Column(name = "Quantity")
 	private int quantity;
 
-
+	@OneToMany(mappedBy = "product")
+	private List<Comment> comments;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "productCategory_id")

@@ -70,8 +70,10 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-                <li th:each="category : ${listCategory}" ><a   th:text="${category.name}" th:href="@{/user/category/{id}(id=${category.id})}" > </a></li>
+                <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
+                <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
 
+                <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
                 <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
@@ -130,7 +132,167 @@
                          </div>
                     </div>
                 </div>
+                <style>
+form.form-block {
+    margin-bottom: 20px;
+}
+div#loadMoreComments {
+    margin-left: 45%;
+}
+button.btn.btn-primary.pull-right {
+    background: #cda45e;
+    border: 0;
+    padding: 10px 35px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 50px;
+}
+.be-comment-block {
+margin-bottom: 50px !important;
+    padding: 50px 70px
+}
 
+.comments-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 15px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+}
+
+.be-img-comment {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-bottom: 15px;
+}
+
+.be-ava-comment {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.be-comment-content {
+    margin-left: 80px;
+}
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-name {
+    font-size: 13px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+}
+
+.be-comment-content a {
+    color: white;
+}
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-time {
+    text-align: right;
+}
+
+.be-comment-time {
+    font-size: 11px;
+    color: #b4b7c1;
+}
+
+.be-comment-text {
+    font-size: 13px;
+    line-height: 18px;
+    color: black;
+    display: block;
+    background: #f6f6f7;
+    border: 1px solid #edeff2;
+    padding: 15px 20px 20px 20px;
+}
+
+
+.form-group .form-input {
+    font-size: 13px;
+    line-height: 50px;
+    font-weight: 400;
+    color: #b4b7c1;
+    width: 100%;
+    height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid #edeff2;
+    border-radius: 3px;
+}
+
+
+
+.form-group textarea.form-input {
+    height: 150px;
+        border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    background: #0c0b09;
+    border-color: #625b4b;
+    color: white;
+}
+a.btn.btn-primary.pull-right {
+    background: #cda45e;
+    border: 0;
+    padding: 10px 35px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 50px;
+}
+    </style>
+                <div class="container">
+                    <div class="be-comment-block">
+                        <h1 class="comments-title" th:text="'Bình luận ' +(${commentCount})">Comments (3)</h1>
+                        <form class="form-block" method="POST" th:object="${comment}" th:action="@{/user/submitComment}">
+
+
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <textarea class="form-input"maxlength="300" required=""th:field="*{content}" placeholder="Bình luận"></textarea>
+                                </div>
+                            </div>
+                            <input type="hidden" th:value="${productId}" name="productId">
+                            <button type="submit" class="btn btn-primary pull-right">Gửi</button>
+
+                        </form>
+
+                        <div class="be-comment" th:each="item : ${commentProduct}">
+                            <div class="be-img-comment">
+                                <a  >
+                                    <img th:src="${item.user.image != null ? '/displayStaff?id=' + item.user.id : '/User/images/blank-profile-picture.png'}" alt="" class="be-ava-comment">
+                                </a>
+                            </div>
+                            <div class="be-comment-content">
+
+				<span class="be-comment-name">
+					<a href="blog-detail-2.html" th:text="${item.user.name}">Ravi Sah</a>
+					</span>
+                                <span class="be-comment-time" th:text="${#temporals.format(item.commentDate, 'dd/MM/yyyy')}">
+					<i class="fa fa-clock-o"></i>
+
+				</span>
+
+                                <p class="be-comment-text" th:text="${item.content}">
+
+                                </p>
+                            </div>
+                        </div>
+                        <div id="loadMoreComments" style="display: none;">
+                            <a href="#" id="loadMoreBtn" >Xem thêm</a>
+                        </div>
+                     </div>
+                </div>
             </div>
 
     </section>
@@ -162,6 +324,34 @@
         });
     }
 </script>
+    <script>
+      $(document).ready(function() {
+    var commentsPerPage = 4; // Số lượng comment hiển thị mỗi lần
+
+    // Hiển thị nút "Xem thêm" nếu có nhiều hơn commentsPerPage bình luận
+    if ($('.be-comment').length > commentsPerPage) {
+        $('#loadMoreComments').show();
+    }
+
+    // Ẩn các comment vượt quá commentsPerPage
+    $('.be-comment:gt(' + (commentsPerPage - 1) + ')').hide();
+
+    // Xử lý sự kiện nhấp vào nút "Xem thêm"
+    $('#loadMoreBtn').click(function(e) {
+        e.preventDefault();
+
+        var hiddenComments = $('.be-comment:hidden');
+
+        // Hiển thị commentsPerPage bình luận tiếp theo
+        hiddenComments.slice(0, commentsPerPage).fadeIn();
+
+        // Ẩn nút "Xem thêm" nếu không còn comment ẩn
+        if (hiddenComments.length <= commentsPerPage) {
+            $('#loadMoreComments').hide();
+        }
+    });
+});
+    </script>
 </main>
 
 

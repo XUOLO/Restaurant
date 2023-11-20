@@ -205,7 +205,7 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
 
         booking.setDesk(selectedDesk);
 
-        booking.setStatus("1");
+        booking.setStatus("2");
 
         Collection<ReservationItem> reservationItems = bookingService.getAllReservationItem();
 
@@ -302,8 +302,9 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
 //            return "User/ErrorPage";
 //        }
         bookingService.clear();
-
-        return "redirect:/user/placeBookingSuccess";
+        redirectAttributes.addFlashAttribute("SuccessMessage", "Tạo đơn thành công!");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
     }
     @PostMapping("/user/booking-list")
     public String showBookingList( @RequestParam("reservationId") long reservationId,   @RequestParam("dateArrive") LocalDate dateArrive, Model model, Principal principal, HttpSession session ) {

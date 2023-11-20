@@ -72,7 +72,7 @@
             <ul>
                 <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
                 <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
-                <li   ><a class="nav-link scrollto  "      href="/user/ingredient" >Thành phần </a></li>
+
                 <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
                 <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
@@ -498,7 +498,9 @@ function checkFormSubmission(event) {
 
         <div class="checkout-container" style="margin-left: 41%;">
             <div class="address-section">
-
+                <div th:if="${SuccessMessage}" class="alert alert-success">
+                    <p style="text-align:center;" th:text="${SuccessMessage}"></p>
+                </div>
                 <h2>Thông tin khách hàng</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">
                     <p style="text-align:center;" th:text="${DuplicateDate}"></p>

@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import owlvernyte.springfood.entity.*;
+import owlvernyte.springfood.repository.CommentRepository;
 import owlvernyte.springfood.repository.ProductCategoryRepository;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.repository.RatingRepository;
@@ -54,6 +56,8 @@ public class HomeUserController {
 
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private CommentRepository commentRepository;
     @Autowired
     private RatingRepository ratingRepository;
 
@@ -207,17 +211,27 @@ public class HomeUserController {
             // Xử lý trường hợp sản phẩm không tồn tại
             return "error";
         }
+
+
+
         Long userId = (Long) session.getAttribute("userId");
         model.addAttribute("userId",userId);
         List<Rating> ratings = ratingRepository.findByProduct(product);
         double averageRating = calculateAverageRating(ratings);
         model.addAttribute("product", product);
+        model.addAttribute("productId",product.getId());
         model.addAttribute("averageRating", averageRating);
         String username = (String) session.getAttribute("username");
         String name = (String) session.getAttribute("name");
         model.addAttribute("username", username);
         model.addAttribute("name", name);
-
+        Comment comment= new Comment();
+        model.addAttribute("comment",comment);
+        int commentCount = commentRepository.countCommentsByProductId(id);
+        model.addAttribute("commentCount",commentCount);
+        Sort sort = Sort.by(Sort.Direction.DESC, "commentDate");
+        List<Comment> commentList = commentRepository.findByProduct(product, sort);
+        model.addAttribute("commentProduct", commentList);
 
         model.addAttribute("listCategory", categoryService.getAllCategory());
         boolean isAuthenticated = principal != null;

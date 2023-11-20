@@ -74,7 +74,7 @@ public class SecurityConfig {
                                 .requestMatchers("/user/**").permitAll()
 
                                 .requestMatchers("/admin/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
-
+                                .requestMatchers("/displayStaff/**").permitAll()
                                 .requestMatchers("/display").permitAll()
                                 .requestMatchers("/displayReservation").permitAll()
                                 .anyRequest()

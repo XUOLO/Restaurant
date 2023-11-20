@@ -55,6 +55,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Rating> ratings;
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
+
     public List<Booking> getBookings() {
         return bookings;
     }
