@@ -9,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import owlvernyte.springfood.entity.CsvReader;
-import owlvernyte.springfood.entity.Product;
-import owlvernyte.springfood.entity.Rating;
-import owlvernyte.springfood.entity.User;
+import owlvernyte.springfood.entity.*;
+import owlvernyte.springfood.repository.OrderDetailRepository;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.repository.RatingRepository;
 import owlvernyte.springfood.repository.UserRepository;
@@ -20,6 +18,7 @@ import owlvernyte.springfood.service.ProductService;
 import owlvernyte.springfood.service.UserService;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,6 +33,8 @@ public class FoodSuggestionController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
     @Autowired
     UserService userService;
 
@@ -122,7 +123,69 @@ public class FoodSuggestionController {
                 .headers(headers)
                 .body(csvBytes);
     }
+    @GetMapping("/user/order-details/csv")
+    public ResponseEntity<byte[]> exportOrderDetailsToCSV(HttpServletResponse response) throws IOException {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
 
+        // Tạo danh sách ID sản phẩm từ bảng Product
+        List<Long> productIds = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetails) {
+            Long productId = orderDetail.getProduct().getId();
+            if (!productIds.contains(productId)) {
+                productIds.add(productId);
+            }
+        }
+
+        StringBuilder csvContent = new StringBuilder();
+
+        // Thêm header vào file CSV
+        StringBuilder headerRow = new StringBuilder();
+        for (Long productId : productIds) {
+            headerRow.append(productId).append(",");
+        }
+        csvContent.append(headerRow.toString().trim()).append("\n");
+
+        // Xây dựng danh sách ID sản phẩm cho từng đơn hàng
+        Map<Long, List<Long>> orderProductMap = new HashMap<>();
+
+        for (OrderDetail orderDetail : orderDetails) {
+            Long orderId = orderDetail.getOrder().getId();
+            Long productId = orderDetail.getProduct().getId();
+
+            List<Long> products = orderProductMap.getOrDefault(orderId, new ArrayList<>());
+            products.add(productId);
+            orderProductMap.put(orderId, products);
+        }
+
+        // Xây dựng các hàng trong file CSV
+        for (Long orderId : orderProductMap.keySet()) {
+            List<Long> products = orderProductMap.get(orderId);
+            StringBuilder dataRow = new StringBuilder();
+
+            // Kiểm tra sự có mặt của sản phẩm trong OrderDetail
+            for (Long productId : productIds) {
+                if (products.contains(productId)) {
+                    dataRow.append("1,");
+                } else {
+                    dataRow.append("0,");
+                }
+            }
+            if (productIds.isEmpty()) {
+                dataRow.append("0");
+            }
+            csvContent.append(dataRow.toString().trim()).append("\n");
+        }
+
+        byte[] csvBytes = csvContent.toString().getBytes(StandardCharsets.UTF_8);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.set(HttpHeaders.CONTENT_ENCODING, StandardCharsets.UTF_8.name());
+        headers.setContentDispositionFormData("attachment", "order_details.csv");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csvBytes);
+    }
     @Autowired
     private ProductRepository productRepository;
 
