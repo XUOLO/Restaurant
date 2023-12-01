@@ -3,7 +3,7 @@
        layout:decorate="~{Admin/index}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Thêm danh mục món ăn</title>
 </head>
 <body>
 <main id="main" layout:fragment="main"class="main">
@@ -13,13 +13,13 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">General Form Elements</h5>
+                        <h5 class="card-title">Danh mục món ăn mới</h5>
 
                         <!-- General Form Elements -->
                         <form th:action="@{/admin/addProductCategory}" method="post" th:object="${productCategory}" enctype="multipart/form-data">
 
                             <div class="row mb-3">
-                                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                <label for="name" class="col-sm-2 col-form-label">Tên danh mục</label>
                                 <div class="col-sm-10">
                                     <input type="text"required id="name" name="name" th:field="*{name}" class="form-control">
                                 </div>
@@ -27,7 +27,7 @@
 
 
                             <div class="row mb-3">
-                                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                <label for="description" class="col-sm-2 col-form-label">Mô tả</label>
                                 <div class="col-sm-10">
                                     <input type="text" required id="description" name="description" th:field="*{description}"class="form-control">
                                 </div>
@@ -35,11 +35,10 @@
 
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Submit Button</label>
-                                <div class="col-sm-10">
-                                    <a class="btn btn-danger" href="/admin/list_productCategory">Back</a>
+                                 <div class="col-sm-10">
+                                    <a class="btn btn-danger" href="/admin/list_productCategory">Quay lại</a>
 
-                                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                 </div>
                             </div>
 

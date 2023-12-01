@@ -15,33 +15,33 @@
 
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">New product</h5>
+                <h5 class="card-title">Phòng mới</h5>
 
                 <!-- General Form Elements -->
                 <form th:action="@{/admin/addReservation}" method="post" th:object="${reservation}" enctype="multipart/form-data">
                     <div class="row mb-3">
-                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <label for="name" class="col-sm-2 col-form-label">Tên phòng</label>
                         <div class="col-sm-10">
                             <input type="text"  id="name" name="name" required th:field="*{name}" class="form-control">
                             <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="detail" class="col-sm-2 col-form-label">Detail</label>
+                        <label for="detail" class="col-sm-2 col-form-label">Chi tiết</label>
                         <div class="col-sm-10">
                             <input type="text"  id="detail" name="name" required th:field="*{detail}" class="form-control">
                             <span class="text-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></span>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="description" class="col-sm-2 col-form-label">Description</label>
+                        <label for="description" class="col-sm-2 col-form-label">Mô tả</label>
                         <div class="col-sm-10">
                             <input type="text"  id="description" required name="description" th:field="*{description}" class="form-control">
                             <span class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="numberOfPeople" class="col-sm-2 col-form-label">Number Of People: </label>
+                        <label for="numberOfPeople" class="col-sm-2 col-form-label">Số lượng người: </label>
                         <div class="col-sm-10">
                             <input type="number" id="numberOfPeople" name="numberOfPeople" th:field="*{numberOfPeople}"class="form-control" min="1">
                             <span class="text-danger" th:if="${#fields.hasErrors('numberOfPeople')}" th:errors="*{numberOfPeople}"></span>
@@ -50,18 +50,18 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="reservationCategory"class="col-sm-2 col-form-label">Select reservation  category</label>
+                        <label for="reservationCategory"class="col-sm-2 col-form-label">Danh mục phòng: </label>
                         <div class="col-sm-10">
 
                             <select id="reservationCategory" name="reservationCategory.id"aria-label="Default select example" th:field="*{reservationCategory.id}"  >
-                                <option value="">Select Category</option>
+                                <option value="">Chọn danh mục</option>
                                 <option th:each="category : ${listReservationCategory}" th:value="${category.id}" th:text="${category.name}"></option>
                             </select>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="image" class="col-sm-2 col-form-label">File Upload</label>
+                        <label for="image" class="col-sm-2 col-form-label">Ảnh</label>
                         <div class="col-sm-10">
 
                             <input class="form-control"  type="file"id="image" name="image" accept="image/*"  >
@@ -70,9 +70,9 @@
                     <div class="row mb-3">
 
                         <div class="col-sm-10">
-                            <a class="btn btn-danger" href="/admin/list_reservation">Back</a>
+                            <a class="btn btn-danger" href="/admin/list_reservation">Quay lại</a>
 
-                            <button type="submit" class="btn btn-primary">Submit </button>
+                            <button type="submit" class="btn btn-primary">Lưu </button>
                         </div>
                     </div>
 

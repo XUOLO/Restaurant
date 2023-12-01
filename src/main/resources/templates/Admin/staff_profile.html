@@ -3,21 +3,15 @@
        layout:decorate="~{Admin/index}">
 <head>
   <meta charset="UTF-8">
-  <title>New Product</title>
+  <title>Thông tin nhân viên</title>
 </head>
 <body>
 
 <main id="main" layout:fragment="main"class="main">
 
   <div class="pagetitle">
-    <h1>Profile</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Users</li>
-        <li class="breadcrumb-item active">Profile</li>
-      </ol>
-    </nav>
+    <h1>Thông tin cá nhân</h1>
+
   </div><!-- End Page Title -->
 
   <section class="section profile">
@@ -33,10 +27,7 @@
             <h3 th:if="${isAdmin}"> <p>ADMIN</p></h3>
             <h3 th:if="${isEmployee}"> <p>EMPLOYEE</p></h3>
             <div class="social-links mt-2">
-              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+
             </div>
           </div>
         </div>
@@ -51,7 +42,7 @@
             <ul class="nav nav-tabs nav-tabs-bordered">
 
               <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Tống quan</button>
               </li>
 
 <!--              <li class="nav-item">-->
@@ -61,7 +52,7 @@
 
 
               <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Đổi mật khẩu</button>
               </li>
 
             </ul>
@@ -69,10 +60,10 @@
 
               <div class="tab-pane fade show active profile-overview" id="profile-overview">
 
-                <h5 class="card-title">Profile Details</h5>
+                <h5 class="card-title">Chi tiết thông tin cá nhân</h5>
 
                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                  <div class="col-lg-3 col-md-4 label ">Họ tên</div>
                   <div class="col-lg-9 col-md-8" th:text=" ${user.name}">Kevin Anderson</div>
                 </div>
 
@@ -93,12 +84,12 @@
 
 
                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Address</div>
+                  <div class="col-lg-3 col-md-4 label">Địa chỉ</div>
                   <div class="col-lg-9 col-md-8" th:text=" ${user.address}">   </div>
                 </div>
 
                 <div class="row">
-                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-3 col-md-4 label">SDT</div>
                   <div class="col-lg-9 col-md-8"th:text=" ${user.phone}">phone</div>
                 </div>
 
@@ -201,28 +192,28 @@
                     <p th:text="${success}"></p>
                   </div>
                   <div class="row mb-3">
-                    <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                    <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu hiện tại</label>
                     <div class="col-md-8 col-lg-9">
                       <input name="password" type="password" class="form-control" id="currentPassword">
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                    <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu mới</label>
                     <div class="col-md-8 col-lg-9">
                       <input name="newPassword" type="password" class="form-control" id="newPassword">
                     </div>
                   </div>
 
                   <div class="row mb-3">
-                    <label for="confirmPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                    <label for="confirmPassword" class="col-md-4 col-lg-3 col-form-label">Nhập lại mật khẩu mới</label>
                     <div class="col-md-8 col-lg-9">
                       <input name="confirmPassword" type="password" class="form-control" id="confirmPassword">
                     </div>
                   </div>
 
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Change Password</button>
+                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
                   </div>
                 </form><!-- End Change Password Form -->
 

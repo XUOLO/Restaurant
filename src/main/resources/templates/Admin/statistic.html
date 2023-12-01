@@ -3,7 +3,7 @@
       layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>Statistic</title>
+  <title>Thống kê</title>
 </head>
 <body>
 <!--<div  layout:fragment="search-bar" class="search-bar">-->
@@ -19,7 +19,7 @@
     <div class="col-md-4 stretch-card grid-margin">
       <div class="card bg-gradient-danger card-img-holder text-white">
         <div class="card-body">
-          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-account-star mdi-24px  ">Total customers : [[${countCustomer}]]</i>
+          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-account-star mdi-24px  ">Tổng khách hàng : [[${countCustomer}]]</i>
           </h4>
           <hr>
         </div>
@@ -28,13 +28,13 @@
     <div class="col-md-4 stretch-card grid-margin">
       <div class="card bg-gradient-info card-img-holder text-white">
         <div class="card-body">
-          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-application mdi-24px  ">Total Orders : [[${countOrder}]]</i>
+          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-application mdi-24px  ">Tổng đơn : [[${countOrder}]]</i>
           </h4>
 
           <hr>
-          <h2 class="mb-5"  >Wait for Confirm : [[${countHandlingOrder}]]</h2>
-          <h2 class="mb-5"  >Confirm : [[${countConfirmOrder}]]</h2>
-          <h2 class="mb-5" > Cancel : [[${countCancelOrder}]]</h2>
+          <h2 class="mb-5"  >Chờ xác nhận : [[${countHandlingOrder}]]</h2>
+          <h2 class="mb-5"  >Đã xác nhận : [[${countConfirmOrder}]]</h2>
+          <h2 class="mb-5" > Đã hủy : [[${countCancelOrder}]]</h2>
 
         </div>
       </div>
@@ -42,25 +42,25 @@
     <div class="col-md-4 stretch-card grid-margin">
       <div class="card bg-gradient-success card-img-holder text-white">
         <div class="card-body">
-          <h4 class="font-weight-normal mb-3"><i class="menu-icon mdi mdi-account-circle-outline mdi-24px  ">Total employee : [[${countEmployeeAndAdmin}]]</i>
+          <h4 class="font-weight-normal mb-3"><i class="menu-icon mdi mdi-account-circle-outline mdi-24px  ">Tổng nhân viên : [[${countEmployeeAndAdmin}]]</i>
           </h4>
 
           <hr>
           <h2 class="mb-5"  >Admin : [[${countAdmin}]]</h2>
-          <h2 class="mb-5"  >Employee : [[${countEmployee}]]</h2>
+          <h2 class="mb-5"  >Nhân viên : [[${countEmployee}]]</h2>
         </div>
       </div>
     </div>
     <div class="col-md-4 stretch-card grid-margin">
       <div class="card bg-gradient-booking card-img-holder text-white">
         <div class="card-body">
-          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-application mdi-24px  ">Total reservation : [[${countBooking}]]</i>
+          <h4 class="font-weight-normal mb-3"><i class="mdi mdi-application mdi-24px  ">Số lượng đơn đặt bàn : [[${countBooking}]]</i>
           </h4>
 
           <hr>
-          <h2 class="mb-5"  >Wait for Confirm : [[${countHandlingBooking}]]</h2>
-          <h2 class="mb-5"  >Confirm : [[${countConfirmBooking}]]</h2>
-          <h2 class="mb-5" > Cancel : [[${countCancelBooking}]]</h2>
+          <h2 class="mb-5"  >Chờ xác nhân : [[${countHandlingBooking}]]</h2>
+          <h2 class="mb-5"  >Đã xác nhân : [[${countConfirmBooking}]]</h2>
+          <h2 class="mb-5" > Đã hủy : [[${countCancelBooking}]]</h2>
 
         </div>
       </div>

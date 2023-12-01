@@ -3,7 +3,7 @@
       layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách món ăn</title>
 </head>
 <body>
 
@@ -24,7 +24,7 @@
 
 
             <div class="card-body pb-0">
-                <h5 class="card-title">List product <a href="/admin/new_product"><button type="button" class="btn btn-primary">Add Product</button></a><a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportDishes-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportDishes-pdf">Xuất PDF</a>
+                <h5 class="card-title">Danh sách món ăn <a href="/admin/new_product"><button type="button" class="btn btn-primary">Thêm món</button></a><a class="btn btn-primary excel" style="margin-left: 60%;margin-right: 1%;background-color: green;" href="/admin/exportDishes-excel">Xuất Excel</a><a class="btn btn-primary pdf" style="background-color: red;" href="/admin/exportDishes-pdf">Xuất PDF</a>
                 </h5>
                 <div th:if="${errorMessage}" class="alert alert-danger">
                     <p th:text="${errorMessage}"></p>
