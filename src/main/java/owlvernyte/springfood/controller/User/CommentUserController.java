@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import owlvernyte.springfood.entity.Blog;
 import owlvernyte.springfood.entity.Comment;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.User;
@@ -38,6 +39,27 @@ public class CommentUserController {
         LocalDate date = LocalDate.now();
         comment.setUser(user);
         comment.setProduct(productId);
+        comment.setBlog(null);
+        comment.setCommentDate(date);
+        commentRepository.save(comment);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
+    @PostMapping("/user/submitBlogComment")
+    public String placeSubmitBlogComment(@Valid @ModelAttribute("comment") Comment comment, @RequestParam("blogId") Blog blogId, Model model, HttpSession session, Principal principal, HttpServletRequest request) {
+        String name = (String) session.getAttribute("name");
+
+        model.addAttribute("name", name);
+        boolean isAuthenticated = principal != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        Long userId = (Long) session.getAttribute("userId");
+        User user = userService.viewById(userId);
+        LocalDate date = LocalDate.now();
+        comment.setUser(user);
+        comment.setProduct(null);
+        comment.setBlog(blogId);
         comment.setCommentDate(date);
         commentRepository.save(comment);
 

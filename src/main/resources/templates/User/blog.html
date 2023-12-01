@@ -10,7 +10,7 @@
   <title>Lign</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-  <link href="/User/css/styleRecipe.css" rel="stylesheet" />
+
   <!-- Favicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="/User/img/favicon.png" rel="icon">
@@ -71,10 +71,10 @@
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
         <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
-        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/menu" >Thực đơn </a></li>
 
         <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
-<li   ><a class="nav-link scrollto  "      href="/user/blog" >Tin tức </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/blog" >Tin tức </a></li>
         <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
             <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
@@ -101,11 +101,82 @@
 </header><!-- End Header -->
 
 <main id="main">
-  <div style="text-align: center; padding: 20px; padding-top:160px; border-radius: 5px; margin: 0 auto; max-width: 500px;">
-    <h1 style="color: #37cc37; font-size:40px; margin-bottom: 10px;">Đặt bàn thành công!</h1>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Cảm ơn bạn đã đặt bàn tại nhà hàng của chúng tôi.</p>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Vui lòng kiểm tra <a href="/user/userBookingInfo" style="color:#37cc37; text-decoration: none; font-weight: bold;">thông tin đặt bàn</a> của bạn. Chúng tôi sẽ liên hệ để xác nhận trong thời gian sớm nhất.</p>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Nếu bạn có bất kỳ câu hỏi nào, xin vui lòng liên hệ với chúng tôi.</p>    </div>
+
+  <!-- ======= Contact Section ======= -->
+  <section id="blog" style="padding-top: 165px;" class="blog">
+    <div class="container"  th:each="list, index : ${listBlog}">
+      <div class="blog-post">
+         <img   th:if="${list.image != null}" th:src="@{'/displayBlog?id=' + ${list.id}}" alt="">
+        <img   th:unless="${list.image != null}" src="/Admin/img/foodDefault.png" alt="">
+        <div>
+          <h2 th:text="${list.title}">Recipe: Delicious Pasta</h2>
+          <p class="date"  th:text="'Đăng ngày '+${#temporals.format(list.createdDate, 'dd/MM/yyyy')}"> </p>
+          <p class="content" th:text="${list.description}">  </p>
+          <a th:href="@{'/user/blogDetail/' + ${list.id}}" >Đọc thêm</a>
+        </div>
+      </div>
+
+     </div>
+    <style>
+        body {
+             margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .blog-post {
+            margin-bottom: 20px;
+             padding: 20px;
+            border-radius: 5px;
+            display: flex;
+        }
+
+        .blog-post h2 {
+            margin-top: 0;
+        }
+
+        .blog-post .date {
+
+            margin-bottom: 10px;
+        }
+
+        .blog-post .content {
+            line-height: 1.5;
+        }
+
+        .blog-post a {
+             text-decoration: none;
+        }
+
+        .blog-post a:hover {
+            text-decoration: underline;
+        }
+
+        .blog-post img {
+            width: 150px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+    </style>
+  </section>
+
+
 </main>
 
 
@@ -185,7 +256,36 @@
 <script src="/User/js/main.js"></script>
 
 <!-- End Google Map -->
+<script>
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Số điện thoại phải bắt đầu bằng số 0 và có độ dài 10 chữ số');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
+</script>
 </body>
 
 </html>

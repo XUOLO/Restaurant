@@ -317,9 +317,11 @@ public class UserInfoController {
     }
 
     @PostMapping("/user/editProfile")
-    public String editProfile(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpSession session,
+    public String editProfile(@ModelAttribute("user") @Valid User user,
+                              BindingResult bindingResult, HttpSession session,
                               Model model,
-                              @RequestParam("image") MultipartFile file , RedirectAttributes redirectAttributes, HttpServletRequest request) throws IOException, SerialException, SQLException {
+                              @RequestParam("image") MultipartFile file ,
+                              RedirectAttributes redirectAttributes, HttpServletRequest request) throws IOException, SerialException, SQLException {
         User existingUser = userService.viewById(user.getId());
         if (file.isEmpty()) {
             user.setImage(existingUser.getImage());

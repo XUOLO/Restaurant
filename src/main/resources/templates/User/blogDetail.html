@@ -10,7 +10,7 @@
   <title>Lign</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-  <link href="/User/css/styleRecipe.css" rel="stylesheet" />
+
   <!-- Favicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="/User/img/favicon.png" rel="icon">
@@ -71,10 +71,10 @@
     <nav id="navbar" class="navbar order-last order-lg-0">
       <ul>
         <li   ><a class="nav-link scrollto "      href="/user/home" >Trang chủ </a></li>
-        <li   ><a class="nav-link scrollto "      href="/user/menu" >Thực đơn </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/menu" >Thực đơn </a></li>
 
         <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
-<li   ><a class="nav-link scrollto  "      href="/user/blog" >Tin tức </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/blog" >Tin tức </a></li>
         <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
           <ul>
             <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
@@ -101,11 +101,230 @@
 </header><!-- End Header -->
 
 <main id="main">
-  <div style="text-align: center; padding: 20px; padding-top:160px; border-radius: 5px; margin: 0 auto; max-width: 500px;">
-    <h1 style="color: #37cc37; font-size:40px; margin-bottom: 10px;">Đặt bàn thành công!</h1>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Cảm ơn bạn đã đặt bàn tại nhà hàng của chúng tôi.</p>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Vui lòng kiểm tra <a href="/user/userBookingInfo" style="color:#37cc37; text-decoration: none; font-weight: bold;">thông tin đặt bàn</a> của bạn. Chúng tôi sẽ liên hệ để xác nhận trong thời gian sớm nhất.</p>
-    <p style="color: white; font-size: 18px; line-height: 1.5; margin-bottom: 15px;">Nếu bạn có bất kỳ câu hỏi nào, xin vui lòng liên hệ với chúng tôi.</p>    </div>
+
+  <!-- ======= Contact Section ======= -->
+  <section id="blog" style="padding-top: 65px;" class="blog">
+
+
+    <div class="container">
+      <div class="blog-post-detail">
+        <img   th:if="${blog.image != null}" th:src="@{'/displayBlog?id=' + ${blog.id}}" alt="">
+        <img   th:unless="${blog.image != null}" src="/Admin/img/foodDefault.png" alt="">
+        <h1 th:text="${blog.title}"> </h1>
+        <p class="date" th:text="'Đăng ngày ' + ${#temporals.format(blog.createdDate, 'dd/MM/yyyy')}">Posted on January 1, 2023</p>
+        <p class="content"th:utext="${blog.detail}">     </p>
+        <a href="/user/blog">Quay lại trang tin tức</a>
+
+        <style>
+form.form-block {
+    margin-bottom: 20px;
+}
+div#loadMoreComments {
+    margin-left: 45%;
+}
+button.btn.btn-primary.pull-right {
+    background: #cda45e;
+    border: 0;
+    padding: 10px 35px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 50px;
+}
+.be-comment-block {
+margin-bottom: 50px !important;
+    padding: 15px
+}
+
+.comments-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 15px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+}
+
+.be-img-comment {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-bottom: 15px;
+}
+
+.be-ava-comment {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.be-comment-content {
+    margin-left: 80px;
+}
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-name {
+    font-size: 13px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+}
+
+.be-comment-content a {
+    color: white;
+}
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-time {
+    text-align: right;
+}
+
+.be-comment-time {
+    font-size: 11px;
+    color: #b4b7c1;
+}
+
+.be-comment-text {
+    font-size: 13px;
+    line-height: 18px;
+    color: black;
+    display: block;
+    background: #f6f6f7;
+    border: 1px solid #edeff2;
+    padding: 15px 20px 20px 20px;
+}
+
+
+.form-group .form-input {
+    font-size: 13px;
+    line-height: 50px;
+    font-weight: 400;
+    color: #b4b7c1;
+    width: 100%;
+    height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid #edeff2;
+    border-radius: 3px;
+}
+
+
+
+.form-group textarea.form-input {
+    height: 150px;
+        border-radius: 0;
+    box-shadow: none;
+    font-size: 14px;
+    background: #0c0b09;
+    border-color: #625b4b;
+    color: white;
+}
+a.btn.btn-primary.pull-right {
+    background: #cda45e;
+    border: 0;
+    padding: 10px 35px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 50px;
+}
+    </style>
+        <div class="container">
+          <div class="be-comment-block">
+            <h1 class="comments-title" th:text="'Bình luận ' +(${commentCount})">Comments (3)</h1>
+
+
+            <div class="be-comment" th:each="item : ${commentProduct}">
+              <div class="be-img-comment">
+                <a  >
+                  <img th:src="${item.user.image != null ? '/displayStaff?id=' + item.user.id : '/User/images/blank-profile-picture.png'}" alt="" class="be-ava-comment">
+                </a>
+              </div>
+              <div class="be-comment-content">
+
+				<span class="be-comment-name">
+					<a   th:text="${item.user.name}">Ravi Sah</a>
+					</span>
+                <span class="be-comment-time" th:text="${#temporals.format(item.commentDate, 'dd/MM/yyyy')}">
+					<i class="fa fa-clock-o"></i>
+
+				</span>
+
+                <p class="be-comment-text" th:text="${item.content}">
+
+                </p>
+              </div>
+            </div>
+            <div id="loadMoreComments" style="display: none;">
+              <a href="#" id="loadMoreBtn" >Xem thêm</a>
+            </div>
+            <form class="form-block" method="POST" th:object="${comment}" th:action="@{/user/submitBlogComment}">
+
+
+              <div class="col-xs-12">
+                <div class="form-group">
+                  <textarea class="form-input"maxlength="300" required=""th:field="*{content}" placeholder="Bình luận"></textarea>
+                </div>
+              </div>
+              <input type="hidden" th:value="${blogId}" name="blogId">
+              <button type="submit" class="btn btn-primary pull-right">Gửi</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+
+
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .blog-post-detail {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .blog-post-detail h2 {
+            margin-top: 0;
+        }
+
+        .blog-post-detail .date {
+
+            margin-bottom: 10px;
+        }
+
+        .blog-post-detail .content {
+            line-height: 1.5;
+        }
+
+        .blog-post-detail img {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+
+    </style>
+  </section>
+
+
 </main>
 
 
@@ -185,7 +404,36 @@
 <script src="/User/js/main.js"></script>
 
 <!-- End Google Map -->
+<script>
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Số điện thoại phải bắt đầu bằng số 0 và có độ dài 10 chữ số');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
+</script>
 </body>
 
 </html>

@@ -20,6 +20,9 @@ public class Comment {
     private Product product;
 
     @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @NotBlank(message = "Name not null ")
@@ -28,6 +31,14 @@ public class Comment {
 
     @Column(name = "comment_date")
     private LocalDate commentDate;
+
+    public Blog getBlog() {
+        return blog;
+    }
+
+    public void setBlog(Blog blog) {
+        this.blog = blog;
+    }
 
     public Long getId() {
         return id;

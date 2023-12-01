@@ -75,4 +75,37 @@ public class CsvReader {
         return false;
     }
 
+    public List<Integer> getMatchingOrdersFromCsv(String csvFilePath,CartItem cartItem) {
+        List<Integer> matchingProducts = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                String userIdStr = data[0].trim();
+                String recommendedProductIdsStr = data[1].trim();
+
+                try {
+                    long productId = Long.parseLong(userIdStr);
+                    long recommendedProductIds = Long.parseLong(recommendedProductIdsStr);
+
+                    if (productId == cartItem.getProductId()) {
+                        String sql = "SELECT id FROM product WHERE id = ?";
+                        List<Integer> result = jdbcTemplate.queryForList(sql, Integer.class, recommendedProductIds);
+                        if (!result.isEmpty()) {
+                            matchingProducts.add((int) recommendedProductIds);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    // Handle the case where userIdStr or recommendedProductIdsStr is not a valid integer
+                    System.err.println("Invalid integer value: " + userIdStr + " or " + recommendedProductIdsStr);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return matchingProducts;
+    }
+
 }
