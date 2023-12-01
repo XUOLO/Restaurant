@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  import org.springframework.ui.Model;
 
  import java.security.Principal;
+ import java.util.ArrayList;
  import java.util.List;
 
 @Controller
@@ -31,8 +32,16 @@ public class BlogUserController {
 
     @GetMapping("/user/blog")
     private String ShowBlog (Model model){
+        List<Blog> blogList = blogService.getAllBlog();
+        List<Blog> showBlogList = new ArrayList<>();
 
-        model.addAttribute("listBlog",blogRepository.findAll());
+        for (Blog blog : blogList) {
+            if ("2".equals(blog.getStatus())) {
+                showBlogList.add(blog);
+            }
+        }
+
+        model.addAttribute("listBlog",showBlogList);
 
         return "User/blog";
     }
