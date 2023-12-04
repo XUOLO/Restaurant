@@ -143,7 +143,6 @@ public class PayController {
             String phone = (String) session.getAttribute("phone");
             Blob userImage = (Blob) session.getAttribute("userImage");
 
-
             order.setName(name);
             order.setAddress(address);
             order.setPhone(phone);
@@ -231,7 +230,7 @@ public class PayController {
 
                 // Đặt nội dung email dưới dạng HTML
                 String tableContent = "<table style=\"border-collapse: collapse;\">";
-                tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
+                tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Tên món</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Số lượng</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Đơn giá</th></tr>";
 
                 for (CartItem cartItem : cartItems) {
                     if (cartItem.getProductId() != null) {

@@ -215,29 +215,7 @@ public class FoodSuggestionController {
                 .headers(headers)
                 .body(csvBytes);
     }
-//    @Autowired
-//    private CsvReader csvReader;
-//    @GetMapping("/user/matching-products")
-//    public String getMatchingProducts(Model model,HttpSession session) {
-//        // Đường dẫn đến tệp CSV chứa dữ liệu
-//        String csvFilePath = "C:\\Users\\admin\\Downloads\\recommendation.csv";
-//        Long userId = (Long) session.getAttribute("userId");
-//        // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
-//        List<Integer> matchingProductIds = csvReader.getMatchingProductsFromCsv(csvFilePath,userId);
-//
-//        List<Product> matchingProducts = new ArrayList<>();
-//
-//        for (Integer productId : matchingProductIds) {
-//            Product product = productService.getProductById(productId);
-//            if (product != null) {
-//                matchingProducts.add(product);
-//            }
-//        }
-//
-//        model.addAttribute("matchingProducts", matchingProducts);
-//
-//        return "User/user-products-view";
-//    }
+
 }
 
 

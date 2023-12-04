@@ -3,7 +3,7 @@ package owlvernyte.springfood.entity;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class BookingDTO {
+public class  BookingDTO {
     private Long id;
     private String title;
     private LocalDate start;

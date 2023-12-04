@@ -90,6 +90,9 @@ public class BookingDetailController {
     @Autowired
     private ReceiptRepository receiptRepository;
 
+    @Autowired
+    private CookingRepository cookingRepository;
+
     @PostMapping("/admin/{id}/updateBookingStatus")
     public String updateBookingStatus(@PathVariable("id") Long id, @RequestParam("status") String status, Model model, HttpSession session, HttpServletRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + id));
@@ -618,15 +621,17 @@ public class BookingDetailController {
                 if (product != null && reservationItem.getQuantity() > 0) {
 
                     BookingDetail existingBookingDetail = bookingDetailService.findBookingDetailByBookingAndProduct(bo, product);
-
+                    Cooking cooking = new Cooking();
+                    cooking.setOrderCode(bo.getCode());
+                    cooking.setProduct(product);
+                    cooking.setQuantity(reservationItem.getQuantity());
+                    cookingRepository.save(cooking);
                     if (existingBookingDetail != null) {
                         LocalDateTime dateTime = LocalDateTime.now();
-                        // Món đã được gọi trước đó, cập nhật thông tin
                         existingBookingDetail.setQuantity(existingBookingDetail.getQuantity() + reservationItem.getQuantity());
                         existingBookingDetail.setTotal(existingBookingDetail.getTotal() + product.getPrice() * reservationItem.getQuantity());
                         existingBookingDetail.setDateTime(dateTime);
-                        // Lưu cập nhật vào cơ sở dữ liệu
-                        bookingDetailRepository.save(existingBookingDetail);
+                         bookingDetailRepository.save(existingBookingDetail);
                     } else {
 
                         BookingDetail bookingDetail = new BookingDetail();
@@ -638,7 +643,8 @@ public class BookingDetailController {
                         bookingDetail.setTotal(product.getPrice() * reservationItem.getQuantity());
                         bookingDetailRepository.save(bookingDetail);
 
-                    }
+
+                     }
                 }
             }
         }

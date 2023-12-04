@@ -204,11 +204,11 @@ private OrderDetailRepository orderDetailRepository;
 
             // Đặt các thuộc tính của email
             helper.setTo(email);
-            helper.setSubject("Order info #" + order.getCode());
+            helper.setSubject("Đơn hàng #" + order.getCode());
 
             // Đặt nội dung email dưới dạng HTML
             String tableContent = "<table style=\"border-collapse: collapse;\">";
-            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
+            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Tên món</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Số lượng</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Đơn giá</th></tr>";
 
             for (CartItem cartItem : cartItems) {
                 if (cartItem.getProductId() != null) {
@@ -228,13 +228,13 @@ private OrderDetailRepository orderDetailRepository;
             tableContent += "</table>";
 
             String htmlContent = "<html><body>";
-            htmlContent += "<h2>Order info #" + order.getCode() + "</h2>";
-            htmlContent += "<p>Hello " + order.getName() + ",</p>";
-            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
-            htmlContent += "<p>Order code " + order.getCode() + "</p>";
-            htmlContent += "<p>Order date: " + order.getOrderDate() + "</p>";
-            htmlContent += "<p>Address: " + order.getAddress() + "</p>";
-            htmlContent += "<p>Total: " + formattedPriceTotal + "</p>";
+            htmlContent += "<h2>Thông tin đơn hàng #" + order.getCode() + "</h2>";
+            htmlContent += "<p>Xin chào " + order.getName() + ",</p>";
+            htmlContent += "<p>Cảm ơn bạn đã đặt hàng của bạn. Dưới đây là chi tiết về đơn đặt hàng của bạn:</p>";
+            htmlContent += "<p>Mã đơn " + order.getCode() + "</p>";
+            htmlContent += "<p>Ngày đặt: " + order.getOrderDate() + "</p>";
+            htmlContent += "<p>Địa chỉ nhận: " + order.getAddress() + "</p>";
+            htmlContent += "<p>Tổng tiền: " + formattedPriceTotal + "</p>";
             htmlContent += tableContent;
             htmlContent += "</body></html>";
 

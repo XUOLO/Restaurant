@@ -84,7 +84,7 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-        <li>    <a  sec:authorize="isAuthenticated()">Hello <span class="ml-1" sec:authentication="name"></span>
+          <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
