@@ -15,33 +15,34 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">New product</h5>
+                        <h5 class="card-title">Món mới</h5>
 
                         <!-- General Form Elements -->
                         <form th:action="@{/admin/addProduct}" method="post" th:object="${product}" enctype="multipart/form-data">
                             <div class="row mb-3">
-                                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                <label for="name" class="col-sm-2 col-form-label">Tên món</label>
                                 <div class="col-sm-10">
                                     <input type="text"  id="name" name="name" required th:field="*{name}" class="form-control">
                                     <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="detail" class="col-sm-2 col-form-label">Detail</label>
+                                <label for="detail" class="col-sm-2 col-form-label">Chi tiết</label>
                                 <div class="col-sm-10">
                                     <input type="text"  id="detail" name="name" required th:field="*{detail}" class="form-control">
                                     <span class="text-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></span>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                <label for="description" class="col-sm-2 col-form-label"> Mô tả</label>
                                 <div class="col-sm-10">
                                     <input type="text"  id="description" required name="description" th:field="*{description}" class="form-control">
                                     <span class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
-                                <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+                                <label for="quantity" class="col-sm-2 col-form-label">Số lượng</label>
                                 <div class="col-sm-10">
                                     <input type="number" id="quantity" name="quantity" th:field="*{quantity}"class="form-control" min="1">
                                     <span class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></span>
@@ -49,35 +50,42 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                                <label for="price" class="col-sm-2 col-form-label">Đơn giá</label>
                                 <div class="col-sm-10">
                                     <input type="number"min="1" id="price" name="price" th:field="*{price}"class="form-control">
                                     <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
 
                                 </div>
                             </div>
-
-<!--                            <div class="row mb-3">-->
-<!--                                <label for="inputDate" class="col-sm-2 col-form-label">Date</label>-->
-<!--                                <div class="col-sm-10">-->
-<!--                                    <input type="date" class="form-control">-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-
                             <div class="row mb-3">
-                                <label for="productCategory"class="col-sm-2 col-form-label">Select product category</label>
+                                <label for="recipe" class="col-sm-2 col-form-label">Công thức</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  id="recipe"   name="description" th:field="*{recipe}" class="form-control">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('recipe')}" th:errors="*{recipe}"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="videoRecipe" class="col-sm-2 col-form-label">Video hướng dẫn</label>
+                                <div class="col-sm-10">
+
+                                    <input type="text"  id="videoRecipe"   name="videoRecipe" th:field="*{videoRecipe}" class="form-control">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('videoRecipe')}" th:errors="*{videoRecipe}"></span>
+
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="productCategory"class="col-sm-2 col-form-label">Chọn danh mục món</label>
                                 <div class="col-sm-10">
 
                                     <select id="productCategory" name="productCategory.id"aria-label="Default select example" th:field="*{productCategory.id}"  >
-                                        <option value="">Select Category</option>
+                                        <option value="">Chọn danh mục</option>
                                         <option th:each="category : ${listProductCategory}" th:value="${category.id}" th:text="${category.name}"></option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label for="image" class="col-sm-2 col-form-label">File Upload</label>
+                                <label for="image" class="col-sm-2 col-form-label">Ảnh món</label>
                                 <div class="col-sm-10">
 
                                     <input class="form-control"  type="file"id="image" name="image" accept="image/*"  >
@@ -86,9 +94,9 @@
                             <div class="row mb-3">
 
                                 <div class="col-sm-10">
-                                    <a class="btn btn-danger" href="/admin/list_product">Back</a>
+                                    <a class="btn btn-danger" href="/admin/list_product">Quay lại</a>
 
-                                    <button type="submit" class="btn btn-primary">Submit </button>
+                                    <button type="submit" class="btn btn-primary">Lưu </button>
                                 </div>
                             </div>
 

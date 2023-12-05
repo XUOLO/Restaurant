@@ -61,7 +61,18 @@
           <input hidden type="number" id="status" name="status" th:field="*{status}"class="form-control">
           <input hidden type="text" id="createTime" name="createTime" th:field="*{createTime}"class="form-control">
 
-
+          <div class="row mb-3">
+            <label for="recipe" class="col-sm-2 col-form-label">Công thức</label>
+            <div class="col-sm-10">
+              <input type="text"  id="recipe"   name="recipe" th:field="*{recipe}" class="form-control">
+             </div>
+          </div>
+          <div class="row mb-3">
+            <label for="videoRecipe" class="col-sm-2 col-form-label">Video hướng dẫn</label>
+            <div class="col-sm-10">
+              <input type="text"  id="videoRecipe"   name="videoRecipe" th:field="*{videoRecipe}" class="form-control">
+            </div>
+          </div>
 
           <div class="row mb-3">
             <label for="productCategory"class="col-sm-2 col-form-label">Chọn danh mục món</label>

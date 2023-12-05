@@ -22,7 +22,13 @@ public class Product {
 	@NotBlank(message = "Name not null")
 	  @Column(name = "Name")
 	  private String name;
+	@NotBlank(message = "Recipe not null")
+	@Column(name = "Recipe", columnDefinition = "LONGTEXT")
+	private String recipe;
 
+	@NotBlank(message = "Video recipe not null")
+	@Column(name = "VideoRecipe")
+	private String videoRecipe;
 	@NotBlank(message = "Description not null ")
 	  @Column(name = "Description")
 	  private String description;
@@ -46,6 +52,46 @@ public class Product {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "productCategory_id")
 	private ProductCategory productCategory;
+
+	public String getVideoRecipe() {
+		return videoRecipe;
+	}
+
+	public void setVideoRecipe(String videoRecipe) {
+		this.videoRecipe = videoRecipe;
+	}
+
+	public String getRecipe() {
+		return recipe;
+	}
+
+	public void setRecipe(String recipe) {
+		this.recipe = recipe;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
 
 	public int getQuantity() {
 		return quantity;
