@@ -170,42 +170,44 @@ public class BookingDetailController {
     }
 
     @PostMapping("/admin/paymentBooking")
-    private String paymentBooking(Model model, @ModelAttribute("receipt") @Valid Receipt receiptt,@RequestParam("bookingId") long bookingId,Authentication authentication){
+    private String paymentBooking(Model model, @ModelAttribute("receipt") @Valid Receipt receiptt, @RequestParam("bookingId") long bookingId, Authentication authentication) {
         double total = calculateTotalForBooking(bookingId);
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user.getName());
         model.addAttribute("username", username);
 
-        Booking bo = bookingService.getBookingById(bookingId);
-        model.addAttribute("id", bo.getReservation().getId());
+        Booking booking = bookingService.getBookingById(bookingId);
+        model.addAttribute("id", booking.getReservation().getId());
+
         Receipt receipt = new Receipt();
-        receipt.setBooking(bo);
+        receipt.setBooking(booking);
         receipt.setName(user.getName());
         LocalDate localDate = LocalDate.now();
         receipt.setPaymentDate(localDate);
         receipt.setTotal(total);
         receiptRepository.save(receipt);
 
-        List<Product> listChosen = new ArrayList<>();
+        List<ChosenProduct> listChosen = new ArrayList<>();
         List<BookingDetail> bookingDetailList = bookingDetailRepository.findAll();
         for (BookingDetail bookingDetail : bookingDetailList) {
-            if (bookingDetail.getBooking().getId().equals(bo.getId())) {
+            if (bookingDetail.getBooking().getId().equals(booking.getId())) {
                 Product product = productRepository.findById(bookingDetail.getProduct().getId()).orElse(null);
                 if (product != null) {
-                    product.setQuantity((int) bookingDetail.getQuantity());
-                    listChosen.add(product);
+                    ChosenProduct chosenProduct = new ChosenProduct();
+                    chosenProduct.setProduct(product);
+                    chosenProduct.setQuantity((int) bookingDetail.getQuantity());
+                    listChosen.add(chosenProduct);
                 }
             }
         }
 
         model.addAttribute("listChosen", listChosen);
-        Booking booking = bookingService.getBookingById(bookingId);
         booking.setStatus("4");
         bookingRepository.save(booking);
         model.addAttribute("TableName", booking.getDesk());
 
-        Reservation reservation = reservationService.getReservationById(bo.getReservation().getId());
+        Reservation reservation = reservationService.getReservationById(booking.getReservation().getId());
         model.addAttribute("RoomName", reservation.getName());
 
         model.addAttribute("localDate", localDate);
@@ -213,7 +215,6 @@ public class BookingDetailController {
         model.addAttribute("totalBooking", total);
         return "Admin/page_receipt";
     }
-
     public double calculateTotalForBooking(Long bookingId) {
         String queryString = "SELECT SUM(bd.total) FROM BookingDetail bd WHERE bd.booking.id = :bookingId";
         TypedQuery<Double> query = entityManager.createQuery(queryString, Double.class);
@@ -625,6 +626,7 @@ public class BookingDetailController {
                     cooking.setOrderCode(bo.getCode());
                     cooking.setProduct(product);
                     cooking.setQuantity(reservationItem.getQuantity());
+                    cooking.setTime(LocalTime.now());
                     cookingRepository.save(cooking);
                     if (existingBookingDetail != null) {
                         LocalDateTime dateTime = LocalDateTime.now();

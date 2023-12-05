@@ -73,7 +73,7 @@
               <div th:each="role : ${listRole}">
                 <div class="form-check">
                   <input type="checkbox" id="role-[[${role.id}]]" name="roles" th:value="${role.id}" class="form-check-input">
-                  <label for="role-[[${role.id}]]" class="form-check-label" th:text="${role.name}"></label>
+                  <label for="role-[[${role.id}]]" class="form-check-label" th:text="${role.description }"></label>
                 </div>
               </div>
             </div>

@@ -2,6 +2,10 @@ package owlvernyte.springfood.service;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import owlvernyte.springfood.repository.RoleRepository;
 import owlvernyte.springfood.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -168,7 +173,7 @@ public class UserService {
 
         for (User user : users) {
             for (owlvernyte.springfood.entity.Role role : user.getRoles()) {
-                if (role.getName().equals("ADMIN")||role.getName().equals("EMPLOYEE")) {
+                if (role.getName().equals("ADMIN")||role.getName().equals("EMPLOYEE")||role.getName().equals("CHEF")) {
                     usersWithRoleUser.add(user);
                     break;
                 }
@@ -226,5 +231,24 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         user.setPassword(newPassword);
         userRepository.save(user);
+    }
+
+
+    public Page<User> findPaginatedStaff(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return this.userRepository.findPaginatedStaff(pageable);
+    }
+
+    public Page<User> findPaginatedCustomer(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        return userRepository.findPaginatedCustomer(pageable);
     }
 }

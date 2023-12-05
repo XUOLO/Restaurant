@@ -38,7 +38,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             String redirectUrl;
             if (role.equals("ADMIN")) {
                 redirectUrl = "/admin";
-            } else if (role.equals("EMPLOYEE")) {
+            } else if (role.equals("CHEF")) {
+                redirectUrl = "/admin/list_cooking";
+            }
+            else if (role.equals("EMPLOYEE")) {
                 redirectUrl = "/admin";
             } else {
                 redirectUrl = "/";

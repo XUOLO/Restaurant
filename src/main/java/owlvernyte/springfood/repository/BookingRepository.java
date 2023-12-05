@@ -31,10 +31,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Long countConfirmedBooking();
     @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '3'")
     Long countCancelBooking();
+    @Query("SELECT COUNT(t) FROM Booking t WHERE t.status = '4'")
+    Long countSuccessBooking();
     @Query("SELECT b FROM Booking b WHERE b.dateArrive = :date")
     List<Booking> findBookingsByDate(LocalDate date);
 
-
+    Booking findByCode(String code);
     List<Booking> findByBookingDateAndReservationId(LocalDate dateArrive, long reservationId);
     List<Booking> findByDateArrive(LocalDate dateArrive);
 

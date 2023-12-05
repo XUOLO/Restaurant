@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách món cần nấu</title>
+</head>
+<body>
+
+<div  layout:fragment="search-bar" class="search-bar">
+
+</div>
+<main id="main" layout:fragment="main"class="main">
+
+
+
+    <!-- Top Selling -->
+
+    <div class="card top-selling overflow-auto">
+
+
+
+        <div class="col-lg-6" style="    width: 100%;
+    padding: 15px;">
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Danh sách đơn món cần làm</h5>
+
+
+                        <div class="card" th:each="orderDTO : ${orderDTOList}">
+                             <div class="card-body"  >
+                                 <h5 class="card-title" th:text="'Đơn #' + ${orderDTO.orderCode}">Đơn #</h5>
+<!--                                 <p>Status: <span th:text="${orderDTO.status}"></span></p>-->
+
+                                 <a type="button" class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="'#' + ${orderDTO.orderCode}">
+                                     Xem
+                                 </a>
+                                 <div class="modal fade" th:id="${orderDTO.orderCode}" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" th:text="'Đơn #'+${orderDTO.orderCode}">Đơn #</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                         <th scope="col">Tên món</th>
+                                                        <th scope="col">Thời gian gọi món</th>
+
+                                                        <th scope="col">Số lượng</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr th:each="cooking : ${cookingList}" th:if="${cooking.orderCode} == ${orderDTO.orderCode}">
+                                                         <td th:text="${cooking.product.name}"></td>
+                                                        <td th:text="${#temporals.format(cooking.time, 'HH:mm')}"></td>
+                                                        <td th:text="${cooking.quantity}"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+    </div>
+
+    </div>
+
+
+
+
+    <style>
+
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  width: 150px;
+}
+
+.custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+}
+
+.custom-select option {
+  background-color: white;
+  color: #333;
+  font-weight: normal;
+}
+
+.custom-select option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+</style>
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.custom-select');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            if (selectedOption.value === '1') {
+                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
+            } else if (selectedOption.value === '2') {
+                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
+            }
+        });
+    });
+</script>
+    </div>
+</main>
+</body>
+</html>

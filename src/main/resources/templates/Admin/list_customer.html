@@ -22,24 +22,21 @@
     <div class="card top-selling overflow-auto">
 
 
-
         <div class="card-body pb-0">
             <h5 class="card-title">Danh sách khách hàng
-<!--                <a href="/admin/new_staff"><button type="button" class="btn btn-primary">Add staff</button></a>-->
-            </h5>
+             </h5>
 
             <table class="table table-borderless">
                 <thead>
                 <tr>
                     <th scope="col">Stt.</th>
 
-                    <th scope="col">Tên</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">SDT</th>
-                    <th scope="col">Địa chỉ</th>
-                    <!--                    <th scope="col">Username</th>-->
-                    <th scope="col"> Quyền</th>
-                    <th scope="col">Ngày tạo</th>
+                    <th scope="col"> <a th:href="@{'/admin/pageCustomer/' + ${currentPage} + '?sortField=name&sortDir=' +${reverseSortDir}}">Tên khách hàng</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageCustomer/' + ${currentPage} + '?sortField=email&sortDir=' +${reverseSortDir}}">Email</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageCustomer/' + ${currentPage} + '?sortField=phone&sortDir=' +${reverseSortDir}}">SDT</a> </th>
+                    <th scope="col"> <a th:href="@{'/admin/pageCustomer/' + ${currentPage} + '?sortField=address&sortDir=' +${reverseSortDir}}">Địa chỉ</a> </th>
+                     <th scope="col"> <a th:href="@{'/admin/pageCustomer/' + ${currentPage} + '?sortField=createTime&sortDir=' +${reverseSortDir}}">Ngày tạo</a> </th>
+
 
                     <th scope="col">Action</th>
                     <th scope="col"> </th>
@@ -54,34 +51,51 @@
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.phone}"></td>
                     <td th:text="${user.address}"></td>
-                    <!--                    <td th:text="${user.username}"></td>-->
-                    <!--                    <td>-->
-                    <!--                        <ul>-->
-                    <!--                            <li th:each="role : ${user.roles}" th:text="${role.name}"></li>-->
-                    <!--                        </ul>-->
-                    <!--                    </td>-->
-                    <td th:each="role : ${user.roles}" th:text="${role.name}">
 
-                    </td>
+
 
 
 
                     <td th:text="${#temporals.format(user.createTime, 'dd/MM/yyyy')}">Create date</td>
 
-                    <!--                    <td >-->
 
-                    <!--                        <a   th:href="@{/admin/showFormForUpdateProduct/{id}(id=${user.id})}" ><i  style="color:blue;" class="bx bxs-pencil"></i></a>-->
-
-                    <!--                        <a  th:if="${isAdmin}" th:href="@{/admin/deleteProduct/{id}(id=${user.id})}" ><i style="color:red;"  class="bx bxs-trash"></i></a>-->
-
-
-                    <!--                    </td>-->
 
 
                 </tr>
 
                 </tbody>
             </table>
+            <!-- Pagination Logic -->
+            <div  class="paginate" style="margin-top:45px;" th:if="${totalPages > 1}">
+                <div class="d-flex justify-content-between col-md-6">
+                    <div class="col-md-4 text-center">
+            <span th:if="${currentPage > 1}">
+                <a th:href="@{/admin/pageCustomer/} +'1' + '?sortField='+${sortField}+'&sortDir='+${sortDir}">Đầu</a>
+             </span>
+                        <span hidden th:unless="${currentPage > 1}">Trước</span>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <!-- Display Previous and Next Pages based on Current Page -->
+                        <span th:each="i: ${#numbers.sequence((currentPage > 2 ? currentPage - 2 : 1), (currentPage < totalPages - 1 ? currentPage + 2 : totalPages))}">
+                <a th:if="${currentPage != i}"
+                   th:href="@{/admin/pageCustomer/} + ${i} + '?sortField='+${sortField}+'&sortDir='+${sortDir}">[[${i}]]</a>
+                <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+            </span>
+                    </div>
+                    <div class="col-md-4 text-center">
+            <span th:if="${currentPage < totalPages}">
+                <div id="inputContainer" style="display: none;margin-left: -303px;margin-top: -35px;"  >
+  <input type="number" id="pageNumber" placeholder="Nhập số trang">
+  <button onclick="goToPage()">Xác nhận</button>
+</div>
+                <button onclick="showInput()" style="margin-left: -70px   ; margin-bottom: 20px;">Đến trang</button>
+<input type="hidden" th:value="${totalPages}" id="totalPages">
+                <a th:href="@{/admin/pageCustomer/} + ${currentPage + 1}+ '?sortField='+${sortField}+'&sortDir='+${sortDir} ">Sau</a>
+            </span>
+                        <span th:unless="${currentPage < totalPages}">Sau</span>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -124,17 +138,23 @@
 
 </style>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var selectElement = document.querySelector('.custom-select');
-        selectElement.addEventListener('change', function() {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            if (selectedOption.value === '1') {
-                selectedOption.style.color = 'blue'; // Màu chữ xanh cho giá trị 1
-            } else if (selectedOption.value === '2') {
-                selectedOption.style.color = 'red'; // Màu chữ đỏ cho giá trị 2
-            }
-        });
-    });
+   function showInput() {
+    document.getElementById("inputContainer").style.display = "block";
+  }
+
+  function goToPage() {
+  var pageNumber = parseInt(document.getElementById("pageNumber").value);
+  var totalPages = parseInt(document.getElementById("totalPages").value);
+
+  if (pageNumber < 1 || pageNumber > totalPages) {
+    alert('Số trang không hợp lệ');
+  } else {
+    window.location.href = "/admin/pageCustomer/" + pageNumber + "?sortField=name&sortDir=asc";
+  }
+}
+
+
+
 </script>
 </main>
 </body>

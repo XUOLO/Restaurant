@@ -30,7 +30,11 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
                 } else if (authority.getAuthority().equals("EMPLOYEE")) {
                     response.sendRedirect("/login?logout");
                     return;
-                } else if (authority.getAuthority().equals("USER")) {
+                }else if (authority.getAuthority().equals("CHEF")) {
+                    response.sendRedirect("/login?logout");
+                    return;
+                }
+                else if (authority.getAuthority().equals("USER")) {
 //                    shoppingCartService.clear();
                     response.sendRedirect("/");
                     return;

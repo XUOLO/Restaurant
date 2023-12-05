@@ -126,7 +126,7 @@
 <!-- ======= Sidebar ======= -->
 <aside  id="sidebar" class="sidebar">
 
-   <ul class="sidebar-nav" id="sidebar-nav" sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')" >
+   <ul class="sidebar-nav" id="sidebar-nav" sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE','CHEF')" >
 
     <li class="nav-item">
       <a class="nav-link " href="/admin">
@@ -149,7 +149,7 @@
       </a>
 
     </li>
-     <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">
+     <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE','CHEF')">
        <a class="nav-link collapsed"   href=/admin/list_room>
          <i class="bx bxs-calendar-edit"></i><span>Đặt bàn</span>
        </a>
@@ -162,7 +162,7 @@
 
     </li><!-- End Forms Nav -->
 
-     <li class="nav-item"sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">
+     <li class="nav-item"sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE','CHEF')">
        <a class="nav-link collapsed" href="/admin/list_order">
          <i class="ri-list-ordered"></i>
          <span>Danh sách đặt món</span>
@@ -180,9 +180,9 @@
          <span>Danh sách khách hàng </span>
        </a>
      </li>
-    <li class="nav-item"sec:authorize="hasAnyAuthority('ADMIN')">
-      <a class="nav-link collapsed"  href="#">
-        <i class="bi bi-journal-text"></i><span>Tuyển dụng</span>
+    <li class="nav-item"sec:authorize="hasAnyAuthority('ADMIN','CHEF')">
+      <a class="nav-link collapsed"  href="/admin/list_cooking">
+        <i class="bi bi-journal-text"></i><span>Danh sách món cần làm</span>
       </a>
 
     </li><!-- End Forms Nav -->

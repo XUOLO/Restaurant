@@ -42,6 +42,7 @@ public class StatisticController {
         Long countConfirmBooking = bookingService.countConfirmedBooking();
         Long countCancelBooking = bookingService.countCancelBooking();
         Long countHandlingBooking = bookingService.countHandlingBooking();
+        Long countSuccessBooking = bookingService.countSuccessBooking();
 
         model.addAttribute("countCustomer", userService.countCustomers());
         model.addAttribute("countAdmin", userService.countAdmin());
@@ -53,7 +54,7 @@ public class StatisticController {
         model.addAttribute("countConfirmOrder",countConfirmOrder);
         model.addAttribute("countCancelOrder",countCancelOrder);
         model.addAttribute("countHandlingOrder",countHandlingOrder);
-
+        model.addAttribute("countSuccessBooking", countSuccessBooking);
         model.addAttribute("countBooking",countBooking);
         model.addAttribute("countConfirmBooking",countConfirmBooking);
         model.addAttribute("countCancelBooking",countCancelBooking);

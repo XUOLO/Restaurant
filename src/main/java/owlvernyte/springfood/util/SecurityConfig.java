@@ -73,7 +73,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/deleteProduct/*").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").permitAll()
 
-                                .requestMatchers("/admin/**").hasAnyAuthority("EMPLOYEE", "ADMIN")
+                                .requestMatchers("/admin/**").hasAnyAuthority("EMPLOYEE", "ADMIN","CHEF")
                                 .requestMatchers("/displayStaff/**").permitAll()
                                 .requestMatchers("/display").permitAll()
                                 .requestMatchers("/displayBlog").permitAll()

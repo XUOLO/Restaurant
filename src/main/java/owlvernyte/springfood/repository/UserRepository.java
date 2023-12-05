@@ -2,6 +2,8 @@ package owlvernyte.springfood.repository;
 
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,5 +42,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     User findByEmail(@Param("email") String email);
 
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles r WHERE r.name IN ('ADMIN', 'EMPLOYEE', 'CHEF')")
+    Page<User> findPaginatedStaff(Pageable pageable);
 
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = 'USER'")
+    Page<User> findPaginatedCustomer(Pageable pageable);
 }

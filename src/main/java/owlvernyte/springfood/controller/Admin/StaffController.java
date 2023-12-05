@@ -1,20 +1,23 @@
 package owlvernyte.springfood.controller.Admin;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.Product;
 import owlvernyte.springfood.entity.Role;
 import owlvernyte.springfood.entity.User;
@@ -61,8 +64,33 @@ public class StaffController {
         model.addAttribute("user", user);
         model.addAttribute("username", username);
 
-        return "Admin/list_staff";
+        return findPaginatedStaff(authentication,1,model,"name","asc");
     }
+
+    @GetMapping("/admin/pageStaff/{pageNo}")
+    public String findPaginatedStaff(Authentication authentication,@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
+        int pageSize=10;
+        Page<User> page= userService.findPaginatedStaff(pageNo,pageSize,sortField,sortDir);
+        List<User> listStaff = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
+        String username = authentication.getName();
+//        model.addAttribute("listStaff", userService.getEmployeesByRole());
+        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+        model.addAttribute("listStaff",listStaff);
+        return "Admin/list_staff";
+
+    }
+
     @GetMapping("/admin/list_customer")
     public String listCustomer(Model model ,Authentication authentication){
         String username = authentication.getName();
@@ -72,8 +100,35 @@ public class StaffController {
         model.addAttribute("user", user);
         model.addAttribute("username", username);
 
-        return "Admin/list_customer";
+        return findPaginatedCustomer(authentication,1,model,"name","asc");
     }
+
+
+    @GetMapping("/admin/pageCustomer/{pageNo}")
+    public String findPaginatedCustomer(Authentication authentication,@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
+        int pageSize=10;
+        Page<User> page= userService.findPaginatedCustomer(pageNo,pageSize,sortField,sortDir);
+        List<User> listStaff = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+        model.addAttribute("pageSize", pageSize);
+        String username = authentication.getName();
+//        model.addAttribute("listStaff", userService.getCustomerByRoleUser());
+//        model.addAttribute("listRole", roleService.getAllRole());
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+
+        model.addAttribute("listStaff",listStaff);
+        return "Admin/list_customer";
+
+    }
+
+
 
     @PostMapping("/admin/addStaff")
     public String newStaff(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("image") MultipartFile file, @RequestParam(value = "roles", required = false) List<Long> roleIds, Model model) throws IOException, SerialException, SQLException {
@@ -84,11 +139,11 @@ public class StaffController {
         }
 
         if (file.isEmpty()) {
-            user.setImage(null); // Gán giá trị null cho trường 'image' nếu không có tệp tin tải lên
+            user.setImage(null);
         } else {
             byte[] bytes = file.getBytes();
             Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-            user.setImage(blob); // Gán giá trị 'blob' cho trường 'image' nếu có tệp tin tải lên
+            user.setImage(blob);
         }
         user.setCreateTime(LocalDateTime.now());
         user.setIsOtpVerified(true);
@@ -151,17 +206,46 @@ public class StaffController {
 
 
 
-    @PostMapping("/admin/changePasswordStaff")
-    public String changePasswordStaff(@ModelAttribute("user") @Valid  User user, BindingResult bindingResult,
-                                      @RequestParam("currentPassword") String currentPassword,
-                                      @RequestParam("newPassword") String newPassword,
-                                      @RequestParam("confirmPassword") String confirmPassword,Authentication authentication, Model model
-                                 ) throws IOException, SerialException, SQLException {
+    @PostMapping("/admin/changePassword")
+    public String changePassword(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, HttpSession session,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes, HttpServletRequest request,
+                                 @RequestParam("currentPassword") String currentPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword
+    ) throws IOException, SerialException, SQLException {
+        User existingUser = userService.viewById(user.getId());
+        user.setOtp(existingUser.getOtp());
+        user.setEmail(existingUser.getEmail());
+        user.setAddress(existingUser.getAddress());
+        user.setPhone(existingUser.getPhone());
+        user.setName(existingUser.getName());
+        user.setImage(existingUser.getImage());
+        user.setUsername(existingUser.getUsername());
+        user.setIsOtpVerified(existingUser.getIsOtpVerified());
+        user.setProvider(existingUser.getProvider());
+        user.setCreateTime(existingUser.getCreateTime());
+        user.setRoles(existingUser.getRoles());
+        session.setAttribute("user",user);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-         userService.saveUser(user);
-        return "redirect:/admin/staff_profile";
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String savePassword =existingUser.getPassword();
+        if(!passwordEncoder.matches(currentPassword,savePassword)){
+            redirectAttributes.addFlashAttribute("errorPassword", "Mật khẩu hiện tại không khớp");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("NewAndConfirmError", "Mật khẩu mới và xác nhận mật khẩu mới không khớp");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userService.editUser(user);
+        redirectAttributes.addFlashAttribute("changePasswordSuccess", "Thay đổi mật khẩu thành công");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
 
     }
 

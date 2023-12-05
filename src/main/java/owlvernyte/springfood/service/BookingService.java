@@ -120,6 +120,9 @@ public class BookingService {
     public Long countHandlingBooking() {
         return bookingRepository.countHandlingBooking();
     }
+    public Long countSuccessBooking() {
+        return bookingRepository.countSuccessBooking();
+    }
 
     public Long countConfirmedBooking() {
         return bookingRepository.countConfirmedBooking();

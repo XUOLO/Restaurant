@@ -3,6 +3,8 @@ package owlvernyte.springfood.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "Cooking")
 public class Cooking {
@@ -13,21 +15,26 @@ public class Cooking {
     private Long id;
 
 
-//    @NotBlank(message = "Message not null")
-//    @Column(name = "Message")
-//    private String message;
-//
 
 
     @Column(name = "order_code")
     private String orderCode;
-
+    @Column(name = "time")
+    private LocalTime time;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "quantity")
     private long quantity;
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
 
     public Long getId() {
         return id;

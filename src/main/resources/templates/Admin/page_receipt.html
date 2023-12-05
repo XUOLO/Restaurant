@@ -55,11 +55,11 @@
     </thead>
     <tbody>
     <tr th:each="item : ${listChosen}">
-      <td th:text="${item.name}">Product 1</td>
+      <td th:text="${item.product.name}">Product 1</td>
       <td th:text="${item.quantity}">2</td>
-      <td th:text="${#numbers.formatInteger(item.price, 3, 'POINT') + ' VND'}">$10</td>
+      <td th:text="${#numbers.formatInteger(item.product.price, 3, 'POINT') + ' VND'}">$10</td>
 
-      <td  th:text="${#numbers.formatInteger(item.quantity * item.price, 3, 'POINT') + ' VND'}">$20</td>
+      <td  th:text="${#numbers.formatInteger(item.quantity * item.product.price, 3, 'POINT') + ' VND'}">$20</td>
     </tr>
 
     </tbody>

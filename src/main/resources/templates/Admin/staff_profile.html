@@ -39,26 +39,10 @@
         <div class="card">
           <div class="card-body pt-3">
             <!-- Bordered Tabs -->
-            <ul class="nav nav-tabs nav-tabs-bordered">
 
-              <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Tống quan</button>
-              </li>
-
-<!--              <li class="nav-item">-->
-<!--                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>-->
-<!--              </li>-->
-
-
-
-              <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Đổi mật khẩu</button>
-              </li>
-
-            </ul>
             <div class="tab-content pt-2">
 
-              <div class="tab-pane fade show active profile-overview" id="profile-overview">
+              <div  class="info" >
 
                 <h5 class="card-title">Chi tiết thông tin cá nhân</h5>
 
@@ -71,11 +55,9 @@
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Role</div>
-                  <div class="col-lg-9 col-md-8" >
+                  <div class="col-lg-9 col-md-8"th:text="${role.description}" >
 
-                      <ul>
-                        <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
-                      </ul>
+
 
 
                   </div>
@@ -100,88 +82,23 @@
 
               </div>
 
-<!--              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">-->
-
-<!--                &lt;!&ndash; Profile Edit Form &ndash;&gt;-->
-<!--&lt;!&ndash;                <form th:action="@{/admin/updateProfile}" method="post" th:object="${user}" enctype="multipart/form-data">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                  <input type="hidden" th:field="${user.id}" />&ndash;&gt;-->
-<!--&lt;!&ndash;                  <input type="hidden" name="originalImage" th:value="${user.image != null ? 'true' : 'false'}">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="image" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <img th:src="${user.image != null ? '/displayStaff?id=' + user.id : '/Admin/img/nullProfile.png'}" class="rounded-circle" alt="Profile">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                      <div class="pt-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <input class="form-control"  type="file"id="image" name="image" accept="image/*"  >&ndash;&gt;-->
-<!--&lt;!&ndash;                       </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="name" class="col-md-4 col-lg-3 col-form-label">Full Name</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <input name="name" type="text" class="form-control" th:value=" ${user.name}" id="name"  >&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <input hidden type="text" id="username" name="username" th:field="*{username}"class="form-control">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <input hidden type="text" id="createTime" name="createTime" th:field="*{createTime}"class="form-control">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <input hidden type="text" id="password" name="password" th:field="*{password}"class="form-control">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                  <div hidden class="col-lg-9 col-md-8" >&ndash;&gt;-->
-
-<!--&lt;!&ndash;                    <ul>&ndash;&gt;-->
-<!--&lt;!&ndash;                      <li th:each="role : ${user.roles}" th:text="${role.name}"></li>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </ul>&ndash;&gt;-->
 
 
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+              <div  class="changePass" style="padding-top:10px;">
+                <h5 class="card-title">Đổi mật khẩu</h5>
 
 
-
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <input name="job" type="text" class="form-control" id="Job" value="Web Designer">&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-
-
-
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <input name="address" type="text" class="form-control" id="address" th:value=" ${user.address}">&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <input name="phone" type="text" class="form-control" id="phone" th:value=" ${user.phone}">&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                  <div class="row mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="col-md-8 col-lg-9">&ndash;&gt;-->
-<!--&lt;!&ndash;                      <input name="email" type="email" class="form-control" id="email" th:value=" ${user.email}">&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-
-
-
-<!--&lt;!&ndash;                  <div class="text-center">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <button type="submit" class="btn btn-primary">Save Changes</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                </form>&lt;!&ndash; End Profile Edit Form &ndash;&gt;&ndash;&gt;-->
-
-<!--              </div>-->
-
-
-              <div class="tab-pane fade pt-3" id="profile-change-password">
+                <div th:if="${errorPassword}" class="alert alert-danger">
+                  <p style="text-align:center;" th:text="${errorPassword}"></p>
+                </div>
+                <div th:if="${NewAndConfirmError}" class="alert alert-danger">
+                  <p style="text-align:center;" th:text="${NewAndConfirmError}"></p>
+                </div>
+                <div th:if="${changePasswordSuccess}" class="alert alert-success">
+                  <p style="text-align:center;" th:text="${changePasswordSuccess}"></p>
+                </div>
                 <!-- Change Password Form -->
-                <form>
+                <form th:action="@{/admin/changePassword}" method="post" th:object="${user}">
                   <!-- Hiển thị thông báo lỗi -->
                   <div th:if="${error}" class="alert alert-danger">
                     <p th:text="${error}"></p>
@@ -194,7 +111,7 @@
                   <div class="row mb-3">
                     <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu hiện tại</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="password" type="password" class="form-control" id="currentPassword">
+                      <input name="currentPassword" type="password" class="form-control" id="currentPassword">
                     </div>
                   </div>
 
@@ -216,6 +133,20 @@
                     <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
                   </div>
                 </form><!-- End Change Password Form -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
               </div>
 
