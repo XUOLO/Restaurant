@@ -52,10 +52,7 @@
     </div>
 
     <div class="languages d-none d-md-flex align-items-center">
-      <ul>
-        <li>En</li>
-        <li><a href="#">De</a></li>
-      </ul>
+
     </div>
   </div>
 </div>
@@ -177,7 +174,10 @@
           </div>
           <div class="form-group">
             <label for="phone">SDT:</label>
-            <input type="text" id="phone"th:value="${phone}" name="phone" required>
+            <input type="text" id="phone"th:value="${phone}" name="phone" required
+                   pattern="(03|05|07|08|09)[0-9]{8}"
+                   oninvalid="this.setCustomValidity('Số điện thoại phải bắt đầu với  03, 05, 07, 08 or 09 và có 10 số')"
+                   onchange="this.setCustomValidity('')" onkeypress="return validPhoneNumber(event)">
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
@@ -185,6 +185,7 @@
           </div>
           <button type="submit" class="btn btn-primary" name="paymentMethod" value="cash">Tiền mặt</button>
           <a href="/user/pay" class="btn btn-success"   >VNPay</a>
+
         </form>
 
       </div>
@@ -240,25 +241,11 @@
         </div>
 
         <div class="col-lg-2 col-md-6 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-          </ul>
+
         </div>
 
         <div class="col-lg-3 col-md-6 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-          </ul>
+
         </div>
 
 
@@ -273,7 +260,50 @@
 
 <div id="preloader"></div>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script>
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+function validatePhone() {
+    var phoneNumberInputs = document.getElementsByName('phone');
+    for (var i = 0; i < phoneNumberInputs.length; i++) {
+        var phoneNumber = phoneNumberInputs[i].value;
+        // Kiểm tra điều kiện hợp lệ của số điện thoại
+        var phonePattern = /^(03|05|07|08|09)[0-9]{8}$/;
+        if (!phonePattern.test(phoneNumber)) {
+            // Thiết lập thông báo lỗi cho trường số điện thoại
+            phoneNumberInputs[i].setCustomValidity('Số điện thoại không hợp lệ! Vui lòng kiểm tra lại.');
+            return false; // Ngăn chặn liên kết VNPay chuyển hướng
+        }
+    }
+    return true; // Cho phép liên kết VNPay chuyển hướng
+}
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Phone numbers must start with 0 and be 10 digits long');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
 
+</script>
 <!-- Vendor JS Files -->
 <script src="/User/vendor/aos/aos.js"></script>
 <script src="/User/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
