@@ -72,19 +72,22 @@
                                 <div th:if="${successMessage}" class="alert alert-success">
                                     <p style="text-align:center;" th:text="${successMessage}"></p>
                                 </div>
-                                <form class="row g-3" method="post" role="form" th:action="@{/user/register}" th:object="${user}" novalidate>
+                                <form class="row g-3" method="post" role="form"onsubmit="return validateForm()" th:action="@{/user/register}" th:object="${user}" >
 
                                     <div class="col-12">
                                         <label for="name" class="form-label">Họ tên</label>
-                                        <input th:type="text" th:field="*{name}" id="name" class="form-control" placeholder="Nhập họ tên" required>
-                                        <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                        <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="Nhập họ tên" required>
+                                        <span id="nameError" class="text-danger"></span>
                                     </div>
 
                                     <div class="col-12">
                                         <label for="address" class="form-label">Địa chỉ</label>
-                                        <input th:type="text" th:field="*{address}" id="address" name="address" class="form-control" placeholder="Nhập địa chỉ" required>
-                                        <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
-                                    </div>
+                                        <input th:type="text" th:field="*{address}" id="address"
+                                               oninvalid="this.setCustomValidity('Nhập địa chỉ')"
+                                               minlength="1" maxlength="200"
+                                               onchange="this.setCustomValidity('')"
+                                               name="address" class="form-control" placeholder="Nhập địa chỉ" required>
+                                     </div>
 
                                     <div class="col-12">
                                         <label for="phone" class="form-label">SDT</label>
@@ -92,27 +95,36 @@
                                                pattern="(03|05|07|08|09)[0-9]{8}"
                                                oninvalid="this.setCustomValidity('Số điện thoại phải bắt đầu với  03, 05, 07, 08 or 09 và có 10 số')"
                                                onchange="this.setCustomValidity('')" onkeypress="return valideNumber()">
-                                        <span class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
-                                    </div>
+                                     </div>
 
                                     <div class="col-12">
                                         <label for="email" class="form-label">Email</label>
                                         <div class="input-group has-validation">
                                             <input th:type="email" id="email" th:field="*{email}" name="email" class="form-control" placeholder="Nhập địa chỉ email" required>
-                                            <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-                                        </div>
+                                            <div th:if="${emailExists}"  >
+                                                <span class="text-danger" th:text="${emailExists}"></span>
+                                            </div>
+                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="username" class="form-label">Tài khoản</label>
-                                        <input th:type="text" th:field="*{username}" id="username" name="address" class="form-control" placeholder="Nhập tài khoản " required>
-                                        <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-                                    </div>
+                                        <input th:type="text"
+                                               oninvalid="this.setCustomValidity('Tài khoản phải có ít nhất 8 đến 16 kí tự')"
+                                               minlength="8" maxlength="16"
+                                               onchange="this.setCustomValidity('')"
+                                               th:field="*{username}" id="username" name="address" class="form-control" placeholder="Nhập tài khoản " required>
+                                        <div th:if="${usernameExists}"  >
+                                            <span class="text-danger" th:text="${usernameExists}"></span>
+                                        </div>
+
+                                     </div>
                                     <div class="col-12">
                                         <label for="password" class="form-label">Mật khẩu</label>
-                                        <input th:type="password" id="password"th:field="*{password}" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                                        <input th:type="password"
+                                               maxlength="50"
+                                               id="password"th:field="*{password}" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
                                         <div class="invalid-feedback">Vui lòng nhập mật khẩu!</div>
-                                        <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-                                    </div>
+                                     </div>
 
 
 
@@ -163,6 +175,49 @@
         </section>
 
     </div>
+    <script>
+
+    function validateForm() {
+    var nameInput = document.getElementById("name");
+    var nameError = document.getElementById("nameError");
+
+    if (nameInput.value.length < 8) {
+        nameError.textContent = "Nhập tên";
+        return false; // Prevent form submission
+    } else {
+        nameError.textContent = ""; // Clear error message
+        return true; // Allow form submission
+    }
+}
+    function valideNumber() {
+        var charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+        function validPhoneNumber(event) {
+  // Chỉ nhận các giá trị số và phím xoá
+  if(event.charCode >= 48 && event.charCode <= 57 || event.keyCode === 8) {
+    var phoneNumberInputs = document.getElementsByName('Phone');
+        for(var i = 0; i < phoneNumberInputs.length; i++) {
+      var phoneNumber = phoneNumberInputs[i].value;
+        // Số điện thoại của Việt Nam có độ dài là 10 và bắt đầu từ số 0
+        if(phoneNumber.length < 10 || phoneNumber.charAt(0) !== '0') {
+            phoneNumberInputs[i].setCustomValidity('Số điện thoại phải bắt đầu bằng số 0 và có độ dài 10 chữ số');
+        } else {
+            phoneNumberInputs[i].setCustomValidity('');
+      }
+    }
+        return true;
+  } else {
+            event.preventDefault();
+        return false;
+  }
+}
+</script>
 </main><!-- End #main -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

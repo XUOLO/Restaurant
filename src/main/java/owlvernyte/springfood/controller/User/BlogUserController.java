@@ -2,14 +2,14 @@ package owlvernyte.springfood.controller.User;
 
  import jakarta.servlet.http.HttpSession;
  import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.data.domain.Page;
  import org.springframework.data.domain.Sort;
+ import org.springframework.security.core.Authentication;
  import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
  import org.springframework.web.bind.annotation.PathVariable;
- import owlvernyte.springfood.entity.Blog;
- import owlvernyte.springfood.entity.Comment;
- import owlvernyte.springfood.entity.Product;
- import owlvernyte.springfood.entity.Rating;
+ import org.springframework.web.bind.annotation.RequestParam;
+ import owlvernyte.springfood.entity.*;
  import owlvernyte.springfood.repository.BlogRepository;
  import owlvernyte.springfood.repository.CommentRepository;
  import owlvernyte.springfood.service.BlogService;
@@ -41,10 +41,34 @@ public class BlogUserController {
             }
         }
 
-        model.addAttribute("listBlog",showBlogList);
+         model.addAttribute("listBlog",showBlogList);
+
+        return findPaginatedBlogRequest(1,model,"title","asc");
+    }
+
+
+    @GetMapping("/user/pageBlog/{pageNo}")
+    public String findPaginatedBlogRequest(@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
+        int pageSize=1;
+        Page<Blog> page= blogService.findPaginatedProduct(pageNo,pageSize,sortField,sortDir);
+        List<Blog> blogList = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",page.getTotalPages());
+        model.addAttribute("totalItems",page.getTotalElements());
+
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("sortField",sortField);
+        model.addAttribute("sortDir",sortDir);
+        model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
+        model.addAttribute("listBlog",blogList);
 
         return "User/blog";
+
     }
+
+
+
 
     @GetMapping("/user/blogDetail/{id}")
     private String ShowBlogDetail (@PathVariable Long id, Model model, HttpSession session, Principal principal){

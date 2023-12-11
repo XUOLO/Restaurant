@@ -71,7 +71,7 @@
                                       role="form"
                                       th:action="@{/login}"
 
-                                      novalidate>
+                                      >
 
                                     <div class="col-12">
                                         <label for="username" class="form-label">Tài khoản</label>
@@ -84,7 +84,12 @@
                                                     name="username"
                                                     class="form-control"
                                                     placeholder="Tài khoản"
-                                                    required>
+                                                    required
+                                                    minlength="8"
+                                                    maxlength="16"
+                                                    oninvalid="this.setCustomValidity('Tài khoản không hợp lệ')"
+                                                     onchange="this.setCustomValidity('')"
+                                            >
                                             <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
                                         </div>
                                     </div>

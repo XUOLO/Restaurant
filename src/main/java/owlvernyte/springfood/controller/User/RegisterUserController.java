@@ -2,6 +2,7 @@ package owlvernyte.springfood.controller.User;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,21 +97,24 @@ public class RegisterUserController {
         return "User/otpVerifiedAgain";
     }
     @PostMapping("/user/register")
-    public String registerUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String registerUser(HttpServletRequest request, @ModelAttribute("user") @Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "User/register";
         }
 
         // Kiểm tra xem username đã tồn tại trong CSDL hay chưa
         if (userService.isUsernameExists(user.getUsername())) {
-            result.rejectValue("username", "error.user", "Tài khoản đã tồn tại.");
-            return "User/register";
+             redirectAttributes.addFlashAttribute("usernameExists", "Username đã tồn tại.");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
         }
 
         // Kiểm tra xem email đã tồn tại trong CSDL hay chưa
         if (userService.isEmailExists(user.getEmail())) {
-            result.rejectValue("email", "error.user", "Email đã tồn tại.");
-            return "User/register";
+             redirectAttributes.addFlashAttribute("emailExists", "Email đã tồn tại.");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+
         }
         redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công. Hãy kiểm tra mail của bạn để lấy mã OTP");
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -144,8 +148,7 @@ public class RegisterUserController {
         }
 
         userService.saveRegisterCustomer(user);
-        model.addAttribute("listCategory", categoryService.getAllCategory());
-        redirectAttributes.addFlashAttribute("username", user.getUsername());
+         redirectAttributes.addFlashAttribute("username", user.getUsername());
         return "redirect:/user/otpVerified";
     }
     @Autowired
