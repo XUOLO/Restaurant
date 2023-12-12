@@ -51,9 +51,19 @@ public class Booking {
 
     @Column(name = "email")
     private String email;
+    @Column(name = "confirmCode")
+    private String confirmCode;
 
     @Column(name = "NumberOfPeople")
     private int numberOfPeople;
+
+    public String getConfirmCode() {
+        return confirmCode;
+    }
+
+    public void setConfirmCode(String confirmCode) {
+        this.confirmCode = confirmCode;
+    }
 
     private String status;
     private String code;

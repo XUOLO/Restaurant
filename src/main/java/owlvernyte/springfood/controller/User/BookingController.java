@@ -25,7 +25,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import java.util.Timer;
+import java.util.TimerTask;
 @Controller
 public class BookingController {
 
@@ -214,7 +215,9 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         int randomNumber = random.nextInt(900000) + 100000;
         String code = "TB" + String.valueOf(randomNumber);
         booking.setCode(code);
-
+        int randomNumberCode = random.nextInt(90000) + 10000;
+        String confirmCode = String.valueOf(randomNumberCode);
+        booking.setConfirmCode(confirmCode);
         if (bindingResult.hasErrors()) {
 
             redirectAttributes.addFlashAttribute("failMessage", "Ngày không hợp lệ");
@@ -228,84 +231,91 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             return "redirect:" + referer;
         }
 
-//        LocalDate date = booking.getDateArrive();
-//        if (bookingRepository.existsByDateArriveAndDesk(date, selectedDesk, reservationId)) {
-//            redirectAttributes.addFlashAttribute("DuplicateDate", "Rất tiếc nhà hàng không phục vụ khung giờ đã chọn. Chọn 1 khung giờ khác.");
-//            String referer = request.getHeader("Referer");
-//            return "redirect:" + referer;
-//        }
-        else
-        bookingService.saveBooking(booking);
+
+        else{
+            Timer timer = new Timer();
+            timer.schedule(new StatusChangeTask(booking, bookingService), 900000);
+            bookingService.saveBooking(booking);
+        }
 
 
 
 
-//        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//
-//         MimeMessage message = mailSender.createMimeMessage();
-//
-//        try {
-//            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//
-//            // Đặt các thuộc tính của email
-//            helper.setTo(email);
-//            helper.setSubject("Order info #" + booking.getCode());
-//
-//            // Đặt nội dung email dưới dạng HTML
-//            String tableContent = "<table style=\"border-collapse: collapse;\">";
-//            tableContent += "<tr style=\"background-color: #f8f8f8;\"><th style=\"padding: 10px; border: 1px solid #ddd;\">Dishes Name</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Quantity</th><th style=\"padding: 10px; border: 1px solid #ddd;\">Price</th></tr>";
-//
-//            for (ReservationItem reservationItem : reservationItems) {
-//                if (reservationItem.getProductId() != null) {
-//                    Product product = productRepository.findById(reservationItem.getProductId()).orElse(null);
-//                    if (product != null && reservationItem.getQuantity() > 0) {
-//                        tableContent += "<tr>";
-//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + product.getName() + "</td>";
-//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + reservationItem.getQuantity() + "</td>";
-//                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//                        String formattedPrice = formatter.format(product.getPrice());
-//                        tableContent += "<td style=\"padding: 10px; border: 1px solid #ddd;\">" + formattedPrice + "</td>";
-//                        tableContent += "</tr>";
-//                    }
-//                }
-//            }
-//
-//            tableContent += "</table>";
-//
-//            String htmlContent = "<html><body>";
-//            htmlContent += "<h2>Order info #" + booking.getCode() + "</h2>";
-//            htmlContent += "<p>Hello " + booking.getName() + ",</p>";
-//            htmlContent += "<p>Thank you for your order. Here are the details about your order:</p>";
-//            htmlContent += "<p>Order code " + booking.getCode() + "</p>";
-//
-//            LocalDate bookingDate = booking.getBookingDate();
-//            DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
-//            String formattedBookingDate = bookingDate.format(formatterBookingDate);
-//            htmlContent += "<p>Booking date " + formattedBookingDate + "</p>";
-//
-//            LocalDateTime dateTime = booking.getDateTime();
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//            String formattedDateTime = dateTime.format(formatter);
-//            htmlContent += "<p>Date come: " + formattedDateTime + "</p>";
-//
-//            htmlContent += tableContent;
-//            htmlContent += "</body></html>";
-//
-//            helper.setText(htmlContent, true);
-//
-//            mailSender.send(message);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//            model.addAttribute("errorMessage", "email fail.");
-//            return "User/ErrorPage";
-//        }
+
+        NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+         MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            // Đặt các thuộc tính của email
+            helper.setTo(email);
+            helper.setSubject("Thông tin đặt bàn #" + booking.getCode());
+
+            // Đặt nội dung email dưới dạng HTML
+
+
+
+            String htmlContent = "<html><body>";
+            htmlContent += "<h2>Thông tin đặt bàn #" + booking.getCode() + "</h2>";
+            htmlContent += "<p>Xin chào " + booking.getName() + ",</p>";
+            htmlContent += "<p>Cảm ơn đã đặt bàn tại nhà hàng chúng tôi:</p>";
+            htmlContent += "<p>Đây là mã xác nhận đặt bàn của bạn " + booking.getConfirmCode() + "</p>";
+
+            LocalDate bookingDate = booking.getBookingDate();
+            DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
+            String formattedBookingDate = bookingDate.format(formatterBookingDate);
+            htmlContent += "<p>Ngày đặt " + formattedBookingDate + "</p>";
+
+
+
+
+            htmlContent += "</body></html>";
+
+            helper.setText(htmlContent, true);
+
+            mailSender.send(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            model.addAttribute("errorMessage", "email fail.");
+            return "User/ErrorPage";
+        }
         bookingService.clear();
-        redirectAttributes.addFlashAttribute("SuccessMessage", "Tạo đơn thành công!");
-        String referer = request.getHeader("Referer");
-        return "redirect:" + referer;
+        redirectAttributes.addFlashAttribute("SuccessMessage", "Chúng tôi đã gửi mã otp đến mail của bạn \n Sau 15' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
+        model.addAttribute("SuccessMessage","Chúng tôi đã gửi mã xác nhận đến mail của bạn .\n Sau 15' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("bookingId",booking.getId());
+        model.addAttribute("reservationId",reservationId);
+
+        return "User/confirmBooking";
     }
+
+    @PostMapping("/user/confirmBooking")
+    public String confirmBooking(Model model,@RequestParam("bookingId") long bookingId,@RequestParam("confirmCode") String confirmCode ){
+
+
+
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + bookingId));
+        if(booking.getConfirmCode().equals(confirmCode)){
+            LocalDate currentDateTime = booking.getDateArrive();
+            booking.setStatus("1");
+            booking.setDateArrive(currentDateTime);
+            bookingRepository.save(booking);
+        }else {
+            Reservation reservation = reservationService.viewById(booking.getReservation().getId());
+
+            model.addAttribute("reservation", reservation);
+            model.addAttribute("bookingId",bookingId);
+            model.addAttribute("errorMessage","Mã xác nhận không chính xác!");
+            return "User/confirmBooking";
+        }
+        model.addAttribute("SuccessMessage","Xác nhận thành công!");
+        return "redirect:/user/showReservation/"+booking.getReservation().getId();
+    }
+
     @PostMapping("/user/booking-list")
     public String showBookingList( @RequestParam("reservationId") long reservationId,   @RequestParam("dateArrive") LocalDate dateArrive, Model model, Principal principal, HttpSession session ) {
         // Lấy danh sách đặt bàn từ cơ sở dữ liệu dựa trên ngày đến đã chọn (dateArrive)

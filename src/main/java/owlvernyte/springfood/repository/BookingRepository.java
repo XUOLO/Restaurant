@@ -22,6 +22,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT o FROM Booking o WHERE CONCAT(o.name, o.code, o.phone, o.email) LIKE %?1%")
     List<Booking> findAll(String keyword);
 
+    @Query("SELECT o FROM Booking o WHERE CONCAT(o.phone) LIKE %?1% AND o.status IN ('1', '2')")
+    List<Booking> findBookingUser(String keyword);
     Page<Booking> findBookingByUserId(long userId, Pageable pageable);
 
     List<Booking> findByUserId(long userId);

@@ -113,7 +113,13 @@ public class BookingService {
         }
         return bookingRepository.findAll();
     }
+    public List<Booking> searchBookingUser(String keyword) {
 
+        if(keyword!=null){
+            return bookingRepository.findBookingUser(keyword);
+        }
+        return bookingRepository.findAll();
+    }
     public Long CountBooking(){
         return bookingRepository.count();
     }

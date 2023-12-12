@@ -66,11 +66,12 @@
                                     <h5 class="card-title text-center pb-0 fs-4">Đăng nhập </h5>
                                     <p class="text-center small">Nhập tài khoàn và mật khẩu để đăng nhập</p>
                                 </div>
-
+                                <span th:if="${param.error != null}"class="text-danger">
+    <p> Tên đăng nhập hoặc mật khẩu không đúng</p>
+</span>
                                 <form class="row g-3  " method="post"
                                       role="form"
                                       th:action="@{/login}"
-
                                       >
 
                                     <div class="col-12">
@@ -79,16 +80,15 @@
 
                                             <input
 
-                                                    type="email"
                                                     id="username"
                                                     name="username"
                                                     class="form-control"
                                                     placeholder="Tài khoản"
                                                     required
-                                                    minlength="8"
+                                                    minlength="4"
                                                     maxlength="16"
                                                     oninvalid="this.setCustomValidity('Tài khoản không hợp lệ')"
-                                                     onchange="this.setCustomValidity('')"
+                                                    onchange="this.setCustomValidity('')"
                                             >
                                             <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
                                         </div>

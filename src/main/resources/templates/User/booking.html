@@ -72,6 +72,7 @@
 
                 <li   ><a class="nav-link scrollto  "      href="/user/contact" >Liên hệ </a></li>
 <li   ><a class="nav-link scrollto  "      href="/user/blog" >Tin tức </a></li>
+        <li   ><a class="nav-link scrollto  "      href="/user/searchBooking" >Tìm kiếm</a></li>
                 <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li> <a  sec:authorize="isAuthenticated()" href="/logout">Đăng xuất</a></li>
@@ -104,39 +105,47 @@
         <div class="table-info" style="
     width: 100%;
     padding: 20px;">
-            <h2>Thông tin phòng</h2>
-            <form th:object="${reservation}" method="POST" action="/user/bookReservation" >
+            <div class="row">
+                <div class="searching col-md-4">
+                    <form method="POST" action="/user/booking-list" >
+                        <label for="dateArrive">Chọn ngày đến:</label>
+                        <input type="date"  name="dateArrive" required>
+                        <input type="hidden" th:value="${reservationId}" name="reservationId">
 
-                <p type="hidden" th:field="*{id}" />
-                <p type="text"  id="name" name="name" th:text="'Phòng : '+ *{name}"  ></p>
-<!--                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="'Số lượng người: ' + *{numberOfPeople}"  ></p>-->
+                        <button type="submit">Xem   bàn</button>
+                    </form>
+                    <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng hôm nay  </h2>
 
-<!--                 <p type="text"  id="description" name="description" th:text="'Mô tả: '+ *{description}" ></p>-->
+                </div>
+                <div class="col-md-6">
+                    <h2>Thông tin phòng</h2>
+                    <form th:object="${reservation}" method="POST" action="/user/bookReservation" >
 
-            </form>
+                        <p type="hidden" th:field="*{id}" />
+                        <p type="text"  id="name" name="name" th:text="'Phòng : '+ *{name}"  ></p>
+                        <!--                <p type="number"  id="numberOfPeople" name="numberOfPeople" th:text="'Số lượng người: ' + *{numberOfPeople}"  ></p>-->
+
+                        <!--                 <p type="text"  id="description" name="description" th:text="'Mô tả: '+ *{description}" ></p>-->
+
+                    </form>
+                </div>
+            </div>
+
+
         </div>
-        <div class="searching">
-            <form method="POST" action="/user/booking-list" >
-                <label for="dateArrive">Chọn ngày đến:</label>
-                <input type="date"  name="dateArrive" required>
-                <input type="hidden" th:value="${reservationId}" name="reservationId">
-
-                <button type="submit">Xem   bàn</button>
-            </form>
-        </div>
 
 
-        <form  th:action="@{/user/placeBooking}" method="post" th:object="${booking}" onsubmit="checkFormSubmission(event)">
-        <h2 class="list-dishes" style="margin-left: 50px;">Sơ đồ phòng hôm nay  </h2>
 
+        <form     th:action="@{/user/placeBooking}" method="post" th:object="${booking}" onsubmit="checkFormSubmission(event)">
 
-           <style   >
+             <style   >
 
 .searching {
     margin-left: 55px;
 }
  .checkout-container {
         margin-left: 45%;
+        margin-top: -70%;
     }
 
     .address-section {
@@ -304,12 +313,12 @@ color:#cda45e;
 }
 
     </style>
-            <div class="room-plan">
+            <div class="room-plan"   >
                 <style>
         .room-plan {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+             gap: 10px;
         }
 .table-selected {
             background-color: yellow;
@@ -396,6 +405,8 @@ color:#cda45e;
     left: 145px;
     width: 20px;
     height: 20px;
+    color:black;
+    font-weight: bold;
     background-color: #44ae44;
         }
             .table-status2{
@@ -403,6 +414,8 @@ color:#cda45e;
     left: 255px;
     width: 20px;
     height: 20px;
+    color:black;
+        font-weight: bold;
     background-color: #ee0c0c;
         }
         .table-onSelected{
@@ -410,6 +423,8 @@ color:#cda45e;
     left: 400px;
     width: 20px;
     height: 20px;
+    color:black;
+        font-weight: bold;
     background-color: yellow;
         }
 .empty {
@@ -430,29 +445,33 @@ color:#cda45e;
         }
 
     </style>
-                <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
-                <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
-                <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
-                <div class="table table-4"onclick="selectTable(this)"style="background-color: #44ae44;"value="4"name="selectDesk">Bàn 4</div>
-                <div class="table table-5"onclick="selectTable(this)"style="background-color: #44ae44;"value="5"name="selectDesk">Bàn 5</div>
-                <div class="table table-6"onclick="selectTable(this)"style="background-color: #44ae44;"value="6"name="selectDesk">Bàn 6</div>
-                <div class="table table-7"onclick="selectTable(this)"style="background-color: #44ae44;"value="7"name="selectDesk">Bàn 7</div>
-                <div class="table table-8"onclick="selectTable(this)"style="background-color: #44ae44;"value="8"name="selectDesk">Bàn 8</div>
-                <div class="table table-9"onclick="selectTable(this)"style="background-color: #44ae44;"value="9"name="selectDesk">Bàn 9</div>
-                <div class="table table-10"onclick="selectTable(this)"style="background-color: #44ae44;"value="10" name="selectDesk">Bàn 10</div>
+                <section style="background-image: url('/User/images/rMappng.png');height: 48%;margin-bottom: 205%;
+    margin-right: -115px;
+    margin-left: -10px;
+    margin-top: -30px;">
+                    <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
+                    <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
+                    <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
+                    <div class="table table-4"onclick="selectTable(this)"style="background-color: #44ae44;"value="4"name="selectDesk">Bàn 4</div>
+                    <div class="table table-5"onclick="selectTable(this)"style="background-color: #44ae44;"value="5"name="selectDesk">Bàn 5</div>
+                    <div class="table table-6"onclick="selectTable(this)"style="background-color: #44ae44;"value="6"name="selectDesk">Bàn 6</div>
+                    <div class="table table-7"onclick="selectTable(this)"style="background-color: #44ae44;"value="7"name="selectDesk">Bàn 7</div>
+                    <div class="table table-8"onclick="selectTable(this)"style="background-color: #44ae44;"value="8"name="selectDesk">Bàn 8</div>
+                    <div class="table table-9"onclick="selectTable(this)"style="background-color: #44ae44;"value="9"name="selectDesk">Bàn 9</div>
+                    <div class="table table-10"onclick="selectTable(this)"style="background-color: #44ae44;"value="10" name="selectDesk">Bàn 10</div>
 
-                <th:block th:each="item, iteration : ${bookings}">
-                    <div th:class="'table table-' + ${item.desk}"
-                         th:style="${item.status == '2' || item.status == '1' ? 'background-color: #ee0c0c;' : ''}"
-                         th:text="'Bàn ' + ${item.desk}"
-                         onclick="selectTable(this)"
-                         th:value="${item.id}">Bàn </div>
-                </th:block>
-                <div  class="table table-status1">   <div class="empty">: Trống</div></div>
+                    <th:block th:each="item, iteration : ${bookings}">
+                        <div th:class="'table table-' + ${item.desk}"
+                             th:style="${item.status == '2' || item.status == '1' ? 'background-color: #ee0c0c;' : ''}"
+                             th:text="'Bàn ' + ${item.desk}"
+                             onclick="selectTable(this)"
+                             th:value="${item.id}">Bàn </div>
+                    </th:block>
+                    <div  class="table table-status1">   <div class="empty">: Trống</div></div>
 
-                <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
-                <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
-                <script>
+                    <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
+                    <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
+                    <script>
 function selectTable(table) {
     // Check if the table has background color other than #ee0c0c
     if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
@@ -486,8 +505,10 @@ function checkFormSubmission(event) {
         // Prevent form submission
         event.preventDefault();
 
-        // Display an alert
+        // Display an alert to select a table
         alert('Vui lòng chọn một bàn trước khi tạo đơn.');
+
+        return;
     }
 
     // Check if namee, phone, and email are filled
@@ -495,20 +516,21 @@ function checkFormSubmission(event) {
         // Prevent form submission
         event.preventDefault();
 
-        // Display an alert
+        // Display an alert to fill in all fields
         alert('Vui lòng điền đầy đủ thông tin.');
 
-        return; // Exit the function if any field is empty
+        return;
     }
 
     // Display a confirmation alert
-    if (confirm('Xác nhận đặt bàn?')) {
-         return;
-    } else {
-         event.preventDefault();
+    if (!confirm('Xác nhận đặt bàn?')) {
+        // If user cancels, prevent form submission
+        event.preventDefault();
     }
 }
 </script>
+                </section>
+
             </div>
 
 
@@ -535,7 +557,11 @@ function checkFormSubmission(event) {
                 <input type="hidden" id="selectedDeskInput" name="selectDesk" value="">
                     <div class="form-group">
                         <label for="name">Họ tên</label>
-                        <input type="text" id="namee" name="name" required>
+                        <input type="text" id="namee"
+                               oninvalid="this.setCustomValidity('Nhập họ tên')"
+
+                               onchange="this.setCustomValidity('')"
+                               name="name" required>
                     </div>
 
                     <div class="form-group">
@@ -547,7 +573,11 @@ function checkFormSubmission(event) {
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email"
+                               oninvalid="this.setCustomValidity('Nhập email')"
+
+                               onchange="this.setCustomValidity('')"
+                               required>
                     </div>
 
                          <select name="numberOfPeople"  style="width: 20%;">
@@ -667,10 +697,11 @@ function checkFormSubmission(event) {
                 </div>
 
                 <div class="col-lg-4 col-md-6 ">
-
-                 </div>
+                    <div id="fb-root"></div>
+                    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0" nonce="nacStYY6"></script>
+                </div>
                 <div class="col-lg-5 col-md-6 footer-links">
-                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D100067589814822&tabs&width=500&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=172925719024818" width="500" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                    <div class="fb-page" data-href="https://www.facebook.com/profile.php?id=61554484232518" data-tabs="timeline" data-width="500" data-height="70" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/profile.php?id=61554484232518" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/profile.php?id=61554484232518">Lign Restaurant</a></blockquote></div>
                 </div>
 
 

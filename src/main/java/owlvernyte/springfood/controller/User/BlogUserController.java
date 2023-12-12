@@ -49,7 +49,7 @@ public class BlogUserController {
 
     @GetMapping("/user/pageBlog/{pageNo}")
     public String findPaginatedBlogRequest(@PathVariable(value = "pageNo")int pageNo, Model model, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir){
-        int pageSize=1;
+        int pageSize=5;
         Page<Blog> page= blogService.findPaginatedProduct(pageNo,pageSize,sortField,sortDir);
         List<Blog> blogList = page.getContent();
         model.addAttribute("currentPage", pageNo);
