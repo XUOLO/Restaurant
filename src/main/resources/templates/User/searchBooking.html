@@ -103,13 +103,13 @@
   <!-- ======= Menu Section ======= -->
   <section id="menu" style="padding-top: 165px;" class="menu section-bg">
     <form th:action="@{/user/searchBookingByPhone}" method="post">
-      <h1  >Theo dõi trạng thái đơn đặt bàn - Nhà hàng Lign</h1>
+      <h1 style="    text-align: center;" >Theo dõi trạng thái đơn đặt bàn - Nhà hàng Lign</h1>
       <div class="form-group" style="text-align: center;">
 
         <input type="text"
 
                name="keyword" required
-
+                style="    width: 15%;"
                pattern="(03|05|07|08|09)[0-9]{8}"
                oninvalid="this.setCustomValidity('Số điện thoại phải bắt đầu với  03, 05, 07, 08 or 09 và có 10 số')"
                onchange="this.setCustomValidity('')" onkeypress="return valideNumber()"

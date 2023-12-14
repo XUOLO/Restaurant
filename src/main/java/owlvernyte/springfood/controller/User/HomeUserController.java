@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import owlvernyte.springfood.entity.*;
-import owlvernyte.springfood.repository.CommentRepository;
-import owlvernyte.springfood.repository.ProductCategoryRepository;
-import owlvernyte.springfood.repository.ProductRepository;
-import owlvernyte.springfood.repository.RatingRepository;
+import owlvernyte.springfood.repository.*;
 import owlvernyte.springfood.service.*;
 
 import java.io.IOException;
@@ -28,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -60,7 +58,8 @@ public class HomeUserController {
     private CommentRepository commentRepository;
     @Autowired
     private RatingRepository ratingRepository;
-
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
     @GetMapping("/")
     public String showIndexUser(Model model, Principal principal, HttpSession session, Authentication authentication) {
         List<Product> productList = productService.getAllProduct();
@@ -211,8 +210,39 @@ public class HomeUserController {
             // Xử lý trường hợp sản phẩm không tồn tại
             return "error";
         }
+        List<OrderDetail> orderDetails = orderDetailRepository.findByProduct(product);
+        List<Product> commonlyPairedProducts = new ArrayList<>();
+        int maxPairs = 4; // Maximum number of pairs to retrieve
+        int totalPairs = 0; // Total number of pairs found
 
+        for (OrderDetail orderDetail : orderDetails) {
+            if (totalPairs >= maxPairs) {
+                break; // Exit the loop if the maximum number of pairs is reached
+            }
 
+            List<OrderDetail> pairedOrderDetails = orderDetailRepository.findByOrderIdAndProductIdNot(
+                    orderDetail.getOrder().getId(), product.getId());
+            for (OrderDetail pairedOrderDetail : pairedOrderDetails) {
+                if (totalPairs >= maxPairs) {
+                    break; // Exit the loop if the maximum number of pairs is reached
+                }
+
+                Product pairedProduct = pairedOrderDetail.getProduct();
+                if (!commonlyPairedProducts.contains(pairedProduct)) {
+                    commonlyPairedProducts.add(pairedProduct);
+                    totalPairs++;
+                }
+            }
+        }
+
+         Collections.shuffle(commonlyPairedProducts);
+
+         if (commonlyPairedProducts.size() > maxPairs) {
+            commonlyPairedProducts = commonlyPairedProducts.subList(0, maxPairs);
+        }
+
+        model.addAttribute("product", product);
+        model.addAttribute("commonlyPairedProducts", commonlyPairedProducts);
 
         Long userId = (Long) session.getAttribute("userId");
         model.addAttribute("userId",userId);

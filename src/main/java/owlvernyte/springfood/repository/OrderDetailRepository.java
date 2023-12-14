@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import owlvernyte.springfood.entity.Order;
 import owlvernyte.springfood.entity.OrderDetail;
+import owlvernyte.springfood.entity.Product;
 
 import java.util.List;
 
 @Repository
 public interface OrderDetailRepository  extends JpaRepository<OrderDetail, Long> {
     List<OrderDetail> findByOrder(Order order);
-
+    List<OrderDetail> findByProduct(Product product);
+    List<OrderDetail> findByOrderIdAndProductIdNot(Long orderId, Long productId);
 
     @Query(value = "SELECT od.product_id, p.name, p.price\n" +
             "FROM order_detail od\n" +

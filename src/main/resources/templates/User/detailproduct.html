@@ -100,8 +100,7 @@
 
 <main id="main">
 
-    <!-- ======= Contact Section ======= -->
-    <section id="about" style="padding-top: 165px;" class="about">
+     <section id="about" style="padding-top: 165px;" class="about">
 
             <div class="container" data-aos="fade-up">
 
@@ -121,6 +120,7 @@
                             <li ><i class="bi bi-check-circle"></i>  <span th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' VND'}"></span>   </li>
 
                         </ul>
+
                         <div class="product-rating">
                             <p>Đánh giá:</p>
                             <div class="star-rating">
@@ -250,6 +250,89 @@ a.btn.btn-primary.pull-right {
     border-radius: 50px;
 }
     </style>
+
+                <h2> Có thể bạn sẽ thích</h2>
+                <div class="container"  style=" display: flex;
+             width: 100%;
+             padding: 20px;" >
+
+                    <div class="food-item" th:each="product : ${commonlyPairedProducts}">
+                        <img th:src="@{'/display?id=' + ${product.id}}"  >
+                        <div th:href="@{'/user/productDetail/' + ${product.id}}" th:text="${product.name}" class="name">Food 1</div>
+                        <div th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' VND'}"class="price">$10.99</div>
+                         <a style="color:white;" href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
+                            + Thêm vào giỏ hàng
+
+                        </a>
+                    </div>
+
+                </div>
+                <style>
+        /* CSS for the container */
+
+        /* CSS for each food item */
+        .food-item {
+        margin-left: 15px;
+            text-align: center;
+            padding: 20px;
+            background-color: #cda45e;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            width: 250px;
+            border-radius: 8px;
+        }
+
+        /* CSS for the food item image */
+        .food-item img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* CSS for the food item name */
+        .food-item .name {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* CSS for the food item price */
+        .food-item .price {
+            margin-top: 5px;
+            color: white;
+        }
+
+        /* CSS for the add-to-cart button */
+        .food-item .add-to-cart {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        /* CSS for hover effect */
+        .food-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* CSS for hover effect on image */
+        .food-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* CSS for hover effect on add-to-cart button */
+        .food-item:hover .add-to-cart {
+            background-color: #45a049;
+        }
+    </style>
                 <div class="container">
                     <div class="be-comment-block">
                         <h1 class="comments-title" th:text="'Bình luận ' +(${commentCount})">Comments (3)</h1>
@@ -351,6 +434,37 @@ a.btn.btn-primary.pull-right {
     });
 });
     </script>
+
+    <script>
+    $(document).ready(function() {
+        $('.add-to-cart-btn').click(function() {
+            var productId = $(this).data('product-id');
+
+           $.ajax({
+    type: 'GET',
+    url: '/user/shoppingCart/add/' + productId,
+    success: function(response) {
+        // Handling success response
+        alert('Thêm vào giỏ hàng thành công');
+        updateCartItemCount();
+    },
+    error: function() {
+        // Handling error (if any)
+        alert('Có lỗi khi thêm vào giỏ hàng');
+    }
+});
+        });
+
+        function updateCartItemCount() {
+            $.get("/user/itemCount", function(data) {
+                // Cập nhật số lượng sản phẩm trên giao diện
+                $(".cart-item-count").text(data);
+            });
+        }
+    });
+</script>
+    <script src="/User/js/jquery-3.4.1.min.js"></script>
+
 </main>
 
 
