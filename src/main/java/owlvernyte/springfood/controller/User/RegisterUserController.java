@@ -45,13 +45,15 @@ public class RegisterUserController {
         return "User/register";
     }
     @PostMapping("/user/verifyOTP")
-    public String verifyOTP(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
+    public String verifyOTP(  @RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
         // Kiểm tra xác minh OTP cho username tại đây
         if (userService.verifyOTP(username, otp)) {
             userService.setOTPVerified(username, true);
             model.addAttribute("successMessage", "Xác thực OTP thành công.");
+
             SecurityContextHolder.clearContext();
             session.invalidate();
+
         } else {
             model.addAttribute("errorMessage", "OTP không hợp lệ. Thử lại!.");
         }
@@ -59,12 +61,13 @@ public class RegisterUserController {
         return "User/otpVerified";
     }
     @PostMapping("/user/verifyOTPAgain")
-    public String verifyOTPAgain(@RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
+    public String verifyOTPAgain( @RequestParam("username") String username, @RequestParam("otp") String otp, Model model,HttpSession session) {
         if (userService.verifyOTP(username, otp)) {
             userService.setOTPVerified(username, true);
             model.addAttribute("successMessage", "Xác thực OTP thành công.");
             SecurityContextHolder.clearContext();
             session.invalidate();
+
         } else {
             model.addAttribute("errorMessage", "OTP không hợp lệ. Thử lại!");
         }
@@ -83,16 +86,17 @@ public class RegisterUserController {
         return "User/otpVerified";
     }
     @GetMapping("/user/otpVerifiedAgain")
-    public String otpVerifiedAgain(Model model, HttpSession session) {
+    public String otpVerifiedAgain(RedirectAttributes redirectAttributes,Model model, HttpSession session) {
         String username = (String) session.getAttribute("username");
 
         if (username == null) {
             model.addAttribute("listCategory", categoryService.getAllCategory());
-            model.addAttribute("errorMessage", "Tài khoản không đúng");
+            redirectAttributes.addFlashAttribute("errorMessage", "Tài khoản không đúng!");
 
         } else {
             model.addAttribute("username", username);
         }
+        redirectAttributes.addFlashAttribute("errorMessage", "Tài khoả̀n của bạn chưa được kích hoạt. Chúng tôi đã gửi lại mã otp đến email của bạn !");
 
         return "User/otpVerifiedAgain";
     }
@@ -101,7 +105,6 @@ public class RegisterUserController {
         if (result.hasErrors()) {
             return "User/register";
         }
-
         // Kiểm tra xem username đã tồn tại trong CSDL hay chưa
         if (userService.isUsernameExists(user.getUsername())) {
              redirectAttributes.addFlashAttribute("usernameExists", "Username đã tồn tại.");

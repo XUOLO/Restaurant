@@ -69,7 +69,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 helper.setTo(user.getEmail());
                 helper.setSubject("OTP Verification");
                 String htmlContent = "<html><body>";
-                htmlContent += "<h2>Your Otp is: " + otp + "</h2>";
+                htmlContent += "<h2>Your new Otp is: " + otp + "</h2>";
                 htmlContent += "</body></html>";
 
                 helper.setText(htmlContent, true);

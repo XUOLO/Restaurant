@@ -1,5 +1,8 @@
 package owlvernyte.springfood.entity;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+
 import java.sql.Blob;
 
 public class ReservationItem {
@@ -11,6 +14,25 @@ public class ReservationItem {
     private int price;
     private int quantity;
     private Blob image;
+    private String recipe;
+    private String videoRecipe;
+
+
+    public String getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(String recipe) {
+        this.recipe = recipe;
+    }
+
+    public String getVideoRecipe() {
+        return videoRecipe;
+    }
+
+    public void setVideoRecipe(String videoRecipe) {
+        this.videoRecipe = videoRecipe;
+    }
 
     public Blob getImage() {
         return image;

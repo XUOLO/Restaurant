@@ -40,44 +40,55 @@ public class ShoppingCartController {
     @GetMapping("/user/viewCart")
     public String viewCart(Model model, Principal principal, HttpSession session) {
         Collection<CartItem> allCartItems = shoppingCartService.getAllCartItem();
-        Long userId = (Long) session.getAttribute("userId");
-//        Long userId = userService.viewById()
-        model.addAttribute("userId",userId);
-        model.addAttribute("AllCartItem", allCartItems);
-        model.addAttribute("listCategory", categoryService.getAllCategory());
-        model.addAttribute("totalAmount", shoppingCartService.getAmount());
-        String name = (String) session.getAttribute("name");
-        model.addAttribute("name", name);
-        boolean hasItems = !allCartItems.isEmpty();
-        model.addAttribute("hasItems", hasItems);
+
         boolean isAuthenticated = principal != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
+        if(isAuthenticated){
+            Long userId = (Long) session.getAttribute("userId");
+            //        Long userId = userService.viewById()
+            model.addAttribute("userId",userId);
+            model.addAttribute("AllCartItem", allCartItems);
+            model.addAttribute("listCategory", categoryService.getAllCategory());
+            model.addAttribute("totalAmount", shoppingCartService.getAmount());
+            String name = (String) session.getAttribute("name");
+            model.addAttribute("name", name);
+            boolean hasItems = !allCartItems.isEmpty();
+            model.addAttribute("hasItems", hasItems);
+
 
 
 // recommendadtion for userid
-        String csvFilePath = "C:\\Users\\admin\\Downloads\\recommendation.csv";
-        boolean isMatchingUser = csvReader.isMatchingUserFromCsv(csvFilePath, userId);
-        // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
-        if (isMatchingUser) {
+            String csvFilePath = "C:\\Users\\admin\\Downloads\\recommendation.csv";
+            boolean isMatchingUser = csvReader.isMatchingUserFromCsv(csvFilePath, userId);
             // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
-            List<Integer> matchingProductIds = csvReader.getMatchingProductsFromCsv(csvFilePath, userId);
+            if (isMatchingUser) {
+                // Lấy danh sách sản phẩm khớp từ tệp CSV và cơ sở dữ liệu
+                List<Integer> matchingProductIds = csvReader.getMatchingProductsFromCsv(csvFilePath, userId);
 
-            List<Product> matchingProducts = new ArrayList<>();
+                List<Product> matchingProducts = new ArrayList<>();
 
-            for (Integer productId : matchingProductIds) {
-                Product product = productService.getProductById(productId);
-                if (product != null) {
-                    matchingProducts.add(product);
+                for (Integer productId : matchingProductIds) {
+                    Product product = productService.getProductById(productId);
+                    if (product != null) {
+                        matchingProducts.add(product);
+                    }
                 }
-            }
 
-            model.addAttribute("matchingProducts", matchingProducts);
-        } else {
-            // Hiển thị thông báo cho người dùng
+                model.addAttribute("matchingProducts", matchingProducts);
+            } else {
+                // Hiển thị thông báo cho người dùng
+                String message = "Hiện tại không có sản phẩm gợi ý cho bạn!.";
+                model.addAttribute("message", message);
+            }
+        }else {
+            boolean hasItems = !allCartItems.isEmpty();
+            model.addAttribute("hasItems", hasItems);
+            model.addAttribute("AllCartItem", allCartItems);
+            model.addAttribute("listCategory", categoryService.getAllCategory());
+            model.addAttribute("totalAmount", shoppingCartService.getAmount());
             String message = "Hiện tại không có sản phẩm gợi ý cho bạn!.";
             model.addAttribute("message", message);
         }
-
 
 
         return "User/ShoppingCart";

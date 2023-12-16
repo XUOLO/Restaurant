@@ -174,7 +174,9 @@ public class HomeUserController {
         model.addAttribute("username", username);
         model.addAttribute("name", name);
         model.addAttribute("userId", userId);
-
+        List<Long> topFourProductIds = orderDetailService.getTopFourProductIdsByQuantity();
+        List<Product> topFourProducts = productService.getTopFourProductsById(topFourProductIds);
+        model.addAttribute("top5FourProducts", topFourProducts);
         boolean isAuthenticated = principal != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
         model.addAttribute("listProduct", sellingProducts);

@@ -20,7 +20,6 @@ public class StatusChangeTask extends TimerTask {
 
     @Override
     public void run() {
-        // Thực hiện thay đổi trạng thái của booking thành 1
         booking.setStatus("3");
         bookingService.saveBooking(booking);
     }

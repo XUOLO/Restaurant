@@ -38,11 +38,12 @@ public class Booking {
 
 
     @Column(name = "date_arrive")
-//    @FutureOrPresent(message = "The booking date cannot be in the past.")
-    private LocalDate dateArrive;
+     private LocalDate dateArrive;
 
     @Column(name = "time_arrive")
     private LocalTime timeArrive;
+    @Column(name = "bookingDateTime")
+    private LocalDateTime bookingDateTime;
 
     @Column(name = "customer_name")
     private String name;
@@ -63,6 +64,14 @@ public class Booking {
 
     public void setConfirmCode(String confirmCode) {
         this.confirmCode = confirmCode;
+    }
+
+    public LocalDateTime getBookingDateTime() {
+        return bookingDateTime;
+    }
+
+    public void setBookingDateTime(LocalDateTime bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
     }
 
     private String status;

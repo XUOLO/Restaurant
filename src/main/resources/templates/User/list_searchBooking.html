@@ -124,6 +124,9 @@
     border-radius: 5px;">Tìm </button>
 
       </div>
+      <div th:if="${errorMessage}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+      </div>
       <table style="border-collapse: collapse; width: 70%; background-color: #0c0b09; text-align: center;margin-top: 15px;margin-left: 15%;">
 
         <thead style="background-color: #d5a84d">

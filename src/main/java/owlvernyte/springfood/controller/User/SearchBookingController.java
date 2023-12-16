@@ -36,9 +36,11 @@ public class SearchBookingController
         List<Booking> listSearchBooking = bookingService.searchBookingUser(keyword);
         if (listSearchBooking.isEmpty()) {
              redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy đơn!!");
-            String referer = request.getHeader("Referer");
-            return "redirect:" + referer;
-         } else {
+            return "redirect:/user/searchBooking"  ;
+         } else if (keyword=="") {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng nhập số điện thoại !!");
+            return "redirect:/user/searchBooking"  ;
+        } else {
             model.addAttribute("listSearchBooking", listSearchBooking);
         }
 

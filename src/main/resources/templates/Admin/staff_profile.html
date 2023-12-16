@@ -55,12 +55,9 @@
 
                 <div class="row">
                   <div class="col-lg-3 col-md-4 label">Role</div>
-                  <div class="col-lg-9 col-md-8"th:text="${role.description}" >
-
-
-
-
-                  </div>
+<!--                  <div class="col-lg-9 col-md-8"th:text="${role.description}" >-->
+<!--                    -->
+<!--                  </div>-->
                 </div>
 
 
@@ -103,7 +100,7 @@
                   <div th:if="${error}" class="alert alert-danger">
                     <p th:text="${error}"></p>
                   </div>
-
+                  <input type="hidden" th:field="*{id}">
                   <!-- Hiển thị thông báo thành công -->
                   <div th:if="${success}" class="alert alert-success">
                     <p th:text="${success}"></p>

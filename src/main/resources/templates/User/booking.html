@@ -401,7 +401,7 @@ color:#cda45e;
     height: 50px;
         }
         .table-status1{
-        top: 755px;
+        top: 750px;
     left: 145px;
     width: 20px;
     height: 20px;
@@ -410,7 +410,7 @@ color:#cda45e;
     background-color: #44ae44;
         }
             .table-status2{
-          top: 755px;
+          top: 750px;
     left: 255px;
     width: 20px;
     height: 20px;
@@ -419,24 +419,39 @@ color:#cda45e;
     background-color: #ee0c0c;
         }
         .table-onSelected{
-          top: 755px;
-    left: 400px;
+          top: 750px;
+    left: 370px;
     width: 20px;
     height: 20px;
     color:black;
         font-weight: bold;
     background-color: yellow;
         }
+
+        .table-waitConfirm{
+          top: 750px    ;
+    left: 510px;
+    width: 20px;
+    height: 20px;
+    color:black;
+        font-weight: bold;
+    background-color: blue;
+        }
+
 .empty {
     width: 100px;
     margin-block-start: -6px;
 }
 .using {
-    width: 140px;
+    width: 110px;
     margin-block-start: -6px;
 }
 .onSelected{
     width: 140px;
+    margin-block-start: -6px;
+}
+.waitConfirm{
+    width: 155px;
     margin-block-start: -6px;
 }
  .table-selected {
@@ -448,7 +463,7 @@ color:#cda45e;
                 <section style="background-image: url('/User/images/rMappng.png');height: 48%;margin-bottom: 205%;
     margin-right: -115px;
     margin-left: -10px;
-    margin-top: -30px;">
+    margin-top: -42px;">
                     <div class="table table-1"onclick="selectTable(this)"style="background-color: #44ae44;"value="1"name="selectDesk">Bàn 1</div>
                     <div class="table table-2"onclick="selectTable(this)"style="background-color: #44ae44;"value="2"name="selectDesk">Bàn 2</div>
                     <div class="table table-3"onclick="selectTable(this)"style="background-color: #44ae44;"value="3"name="selectDesk">Bàn 3</div>
@@ -462,15 +477,17 @@ color:#cda45e;
 
                     <th:block th:each="item, iteration : ${bookings}">
                         <div th:class="'table table-' + ${item.desk}"
-                             th:style="${item.status == '2' || item.status == '1' ? 'background-color: #ee0c0c;' : ''}"
+                             th:style="${item.status == '2' ? 'background-color: blue;' : (item.status == '1' ? 'background-color: #ee0c0c;' : '')}"
+
                              th:text="'Bàn ' + ${item.desk}"
                              onclick="selectTable(this)"
-                             th:value="${item.id}">Bàn </div>
+                             th:value="${item.desk}">Bàn </div>
                     </th:block>
                     <div  class="table table-status1">   <div class="empty">: Trống</div></div>
 
                     <div  class="table table-status2">  <div class="using">: Đã đặt</div ></div>
                     <div  class="table table-onSelected">  <div class="onSelected">: Đang chọn</div ></div>
+                    <div  class="table table-waitConfirm">  <div class="waitConfirm">: Chờ xác nhận</div ></div>
                     <script>
 function selectTable(table) {
     // Check if the table has background color other than #ee0c0c
@@ -541,6 +558,9 @@ function checkFormSubmission(event) {
             <div class="address-section">
                 <div th:if="${SuccessMessage}" class="alert alert-success">
                     <p style="text-align:center;" th:text="${SuccessMessage}"></p>
+                </div>
+                <div th:if="${SuccessConfirm}" class="alert alert-success">
+                    <p style="text-align:center;" th:text="${SuccessConfirm}"></p>
                 </div>
                 <h2>Thông tin khách hàng</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">

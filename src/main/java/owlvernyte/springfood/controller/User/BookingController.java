@@ -203,6 +203,7 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         booking.setEmail(email);
         booking.setBookingDate(LocalDate.now());
         booking.setReservation(reservation);
+        booking.setBookingDateTime(LocalDateTime.now());
 
         booking.setDesk(selectedDesk);
 
@@ -230,11 +231,9 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
-
-
         else{
             Timer timer = new Timer();
-            timer.schedule(new StatusChangeTask(booking, bookingService), 900000);
+            timer.schedule(new StatusChangeTask(booking, bookingService), 180000);
             bookingService.saveBooking(booking);
         }
 
@@ -261,12 +260,14 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             htmlContent += "<h2>Thông tin đặt bàn #" + booking.getCode() + "</h2>";
             htmlContent += "<p>Xin chào " + booking.getName() + ",</p>";
             htmlContent += "<p>Cảm ơn đã đặt bàn tại nhà hàng chúng tôi:</p>";
-            htmlContent += "<p>Đây là mã xác nhận đặt bàn của bạn " + booking.getConfirmCode() + "</p>";
+            htmlContent += "<p>Bàn số :" +selectedDesk+ "(" +booking.getReservation().getName()+  ")</p>";
+            htmlContent += "<p>Số lượng người đến :  " + booking.getNumberOfPeople() + "</p>";
+            htmlContent += "<p>Đây là mã xác nhận đặt bàn của bạn : " + booking.getConfirmCode() + "</p>";
 
             LocalDate bookingDate = booking.getBookingDate();
             DateTimeFormatter formatterBookingDate = DateTimeFormatter.ofPattern("dd-MM-yyyy ");
             String formattedBookingDate = bookingDate.format(formatterBookingDate);
-            htmlContent += "<p>Ngày đặt " + formattedBookingDate + "</p>";
+            htmlContent += "<p>Ngày đặt : " + formattedBookingDate + "</p>";
 
 
 
@@ -284,8 +285,8 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             return "User/ErrorPage";
         }
         bookingService.clear();
-        redirectAttributes.addFlashAttribute("SuccessMessage", "Chúng tôi đã gửi mã otp đến mail của bạn \n Sau 15' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
-        model.addAttribute("SuccessMessage","Chúng tôi đã gửi mã xác nhận đến mail của bạn .\n Sau 15' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
+        redirectAttributes.addFlashAttribute("SuccessMessage", "Chúng tôi đã gửi mã otp đến mail của bạn \n Sau 3' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
+        model.addAttribute("SuccessMessage","Chúng tôi đã gửi mã xác nhận đến mail của bạn .\n Sau 3' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");
         model.addAttribute("reservation", reservation);
         model.addAttribute("bookingId",booking.getId());
         model.addAttribute("reservationId",reservationId);
@@ -294,16 +295,29 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
     }
 
     @PostMapping("/user/confirmBooking")
-    public String confirmBooking(Model model,@RequestParam("bookingId") long bookingId,@RequestParam("confirmCode") String confirmCode ){
+    public String confirmBooking( RedirectAttributes redirectAttributes,Model model,@RequestParam("bookingId") long bookingId,@RequestParam("confirmCode") String confirmCode ){
 
 
 
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new IllegalArgumentException("Invalid booking id: " + bookingId));
-        if(booking.getConfirmCode().equals(confirmCode)){
+
+        LocalDateTime sentTime = booking.getBookingDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        int maxConfirmationTimeMinutes = 180; //180 giay
+
+        if (sentTime.plusSeconds(maxConfirmationTimeMinutes).isBefore(currentTime)) {
+            // Quá thời gian chờ, từ chối xác nhận
+            Reservation reservation = reservationService.viewById(booking.getReservation().getId());
+
+            model.addAttribute("reservation", reservation);
+            model.addAttribute("bookingId",bookingId);
+            model.addAttribute("errorMessage","Quá thời gian xác nhận!");
+            return "User/confirmBooking";
+        } else  if(booking.getConfirmCode().equals(confirmCode)){
             LocalDate currentDateTime = booking.getDateArrive();
             booking.setStatus("1");
             booking.setDateArrive(currentDateTime);
-            bookingRepository.save(booking);
+             bookingRepository.save(booking);
         }else {
             Reservation reservation = reservationService.viewById(booking.getReservation().getId());
 
@@ -312,7 +326,8 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             model.addAttribute("errorMessage","Mã xác nhận không chính xác!");
             return "User/confirmBooking";
         }
-        model.addAttribute("SuccessMessage","Xác nhận thành công!");
+
+        redirectAttributes.addFlashAttribute("SuccessConfirm", "Xác nhận thành công!");
         return "redirect:/user/showReservation/"+booking.getReservation().getId();
     }
 

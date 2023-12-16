@@ -610,6 +610,7 @@ public class BookingDetailController {
                     int availableQuantity = product.getQuantity();
                     int updatedQuantity = availableQuantity - quantityToOrder;
                     product.setQuantity(updatedQuantity);
+
                     productRepository.save(product);
                 }
             }
