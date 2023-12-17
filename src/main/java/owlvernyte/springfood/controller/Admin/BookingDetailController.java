@@ -627,7 +627,7 @@ public class BookingDetailController {
                     cooking.setOrderCode(bo.getCode());
                     cooking.setProduct(product);
                     cooking.setQuantity(reservationItem.getQuantity());
-                    cooking.setTime(LocalTime.now());
+                    cooking.setTime(LocalDateTime.now());
                     cookingRepository.save(cooking);
                     if (existingBookingDetail != null) {
                         LocalDateTime dateTime = LocalDateTime.now();

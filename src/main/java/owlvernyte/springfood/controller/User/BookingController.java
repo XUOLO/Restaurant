@@ -27,6 +27,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @Controller
 public class BookingController {
 
@@ -208,7 +212,7 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         booking.setDesk(selectedDesk);
 
         booking.setStatus("2");
-
+        bookingService.saveBooking(booking);
         Collection<ReservationItem> reservationItems = bookingService.getAllReservationItem();
 
 
@@ -231,15 +235,16 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             String referer = request.getHeader("Referer");
             return "redirect:" + referer;
         }
-        else{
-            Timer timer = new Timer();
-            timer.schedule(new StatusChangeTask(booking, bookingService), 180000);
+
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.schedule(() -> {
+            if (booking.getStatus().equals("2") || booking.getStatus().equals("3")) {
+                booking.setStatus("3");
+
+            }
             bookingService.saveBooking(booking);
-        }
-
-
-
-
+        }, 180, TimeUnit.SECONDS);
+            bookingService.saveBooking(booking);
 
         NumberFormat formatterTotal = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
@@ -248,13 +253,8 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            // Đặt các thuộc tính của email
             helper.setTo(email);
             helper.setSubject("Thông tin đặt bàn #" + booking.getCode());
-
-            // Đặt nội dung email dưới dạng HTML
-
-
 
             String htmlContent = "<html><body>";
             htmlContent += "<h2>Thông tin đặt bàn #" + booking.getCode() + "</h2>";
@@ -306,7 +306,6 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         int maxConfirmationTimeMinutes = 180; //180 giay
 
         if (sentTime.plusSeconds(maxConfirmationTimeMinutes).isBefore(currentTime)) {
-            // Quá thời gian chờ, từ chối xác nhận
             Reservation reservation = reservationService.viewById(booking.getReservation().getId());
 
             model.addAttribute("reservation", reservation);
@@ -317,7 +316,17 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             LocalDate currentDateTime = booking.getDateArrive();
             booking.setStatus("1");
             booking.setDateArrive(currentDateTime);
-             bookingRepository.save(booking);
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(() -> {
+                if (booking.getStatus().equals("1") ) {
+                    booking.setStatus("1");
+
+                }
+                bookingService.saveBooking(booking);
+            }, 180, TimeUnit.SECONDS);
+            bookingService.saveBooking(booking);
+
+            bookingRepository.save(booking);
         }else {
             Reservation reservation = reservationService.viewById(booking.getReservation().getId());
 

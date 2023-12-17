@@ -120,7 +120,11 @@
                             <li ><i class="bi bi-check-circle"></i>  <span th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' VND'}"></span>   </li>
 
                         </ul>
+                        <a style="color:#cda45e;" href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
+                            + Thêm vào giỏ hàng
 
+                        </a>
+                        <br>
                         <div class="product-rating">
                             <p>Đánh giá:</p>
                             <div class="star-rating">

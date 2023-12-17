@@ -20,7 +20,14 @@ public class StatusChangeTask extends TimerTask {
 
     @Override
     public void run() {
-        booking.setStatus("3");
+        if (booking.getStatus().equals("1")) {
+            booking.setStatus("1");
+        } else if (booking.getStatus().equals("2") || booking.getStatus().equals("3")) {
+            booking.setStatus("3");
+        } else if (booking.getStatus().equals("4")) {
+            booking.setStatus("4");
+        }
+
         bookingService.saveBooking(booking);
     }
 }

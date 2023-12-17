@@ -63,11 +63,11 @@
                     <td th:text="${list.statusString}" th:style="${list.status == '1' ? 'color: green' : (list.status == '2' ? 'color: blue' : (list.status == '3' ? 'color: red' : 'color: black'))}">Status</td>
                     <td>
                         <form method="POST" th:object="${order}" th:action="@{/admin/{id}/updateOrderStatus(id=${list.id})}">
-                            <div th:if="${list.status == '3'}">Cancel</div>
+                            <div th:if="${list.status == '3'}">Đã hủy</div>
                             <select name="status" th:if="${list.status != '3'}" onchange="submit()">
-                                <option value="1" th:selected="${list.status == '1'}" th:disabled="${list.status == '2'}">Handling</option>
-                                <option value="2" th:selected="${list.status == '2'}">Confirmed</option>
-                                <option value="3" th:selected="${list.status == '3'}">Cancel</option>
+                                <option value="1" th:selected="${list.status == '1'}" th:disabled="${list.status == '2'}">Đang xử lý</option>
+                                <option value="2" th:selected="${list.status == '2'}">Đã xác nhận</option>
+                                <option value="3" th:selected="${list.status == '3'}">Đa hủy</option>
                             </select>
                             <input type="hidden" name="status" value="3" th:if="${list.status == '3'}" />
                         </form>
