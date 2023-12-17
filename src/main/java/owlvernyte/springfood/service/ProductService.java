@@ -13,8 +13,7 @@ import owlvernyte.springfood.entity.Rating;
 import owlvernyte.springfood.repository.ProductRepository;
 import owlvernyte.springfood.repository.RatingRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -96,6 +95,31 @@ public class ProductService {
 
     public List<Product> getTopFourProductsById(List<Long> productIds) {
         return productRepository.findAllById(productIds);
+    }
+
+
+    private Map<String, List<Long>> bmiIdMap = new HashMap<>();
+
+    public ProductService() {
+        initializeBmiIdMap();
+    }
+
+    private void initializeBmiIdMap() {
+        // Thiết lập sẵn các ID ngẫu nhiên cho từng khoảng BMI
+        bmiIdMap.put("<18.5", Arrays.asList(3L, 13L, 14L,15L,16L,17L));
+        bmiIdMap.put("18.5-24.9", Arrays.asList(1L, 21L, 8L,9L));
+        bmiIdMap.put("25-29.9", Arrays.asList(11L, 10L, 20L));
+        bmiIdMap.put(">=30", Arrays.asList(4L,8L,9L,10L, 11L, 12L));
+    }
+
+    public void setRandomIdByBmiCategory(Product product, String bmiCategory) {
+        List<Long> idList = bmiIdMap.get(bmiCategory);
+        if (idList != null && !idList.isEmpty()) {
+            Random random = new Random();
+            int randomIndex = random.nextInt(idList.size());
+            Long randomId = idList.get(randomIndex);
+            product.setId(randomId);
+        }
     }
 
 }
