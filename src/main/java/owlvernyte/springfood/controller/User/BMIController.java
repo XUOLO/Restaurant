@@ -92,7 +92,7 @@ public class BMIController {
         double bmi = weight / (heightInMeters * heightInMeters);
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String formattedBMI = decimalFormat.format(bmi);
-        String apiKey = "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";
+        String apiKey = "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";
         Random random = new Random();
         String bmiCategory;
         if (bmi < 18.5) {
@@ -105,6 +105,10 @@ public class BMIController {
             redirectAttributes.addFlashAttribute("product", product);
             redirectAttributes.addFlashAttribute("bmi",formattedBMI);
             redirectAttributes.addFlashAttribute("bmiCategory",bmiCategory);
+            String prompt = " Give an advice to improve it or balance base on BMI ="+formattedBMI +". Reply in vietnamese";
+            String response = makeOpenAIRequest(prompt, apiKey);
+            redirectAttributes.addFlashAttribute("response",response);
+
         } else if (bmi >= 18.5 && bmi < 25) {
 
             bmiCategory = "cho thấy cơ thể bạn bình thường";
@@ -115,6 +119,10 @@ public class BMIController {
             redirectAttributes.addFlashAttribute("product", product);
             redirectAttributes.addFlashAttribute("bmi",formattedBMI);
             redirectAttributes.addFlashAttribute("bmiCategory",bmiCategory);
+            String prompt = " Give an advice base on BMI ="+formattedBMI +". Reply in vietnamese";
+            String response = makeOpenAIRequest(prompt, apiKey);
+            redirectAttributes.addFlashAttribute("response",response);
+
         } else if (bmi >= 25 && bmi < 30) {
             bmiCategory = "cho thấy bạn đang quá cân";
             int[] numberArray = {11, 10, 20}; // Dãy số cho sẵn
@@ -124,6 +132,10 @@ public class BMIController {
             redirectAttributes.addFlashAttribute("product", product);
             redirectAttributes.addFlashAttribute("bmi",formattedBMI);
             redirectAttributes.addFlashAttribute("bmiCategory",bmiCategory);
+            String prompt = " Give an advice base on BMI ="+formattedBMI +". Reply in vietnamese";
+            String response = makeOpenAIRequest(prompt, apiKey);
+            redirectAttributes.addFlashAttribute("response",response);
+
         } else {
             bmiCategory = "cho thấy bạn đang bị béo phì";
             int[] numberArray = {4,8,9,10,11,12}; // Dãy số cho sẵn
@@ -133,6 +145,10 @@ public class BMIController {
             redirectAttributes.addFlashAttribute("product", product);
             redirectAttributes.addFlashAttribute("bmi",formattedBMI);
             redirectAttributes.addFlashAttribute("bmiCategory",bmiCategory);
+            String prompt = " Give an advice base on BMI ="+formattedBMI +". Reply in vietnamese";
+            String response = makeOpenAIRequest(prompt, apiKey);
+            redirectAttributes.addFlashAttribute("response",response);
+
         }
 
         return "redirect:/user/bmi";
