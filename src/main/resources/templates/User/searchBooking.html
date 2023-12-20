@@ -82,7 +82,8 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -104,7 +105,7 @@
 <main id="main">
 
   <!-- ======= Menu Section ======= -->
-  <section id="menu" style="padding-top: 165px;" class="menu section-bg">
+  <section id="menu" style="padding-top: 165px;    padding-bottom: 20%;" class="menu section-bg">
     <form th:action="@{/user/searchBookingByPhone}" method="post">
       <h1 style="    text-align: center;" >Theo dõi trạng thái đơn đặt bàn - Nhà hàng Lign</h1>
       <div class="form-group" style="text-align: center;">

@@ -150,7 +150,7 @@ public class PayController {
             order.setOrderDate(LocalDate.now());
             order.setUser(user);
             order.setTotal(shoppingCartService.getAmount());
-            order.setStatus("1");
+            order.setStatus("2");
 
             Collection<CartItem> cartItems = shoppingCartService.getAllCartItem();
             List<String> errorMessages = new ArrayList<>();

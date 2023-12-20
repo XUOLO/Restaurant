@@ -82,8 +82,12 @@
                         <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
                     </ul>
                 </li>
-                <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
                 </a></li>
+                <a href="/user/bmi" >
+                    <button type="submit" style="background-color:#392f1a;" class="book-a-table-btn scrollto d-none d-lg-flex">Chưa biết ăn gì ?</button>
+                </a>
                 <a class="cart" href="/user/viewCart">
                     <span class="cart-item-count"></span>
                     <i class="fa-solid fa-cart-shopping"></i>
@@ -124,6 +128,7 @@
                             + Thêm vào giỏ hàng
 
                         </a>
+                        <br>
                         <br>
                         <div class="product-rating">
                             <p>Đánh giá:</p>
@@ -254,23 +259,28 @@ a.btn.btn-primary.pull-right {
     border-radius: 50px;
 }
     </style>
-
-                <h2> Có thể bạn sẽ thích</h2>
-                <div class="container"  style=" display: flex;
+                <div th:if="${not #lists.isEmpty(commonlyPairedProducts)}">
+                    <h2> Có thể bạn sẽ thích</h2>
+                    <div class="container"  style=" display: flex;
              width: 100%;
              padding: 20px;" >
 
-                    <div class="food-item" th:each="product : ${commonlyPairedProducts}">
-                        <img th:src="@{'/display?id=' + ${product.id}}"  >
-                        <div th:href="@{'/user/productDetail/' + ${product.id}}" th:text="${product.name}" class="name">Food 1</div>
-                        <div th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' VND'}"class="price">$10.99</div>
-                         <a style="color:white;" href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
-                            + Thêm vào giỏ hàng
 
-                        </a>
+
+
+                        <div class="food-item" th:each="product : ${commonlyPairedProducts}">
+                            <img th:src="@{'/display?id=' + ${product.id}}"  >
+                            <div th:href="@{'/user/productDetail/' + ${product.id}}" th:text="${product.name}" class="name">Food 1</div>
+                            <div th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' VND'}"class="price">$10.99</div>
+                            <a style="color:white;" href="javascript:void(0);" class="add-to-cart-btn" th:data-product-id="${product.id}">
+                                + Thêm vào giỏ hàng
+
+                            </a>
+                        </div>
+
                     </div>
-
                 </div>
+
                 <style>
         /* CSS for the container */
 

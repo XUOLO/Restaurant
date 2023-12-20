@@ -226,6 +226,11 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
             return "redirect:" + referer;
         }
 
+        if (name==""||phone==""||email=="") {
+            redirectAttributes.addFlashAttribute("notFillBlank", "Vui lòng điền đầy đủ thông tin !!");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + referer;
+        }
         if (selectedDesk == null || selectedDesk.isEmpty()) {
             redirectAttributes.addFlashAttribute("NotChosenYet", "Bạn chưa chọn bàn");
             String referer = request.getHeader("Referer");
@@ -277,8 +282,8 @@ public List<Booking> getBookingsByCurrentDateAndReservationId(LocalDate currentD
         } catch (Exception e) {
             e.printStackTrace();
 
-            model.addAttribute("errorMessage", "email fail.");
-            return "User/ErrorPage";
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi.");
+            return "Admin/error";
         }
         bookingService.clear();
         redirectAttributes.addFlashAttribute("SuccessMessage", "Chúng tôi đã gửi mã otp đến mail của bạn \n Sau 3' không xác nhận thì bàn đã đặt sẽ tự động hủy !!");

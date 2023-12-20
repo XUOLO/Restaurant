@@ -214,12 +214,12 @@ public class HomeUserController {
         }
         List<OrderDetail> orderDetails = orderDetailRepository.findByProduct(product);
         List<Product> commonlyPairedProducts = new ArrayList<>();
-        int maxPairs = 4; // Maximum number of pairs to retrieve
+        int maxPairs = 5; // Maximum number of pairs to retrieve
         int totalPairs = 0; // Total number of pairs found
 
         for (OrderDetail orderDetail : orderDetails) {
             if (totalPairs >= maxPairs) {
-                break; // Exit the loop if the maximum number of pairs is reached
+                break;
             }
 
             List<OrderDetail> pairedOrderDetails = orderDetailRepository.findByOrderIdAndProductIdNot(

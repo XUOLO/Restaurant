@@ -76,7 +76,8 @@
         <li class="dropdown"><a href="#"><span>Tài khoản</span> <i class="bi bi-chevron-down"></i></a>
 
         </li>
-        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>

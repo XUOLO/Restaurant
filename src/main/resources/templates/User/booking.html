@@ -82,7 +82,8 @@
                         <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
                     </ul>
                 </li>
-                <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
                 </a></li>
                 <a class="cart" href="/user/viewCart">
                     <span class="cart-item-count"></span>
@@ -564,6 +565,9 @@ function checkFormSubmission(event) {
                 </div>
                 <div th:if="${SuccessConfirm}" class="alert alert-success">
                     <p style="text-align:center;" th:text="${SuccessConfirm}"></p>
+                </div>
+                <div th:if="${notFillBlank}" class="alert alert-danger">
+                    <p style="text-align:center;" th:text="${notFillBlank}"></p>
                 </div>
                 <h2>Thông tin khách hàng</h2>
                 <div th:if="${DuplicateDate}" class="alert alert-danger">

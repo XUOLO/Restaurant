@@ -86,13 +86,12 @@ public class BMIController {
     public String calculateBMI(
             @RequestParam("weight") double weight,
             @RequestParam("height") double height
-
     , RedirectAttributes redirectAttributes) {
         double heightInMeters = height / 100;
         double bmi = weight / (heightInMeters * heightInMeters);
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String formattedBMI = decimalFormat.format(bmi);
-        String apiKey = "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";
+        String apiKey = "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";
         Random random = new Random();
         String bmiCategory;
         if (bmi < 18.5) {
@@ -105,7 +104,7 @@ public class BMIController {
             redirectAttributes.addFlashAttribute("product", product);
             redirectAttributes.addFlashAttribute("bmi",formattedBMI);
             redirectAttributes.addFlashAttribute("bmiCategory",bmiCategory);
-            String prompt = " Give an advice to improve it or balance base on BMI ="+formattedBMI +". Reply in vietnamese";
+            String prompt = " Give an advice base on BMI ="+formattedBMI +". Reply in vietnamese";
             String response = makeOpenAIRequest(prompt, apiKey);
             redirectAttributes.addFlashAttribute("response",response);
 

@@ -82,7 +82,8 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-          <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                  <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -120,7 +121,7 @@
 </style>
                 <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
               </a>
-              <h1 th:text="${username}"> </h1>
+              <h2 th:text="${name}"> </h2>
             </div>
 
             <div class="belowPicInfo" style="padding-block: 15px;">
@@ -201,29 +202,36 @@
           </div>
 
         </div>
-        <div class="profile-changePassword col-md-7" style="margin-left: 30%;margin-top: 20px;">
-         <h1>Đổi mật khẩu</h1>
-          <div th:if="${errorPassword}" class="alert alert-danger">
-            <p style="text-align:center;" th:text="${errorPassword}"></p>
+          <div th:if="${provider=='Local'}">
+
+              <div class="profile-changePassword col-md-7" style="margin-left: 30%;margin-top: 20px;">
+                  <h1>Đổi mật khẩu</h1>
+                  <div th:if="${errorPassword}" class="alert alert-danger">
+                      <p style="text-align:center;" th:text="${errorPassword}"></p>
+                  </div>
+                  <div th:if="${NewAndConfirmError}" class="alert alert-danger">
+                      <p style="text-align:center;" th:text="${NewAndConfirmError}"></p>
+                  </div>
+                  <div th:if="${changePasswordSuccess}" class="alert alert-success">
+                      <p style="text-align:center;" th:text="${changePasswordSuccess}"></p>
+                  </div>
+                  <form  th:action="@{/user/changePassword}" method="post" th:object="${user}"   >
+                      <input type="hidden" th:field="*{id}" />
+                      <label>Mật khẩu hiện tại</label>
+                      <input type="password" name="currentPassword" class="form-control">
+                      <label>Mật khẩu mới</label>
+                      <input type="password" name="newPassword" class="form-control">
+                      <label>Xác nhận mật khẩu mới</label>
+                      <input type="password" name="confirmPassword" class="form-control">
+                      <br>
+                      <button type="submit" class="btn btn-primary">lưu thay đổi</button>
+                  </form>
+              </div>
+
           </div>
-          <div th:if="${NewAndConfirmError}" class="alert alert-danger">
-            <p style="text-align:center;" th:text="${NewAndConfirmError}"></p>
-          </div>
-          <div th:if="${changePasswordSuccess}" class="alert alert-success">
-            <p style="text-align:center;" th:text="${changePasswordSuccess}"></p>
-          </div>
-          <form  th:action="@{/user/changePassword}" method="post" th:object="${user}"   >
-            <input type="hidden" th:field="*{id}" />
-          <label>Mật khẩu hiện tại</label>
-          <input type="password" name="currentPassword" class="form-control">
-          <label>Mật khẩu mới</label>
-          <input type="password" name="newPassword" class="form-control">
-          <label>Xác nhận mật khẩu mới</label>
-          <input type="password" name="confirmPassword" class="form-control">
-          <br>
-          <button type="submit" class="btn btn-primary">lưu thay đổi</button>
-          </form>
-        </div>
+
+
+
       </div>
     </div>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>

@@ -82,7 +82,8 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-          <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                  <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -120,7 +121,7 @@
 </style>
                 <img th:src="${userImage != null ? '/displayStaff?id=' + userId : '/Admin/img/nullProfile.png'}" class="rounded-circle profile-image" alt="Profile">
               </a>
-              <h1 th:text="${username}"> </h1>
+              <h2 th:text="${name}"> </h2>
 
 
             </div>

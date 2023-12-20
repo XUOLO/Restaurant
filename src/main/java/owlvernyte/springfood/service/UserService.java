@@ -7,18 +7,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.stereotype.Service;
 import owlvernyte.springfood.constants.Provider;
 import owlvernyte.springfood.constants.Role;
-import owlvernyte.springfood.entity.Order;
 
 import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.repository.RoleRepository;
 import owlvernyte.springfood.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -54,10 +52,12 @@ public class UserService {
         return userRepository.findByUsernameOrEmail(username, email);
     }
 
-    public void saveOauthUser(String email, @NotNull String username) {
+    public void saveOauthUser(String email, @NotNull String username, String name, String phone) {
         if (userRepository.findByUsername(username) != null) return;
         var user = new User();
         user.setUsername(username);
+        user.setName(name);
+        user.setPhone(phone);
         user.setEmail(email);
         user.setPassword(new BCryptPasswordEncoder().encode(username));
         user.setProvider(Provider.GOOGLE.value);

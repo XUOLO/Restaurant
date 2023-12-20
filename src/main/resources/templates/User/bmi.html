@@ -82,7 +82,8 @@
             <li><a sec:authorize="isAuthenticated()" href="/user/info">Thông tin tài khoản</a></li>
           </ul>
         </li>
-        <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" sec:authentication="name"></span> </a> </li>
+                <li> <a sec:authorize="isAuthenticated()">Xin chào <span class="ml-1" style="margin-left: 10px;" th:text="${name}"></span> </a> </li>
+
         </a></li>
         <a class="cart" href="/user/viewCart">
           <span class="cart-item-count"></span>
@@ -185,7 +186,7 @@ border: 0;
 
       <div class="col-md-5">
         <div class="about-img" th:if="${product}">
-          <img th:src="@{'/display?id=' + ${product.id}}" style="margin-left: -60%; width: 300px;height: 200px;" alt="">
+          <img th:src="@{'/display?id=' + ${product.id}}" style="margin-left: -115%;width: 500px;height: 400px;" alt="">
         </div>
       </div>
     </div>

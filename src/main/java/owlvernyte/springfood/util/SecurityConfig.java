@@ -1,6 +1,7 @@
 package owlvernyte.springfood.util;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.SecurityFilterChain;
+import owlvernyte.springfood.entity.User;
 import owlvernyte.springfood.service.CustomOAuth2UserService;
 import owlvernyte.springfood.service.CustomUserDetailService;
 import owlvernyte.springfood.service.OAuthService;
@@ -91,7 +93,18 @@ public class SecurityConfig {
                                 (request, response,
                                  authentication) -> {
                                     var oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-                                    userService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName());
+                                    userService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName(),oidcUser.getFullName(),oidcUser.getPhoneNumber());
+                                    HttpSession session = request.getSession();
+                                    session.setAttribute("name", oidcUser.getFullName());
+                                    User user=userService.findByUsername(oidcUser.getName());
+                                    request.getSession().setAttribute("username", user.getUsername());
+                                     request.getSession().setAttribute("user", user );
+                                    request.getSession().setAttribute("name", user.getName());
+                                    request.getSession().setAttribute("userImage", user.getImage());
+                                    request.getSession().setAttribute("userId", user.getId());
+                                    request.getSession().setAttribute("email", user.getEmail());
+                                    request.getSession().setAttribute("phone", user.getPhone());
+                                    request.getSession().setAttribute("address", user.getAddress());
                                     response.sendRedirect("/");
                                 }
                         )

@@ -301,6 +301,7 @@ public class UserInfoController {
         model.addAttribute("userId", userId);
         User existingUser = userService.viewById(user.getId());
 
+        model.addAttribute("provider", existingUser.getProvider());
 
         model.addAttribute("name", existingUser.getName());
         model.addAttribute("username", existingUser.getUsername());
@@ -338,7 +339,7 @@ public class UserInfoController {
         user.setCreateTime(existingUser.getCreateTime());
         user.setRoles(existingUser.getRoles());
         session.setAttribute("user",user);
-         
+        session.setAttribute("userImage",user.getImage());
 
 
         userService.editUser(user);

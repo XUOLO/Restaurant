@@ -11,7 +11,7 @@
     <groupId>owlvernyte</groupId>
     <artifactId>spring-food</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-food</name>
+     <name>spring-food</name>
     <description>spring-food</description>
     <properties>
         <java.version>20</java.version>
