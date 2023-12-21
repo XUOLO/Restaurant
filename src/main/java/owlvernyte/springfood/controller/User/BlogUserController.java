@@ -36,7 +36,7 @@ public class BlogUserController {
         List<Blog> showBlogList = new ArrayList<>();
 
         for (Blog blog : blogList) {
-            if ("2".equals(blog.getStatus())) {
+            if ((blog.getStatus().equals("2"))) {
                 showBlogList.add(blog);
             }
         }
@@ -52,6 +52,12 @@ public class BlogUserController {
         int pageSize=5;
         Page<Blog> page= blogService.findPaginatedProduct(pageNo,pageSize,sortField,sortDir);
         List<Blog> blogList = page.getContent();
+        List<Blog> showBlogList = new ArrayList<>();
+        for (Blog blog : blogList) {
+            if ((blog.getStatus().equals("2"))) {
+                showBlogList.add(blog);
+            }
+        }
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("totalItems",page.getTotalElements());
@@ -61,7 +67,7 @@ public class BlogUserController {
         model.addAttribute("sortField",sortField);
         model.addAttribute("sortDir",sortDir);
         model.addAttribute("reverseSortDir",sortDir.equals("asc")?"desc":"asc");
-        model.addAttribute("listBlog",blogList);
+        model.addAttribute("listBlog",showBlogList);
 
         return "User/blog";
 

@@ -245,10 +245,15 @@
                   <span class="price" th:text="${#numbers.formatInteger(totalAmount,3,'POINT')+' VND'}"></span>
                 </div>
 
-                <form action="/user/checkOut" method="post">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block">Thanh toán</button>
-                </form>
 
+                <div th:if="${isAuthenticated}">
+                  <form action="/user/checkOut" method="post">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Thanh toán</button>
+                  </form>
+                 </div>
+                <div th:if="${!isAuthenticated}">
+                     <h3> Vui lòng đăng nhập để tiến hành thanh toán!!</h3>
+                 </div>
               </div>
             </div>
           </div>
@@ -337,9 +342,8 @@
           <div class="footer-info">
             <h3>Lign</h3>
             <p>
-              123 HCM <br>
-              <br><br>
-              <strong>SDT:</strong> 0906303905 <br>
+              <strong>Địa chỉ:</strong> 123 HCM <br>
+              <strong>Sđt:</strong> 0906303905 <br>
               <strong>Email:</strong> xuanloc290901@gmail.com<br>
             </p>
             <div class="social-links mt-3">

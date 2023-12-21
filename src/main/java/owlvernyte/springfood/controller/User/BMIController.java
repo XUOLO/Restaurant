@@ -91,7 +91,7 @@ public class BMIController {
         double bmi = weight / (heightInMeters * heightInMeters);
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String formattedBMI = decimalFormat.format(bmi);
-        String apiKey = "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";
+        String apiKey = "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";
         Random random = new Random();
         String bmiCategory;
         if (bmi < 18.5) {

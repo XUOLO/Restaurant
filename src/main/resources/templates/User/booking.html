@@ -494,8 +494,8 @@ color:#cda45e;
                     <div  class="table table-waitConfirm">  <div class="waitConfirm">: Chờ xác nhận</div ></div>
                     <script>
 function selectTable(table) {
-    // Check if the table has background color other than #ee0c0c
-    if (table.style.backgroundColor !== 'rgb(238, 12, 12)') {
+    // Check if the table has background color other than #ee0c0c and not blue
+    if (table.style.backgroundColor !== 'rgb(238, 12, 12)' && table.style.backgroundColor !== 'blue') {
         // Remove 'table-selected' class from all tables
         var tables = document.getElementsByClassName('table');
         for (var i = 0; i < tables.length; i++) {
@@ -708,11 +708,10 @@ function checkFormSubmission(event) {
                     <div class="footer-info">
                         <h3>Lign</h3>
                         <p>
-                            123 HCM <br>
-                            <br><br>
-                            <strong>SDT:</strong> 0906303905 <br>
-                            <strong>Email:</strong> xuanloc290901@gmail.com<br>
-                        </p>
+              <strong>Địa chỉ:</strong> 123 HCM <br>
+              <strong>Sđt:</strong> 0906303905 <br>
+              <strong>Email:</strong> xuanloc290901@gmail.com<br>
+            </p>
                         <div class="social-links mt-3">
                             <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
                             <a href="https://www.facebook.com/profile.php?id=61554484232518" class="facebook"><i class="bx bxl-facebook"></i></a>
